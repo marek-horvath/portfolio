@@ -6,36 +6,53 @@
     <!-- Main content -->
     <div class="portfolio-content">
       <!-- HERO / HEADER SECTION -->
-      <div class="profile-section">
-        <h1 class="profile-name">{{ name }}</h1>
-        <p class="profile-location">{{ currentLocation }}</p>
-        <p class="profile-occupation">{{ occupation }}</p>
-        <p class="profile-intro">{{ intro }}</p>
-      </div>
+      <section class="hero">
+        <div class="hero-text">
+          <h1 class="profile-name">{{ name }}</h1>
+          <p class="profile-occupation">{{ occupation }}</p>
+          <p class="profile-location">{{ currentLocation }}</p>
+          <p class="profile-intro">{{ intro }}</p>
 
-      <!-- SOCIAL ICONS -->
-      <nav class="social-nav">
-        <a class="social-icon" href="https://www.linkedin.com/in/horvathmar/" target="_blank">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/145/145807.png"
-            alt="LinkedIn"
-          />
-        </a>
-        <a class="social-icon" href="discordapp.com/users/341979185637621760" target="_blank">
-          <img
-            src="https://www.freeiconspng.com/uploads/discord-black-icon-1.png"
-            alt="Discord"
-          />
-        </a>
-        <a class="social-icon" href="mailto:marek.horvath@tuke.sk">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/561/561127.png"
-            alt="Mail"
-          />
-        </a>
-      </nav>
+          <div class="highlight-row">
+            <span v-for="(item, index) in highlights" :key="index" class="pill">
+              {{ item }}
+            </span>
+          </div>
+        </div>
 
-      <hr />
+        <div class="hero-card">
+          <div class="avatar-wrap">
+            <img class="avatar" :src="profileImage" alt="Portrait photo" />
+          </div>
+
+          <div class="hero-actions">
+            <a class="social-icon" href="https://www.linkedin.com/in/horvathmar/" target="_blank">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/145/145807.png"
+                alt="LinkedIn"
+              />
+            </a>
+            <a
+              class="social-icon scholar-icon"
+              href="https://scholar.google.com/citations?user=9q0s2u4AAAAJ&hl=sk&oi=ao"
+              target="_blank"
+              title="Scholar"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 5.5 12 2l9 3.5-9 3.5L3 5.5Z" fill="currentColor" />
+                <path d="M6.5 9.2V14c0 2.2 2.6 4 5.5 4s5.5-1.8 5.5-4V9.2l-5.5 2.1-5.5-2.1Z" fill="currentColor" />
+                <path d="M18.5 9.5v4.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+              </svg>
+            </a>
+            <div class="email-chip">
+              <span class="email-text">{{ email }}</span>
+              <button class="copy-btn" type="button" @click="copyEmail">
+                {{ copyStatus || "Copy" }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- TABS NAVIGATION -->
       <nav class="tab-nav">
@@ -73,7 +90,8 @@
       </nav>
 
       <!-- TABS CONTENT -->
-      <div class="tab-content">
+      <transition name="tab-fade" mode="out-in">
+        <div :key="activeTab" class="tab-content">
 
 
 
@@ -87,343 +105,55 @@
 
 
         <!-- PUBLICATIONS TAB -->
-<div v-if="activeTab === 'Publications'" class="publications-tab">
-  <h2>Selected Publications</h2>
-  <div class="scrollable-content">
-    
-    <!-- SAMI 2024 -->
-    <div class="pub-block">
-      <h3>An Experimental Comparison of Three Code Similarity Tools on Over 1,000 Student Projects</h3>
-      <p>
-        <strong>Authors:</strong> Marek Horváth, Emília Pietriková<br/>
-        <strong>Conference:</strong> SAMI 2024<br/>
-        <strong>DOI:</strong> 
-        <a href="http://dx.doi.org/10.1109/sami60510.2024.10432863" target="_blank">
-          10.1109/sami60510.2024.10432863
-        </a><br/>
-        <strong>ISBN:</strong> 979-8-3503-1720-6
-      </p>
-    </div>
-
-    <!-- SAMI 2025 -->
-    <div class="pub-block">
-      <h3>Exploring GPT-Generated Variations in C Programming Assignments</h3>
-      <p>
-        <strong>Authors:</strong> Marek Horváth, Lenka Bubeňková, Emília Pietriková<br/>
-        <strong>Conference:</strong> SAMI 2025<br/>
-        <strong>DOI:</strong> 
-        <a href="https://doi.org/10.1109/sami63904.2025.10883288" target="_blank">
-          10.1109/sami63904.2025.10883288
-        </a><br/>
-        <strong>ISBN:</strong> 979-8-3503-7936-5
-      </p>
-    </div>
-
-    <div class="pub-block">
-      <h3>Code Reuse and Good Clones in Programming Education</h3>
-      <p>
-        <strong>Authors:</strong> Lenka Bubeňková, Emília Pietriková, Marek Horváth<br/>
-        <strong>Conference:</strong> SAMI 2025<br/>
-        <strong>DOI:</strong> 
-        <a href="https://doi.org/10.1109/sami63904.2025.10883291" target="_blank">
-          10.1109/sami63904.2025.10883291
-        </a><br/>
-        <strong>ISBN:</strong> 979-8-3503-7936-5
-      </p>
-    </div>
-
-    <div class="pub-block">
-      <h3>Simplifying Education of Reactive Programming Concepts Using Comparative Application</h3>
-      <p>
-        <strong>Authors:</strong> Tomáš Kormaník, Marek Horváth, Lenka Bubeňková<br/>
-        <strong>Conference:</strong> SAMI 2025<br/>
-        <strong>DOI:</strong> 
-        <a href="https://doi.org/10.1109/SAMI63904.2025.10883129" target="_blank">
-          10.1109/SAMI63904.2025.10883129
-        </a><br/>
-        <strong>ISBN:</strong> 979-8-3503-7936-5
-      </p>
-    </div>
-
-    <div class="pub-block">
-      <h3>Development of a MATLAB Application for Simulating the SEIQRD Pandemic Spread Model</h3>
-      <p>
-        <strong>Authors:</strong> Nikola Geciová, Lukáš Tomaščík, Marek Horváth<br/>
-        <strong>Conference:</strong> SAMI 2025<br/>
-        <strong>DOI:</strong> 
-        <a href="https://doi.org/10.1109/sami63904.2025.10883239" target="_blank">
-          10.1109/sami63904.2025.10883239
-        </a><br/>
-        <strong>ISBN:</strong> 979-8-3503-7936-5
-      </p>
-    </div>
-
-    <!-- ICPEC 2024 -->
-    <div class="pub-block">
-      <h3>Adaptation of Automated Assessment System for Large Programming Courses</h3>
-      <p>
-        <strong>Authors:</strong> Marek Horváth, Tomáš Kormaník, Jaroslav Porubän<br/>
-        <strong>Conference:</strong> ICPEC 2024<br/>
-        <strong>DOI:</strong> 
-        <a href="https://doi.org/10.4230/OASIcs.ICPEC.2024.4" target="_blank">
-          10.4230/OASIcs.ICPEC.2024.4
-        </a><br/>
-        <strong>ISBN:</strong> 978-3-95977-347-8
-      </p>
-    </div>
-
-    <div class="pub-block">
-      <h3>Using ChatGPT During Implementation of Programs in Education</h3>
-      <p>
-        <strong>Authors:</strong> Norbert Baláž, Jaroslav Porubän, Marek Horváth, Tomáš Kormaník<br/>
-        <strong>Conference:</strong> ICPEC 2024<br/>
-        <strong>DOI:</strong> 
-        <a href="https://doi.org/10.4230/OASIcs.ICPEC.2024.18" target="_blank">
-          10.4230/OASIcs.ICPEC.2024.18
-        </a><br/>
-        <strong>ISBN:</strong> 978-3-95977-347-8
-      </p>
-    </div>
-
-    <!-- Informatics 2024 -->
-    <div class="pub-block">
-      <h3>Comparison of Scalability and Performance in Microservices and Monolithic Architectures</h3>
-      <p>
-        <strong>Authors:</strong> Marek Horváth, Vladyslav Sakhnenko, Filip Gurbáľ<br/>
-        <strong>Conference:</strong> Informatics 2024<br/>
-        <strong>DOI:</strong> 
-        <a href="https://doi.org/10.1109/Informatics62280.2024.10900892" target="_blank">
-          10.1109/Informatics62280.2024.10900892
-        </a>
-      </p>
-    </div>
-
-    <!-- ICETA 2023 -->
-    <div class="pub-block">
-      <h3>Puzzle-Driven Learning: Developing and Assessing IT Challenges</h3>
-      <p>
-        <strong>Authors:</strong> Marek Horváth, Emília Pietriková<br/>
-        <strong>Conference:</strong> ICETA 2023<br/>
-        <strong>DOI:</strong> 
-        <a href="http://dx.doi.org/10.1109/iceta61311.2023.10344036" target="_blank">
-          10.1109/iceta61311.2023.10344036
-        </a><br/>
-        <strong>ISBN:</strong> 979-8-3503-7069-0
-      </p>
-    </div>
-
-    <!-- ICETA 2024 -->
-    <div class="pub-block">
-      <h3>Improving Software Education with Technical Debt Analysis Tool</h3>
-      <p>
-        <strong>Authors:</strong> Marek Horváth, Emília Pietriková, Jakub Šašak<br/>
-        <strong>Conference:</strong> ICETA 2024<br/>
-        <strong>DOI:</strong> 
-        <a href="https://doi.org/10.1109/iceta63795.2024.10850816" target="_blank">
-          10.1109/iceta63795.2024.10850816
-        </a><br/>
-        <strong>ISBN:</strong> 979-8-3315-2770-9
-      </p>
-    </div>
-
-    <!-- Acta Electrotechnica -->
-    <div class="pub-block">
-      <h3>Code Clones: A Novel Approach to Detecting Plagiarism in Binary Decomposition of C Programs</h3>
-      <p>
-        <strong>Authors:</strong> Marek Horváth, Filip Gurbáľ<br/>
-        <strong>Journal:</strong> Acta Electrotechnica et Informatica<br/>
-        <strong>DOI:</strong> 
-        <a href="http://dx.doi.org/10.2478/aei-2024-0006" target="_blank">
-          10.2478/aei-2024-0006
-        </a><br/>
-        <strong>ISSN:</strong> 1335-8243
-      </p>
-    </div>
-
-    <!-- SCYR 2024, 2025 -->
-    <div class="pub-block">
-      <h3>Stylistic Patterns in Source Code as Behavioral Biometric Markers for Programmer Identification</h3>
-      <p>
-        <strong>Author:</strong> Marek Horváth<br/>
-        <strong>Conference:</strong> SCYR 2024<br/>
-        <strong>Link:</strong> 
-        <a href="https://scyr.fei.tuke.sk/index.php/proceedings/" target="_blank">
-          scyr.fei.tuke.sk
-        </a><br/>
-        <strong>ISBN:</strong> 978-80-553-3474-5
-      </p>
-    </div>
-
-    <div class="pub-block">
-      <h3>Programmer Identification Based on Source Code Stylometric Analysis and Behavioral Biometrics</h3>
-      <p>
-        <strong>Author:</strong> Marek Horváth<br/>
-        <strong>Conference:</strong> SCYR 2025<br/>
-        <strong>Link:</strong> 
-        <a href="https://scyr.fei.tuke.sk/index.php/proceedings/" target="_blank">
-          scyr.fei.tuke.sk
-        </a>
-      </p>
-    </div>
-
-  </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
+        <PublicationsTab v-if="activeTab === 'Publications'" />
 
         <!-- WORK TAB -->
-        <div v-else-if="activeTab === 'Work'" class="work-tab">
-          <h2>Professional Experience</h2>
-          <div class="scrollable-content">
-            <div class="work-block">
-              <h3>UX Designer | OCT 2023 – SEP 2024</h3>
-              <p>
-                <em>Technical University of Košice</em><br/>
-                Created user-centered solutions for public administration software,
-                focusing on accessibility and intuitive design to simplify complex workflows.
-              </p>
-            </div>
-
-            <div class="work-block">
-              <h3>Frontend Developer | SEP 2021 – NOV 2023</h3>
-              <p>
-                <em>Deutsche Telekom IT Solutions</em><br/>
-                Developed user interfaces in Vue3 and Angular, contributed to automated
-                testing with Selenium, and participated in agile Scrum practices to
-                ensure smooth delivery and continuous improvement.
-              </p>
-            </div>
-
-            <div class="work-block">
-              <h3>Student Teaching Assistant | SEP 2021 – JUN 2023</h3>
-              <p>
-                <em>Technical University of Košice</em><br/>
-                Guided students in Algorithm Basics, C Programming, and UI/UX Design.
-                Developed course materials, provided constructive feedback, and
-                introduced Arduino-based projects to demonstrate real-world
-                engineering applications.
-              </p>
-            </div>
-          </div>
-        </div>
+        <WorkTab v-else-if="activeTab === 'Work'" />
 
         <!-- EDUCATION TAB -->
-        <div v-else-if="activeTab === 'Education'" class="education-tab">
-          <h2>Education & Qualifications</h2>
-          <div class="scrollable-content">
-            <div class="edu-block">
-              <h3>PhD Candidate in Informatics | SEP 2023 – Present</h3>
-              <p>
-                <strong>Technical University of Košice</strong><br/>
-                Dissertation focuses on advanced static code analysis, code similarity detection,
-                and automation for programming education.
-              </p>
-            </div>
-
-            <div class="edu-block">
-              <h3>MBA in Startups and Entrepreneurship | JUN 2023 – MAR 2024</h3>
-              <p>
-                <strong>EDU Effective Business School</strong><br/>
-                Emphasis on innovation, lean methodologies, and strategic planning for modern tech ventures.
-              </p>
-            </div>
-
-            <div class="edu-block">
-              <h3>Supplementary Pedagogical Studies | SEP 2022 – JUN 2024</h3>
-              <p>
-                <strong>Technical University of Košice</strong><br/>
-                Qualified to teach computer science at primary and secondary school levels,
-                focusing on interactive methods and digital literacy.
-              </p>
-            </div>
-
-            <div class="edu-block">
-              <h3>Ing. (Master’s Degree) in Informatics | SEP 2021 – JUN 2023</h3>
-              <p>
-                <strong>Technical University of Košice</strong><br/>
-                Specialized in software engineering, code quality, and large-scale system design.
-              </p>
-            </div>
-
-            <div class="edu-block">
-              <h3>Bc. (Bachelor’s) in Informatics | SEP 2018 – JUN 2021</h3>
-              <p>
-                <strong>Technical University of Košice</strong><br/>
-                Undergraduate focus on algorithms, data structures, and fundamentals of computer networking.
-              </p>
-            </div>
-          </div>
-        </div>
+        <EducationTab v-else-if="activeTab === 'Education'" />
 
         <!-- HOBBIES TAB -->
-        <div v-else-if="activeTab === 'Hobbies'">
-          <h2>Hobbies & Interests</h2>
-          <div class="scrollable-content">
-            <p>
-              I often participate in hackathons to explore new ideas and collaborate with fellow developers.
-              Below are some of my achievements from Hack Kosice:
-            </p>
-
-            <ul class="hack-list">
-              <li>
-                <strong>Hack Kosice 2024:</strong> Winner [MLH] Best Domain Name from GoDaddy Registry
-              </li>
-              <li>
-                <strong>Hack Kosice 2023:</strong> Winner [MLH] Most Creative Use of GitHub
-              </li>
-              <li>
-                <strong>Hack Kosice 2022:</strong> Winner Visma Timeline Challenge
-              </li>
-            </ul>
-
-            <p>
-              I’ve also participated in hackathons organized by Telekom, Erste Digital, Kosice Act in Space, 
-              and CITYTHON 2022. My project portfolio from these events is available on 
-              <a 
-                href="https://devpost.com/marek79horvath?ref_content=user-portfolio&ref_feature=portfolio&ref_medium=global-nav" 
-                target="_blank"
-              >
-                DevPost
-              </a>.
-            </p>
-
-            <p>
-              Beyond programming, I enjoy staying active with football, squash, and regular workouts. 
-              I also take part in running events and have successfully completed the 100th Košice Peace Half Marathon.
-            </p>
-          </div>
+        <HobbiesTab v-else-if="activeTab === 'Hobbies'" />
         </div>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
 
 <script>
+import profileImage from "../assets/photo.jpg";
+import PublicationsTab from "./tabs/PublicationsTab.vue";
+import WorkTab from "./tabs/WorkTab.vue";
+import EducationTab from "./tabs/EducationTab.vue";
+import HobbiesTab from "./tabs/HobbiesTab.vue";
 export default {
   name: "MinimalPortfolio",
+  components: {
+    PublicationsTab,
+    WorkTab,
+    EducationTab,
+    HobbiesTab
+  },
   data() {
     return {
       name: "Marek Horváth",
       currentLocation: "Košice, Slovakia",
       occupation: "PhD Student (Informatics) & Software Engineer",
       intro: "Identifying programmers through style analysis of source code and behavioral biometrics, while also exploring code similarity detection. In my free time, I engage in web development projects and actively participate in hackathons to refine my skills and collaborate with like-minded individuals.",
+      email: "marek.horvath@tuke.sk",
+      copyStatus: "",
+      profileImage,
+      highlights: [
+        "Static Analysis",
+        "Code Similarity",
+        "Programmer Identification",
+        "UI/UX",
+        "Vue"
+      ],
       tabs: ["Publications", "Work", "Education", "Hobbies"],
       activeTab: "Publications",
-      navOpen: false // pre hamburger menu
+      navOpen: false
     };
   },
   mounted() {
@@ -433,9 +163,46 @@ export default {
     });
   },
   methods: {
+    copyEmail() {
+      const text = this.email;
+      const done = () => {
+        this.copyStatus = "Copied";
+        clearTimeout(this.copyTimeout);
+        this.copyTimeout = setTimeout(() => {
+          this.copyStatus = "";
+        }, 1600);
+      };
+      const fail = () => {
+        this.copyStatus = "Copy failed";
+        clearTimeout(this.copyTimeout);
+        this.copyTimeout = setTimeout(() => {
+          this.copyStatus = "";
+        }, 1600);
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(fail);
+        return;
+      }
+
+      try {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "absolute";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.select();
+        const ok = document.execCommand("copy");
+        document.body.removeChild(textarea);
+        ok ? done() : fail();
+      } catch (err) {
+        fail();
+      }
+    },
     selectTab(tab) {
       this.activeTab = tab;
-      this.navOpen = false; // zatvor hamburger menu po kliknutí
+      this.navOpen = false;
     }
   }
 };
@@ -443,17 +210,21 @@ export default {
 
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+
 /* Reset and base styles */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
-html, body {
+:global(html),
+:global(body) {
   width: 100%;
   overflow-x: hidden;
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
+  font-family: "Plus Jakarta Sans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #eef6ff;
+  color: #0d1b2a;
 }
 
 /* Make text unselectable */
@@ -471,7 +242,15 @@ html, body {
   position: relative;
   width: 100%;
   min-height: 100vh;
-  padding: 20px;
+  padding: 40px 20px 60px;
+  background:
+    radial-gradient(900px 500px at 10% 10%, rgba(198, 222, 255, 0.45), transparent 60%),
+    radial-gradient(700px 420px at 90% 20%, rgba(177, 216, 255, 0.4), transparent 60%),
+    linear-gradient(140deg, #eef6ff 0%, #e7f0ff 45%, #f4f9ff 100%);
+}
+.portfolio-wrapper::before,
+.portfolio-wrapper::after {
+  content: none;
 }
 
 /* Background particles */
@@ -481,81 +260,219 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;
+  z-index: 0;
+  pointer-events: none;
 }
 
 /* Main content area */
 .portfolio-content {
-  width: 45%;
-  max-width: 900px;
-  background-color: #ffffff;
-  padding: 20px 30px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: min(1100px, 92vw);
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 32px 36px 30px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 22px;
+  border: 1px solid rgba(13, 27, 42, 0.08);
+  position: relative;
+  z-index: 2;
+  backdrop-filter: blur(6px);
+  animation: fadeIn 0.8s ease-out;
 }
 
-/* Profile section */
-.profile-section {
-  text-align: center;
-  margin-bottom: 20px;
+/* Hero */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 26px;
+  align-items: center;
+  margin-bottom: 26px;
+}
+.hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeUp 0.8s ease-out 0.1s both;
+}
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2c5ea8;
 }
 .profile-name {
-  font-size: 34px; 
-  font-weight: bold;
-  margin-bottom: 10px;
+  font-family: "Fraunces", "Times New Roman", serif;
+  font-size: 40px;
+  font-weight: 700;
+  color: #10233d;
+  margin-bottom: 2px;
   word-wrap: break-word;
 }
 .profile-location {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 5px;
+  font-size: 14px;
+  color: #4b6c8d;
+  font-weight: 500;
 }
 .profile-occupation {
-  font-size: 22px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 8px;
-  letter-spacing: 0.5px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #163a66;
+  letter-spacing: 0.2px;
 }
 .profile-intro {
+  font-size: 15px;
+  color: #3f5c78;
+  line-height: 1.6;
+}
+.highlight-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.pill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background-color: #dfeeff;
+  color: #2c4f75;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* Hero card */
+.hero-card {
+  background: linear-gradient(160deg, #f8fbff, #e9f3ff);
+  border-radius: 18px;
+  padding: 18px;
+  border: 1px solid rgba(44, 94, 168, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: fadeUp 0.8s ease-out 0.2s both;
+}
+.avatar-wrap {
+  background: #ffffff;
+  padding: 10px;
+  border-radius: 16px;
+  border: 1px solid rgba(13, 27, 42, 0.08);
+  display: flex;
+  justify-content: center;
+}
+.avatar {
+  width: 100%;
+  max-height: 240px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+.hero-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.hero-role {
+  font-weight: 600;
   font-size: 14px;
-  color: #777;
-  margin-bottom: 10px;
+  color: #1f3d63;
+}
+.hero-focus {
+  font-size: 13px;
+  color: #466a8a;
   line-height: 1.5;
+}
+.hero-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+.email-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid rgba(22, 58, 102, 0.2);
+  font-size: 13px;
+  font-weight: 600;
+  color: #163a66;
+}
+.email-text {
+  white-space: nowrap;
+}
+.copy-btn {
+  border: 0;
+  background: #163a66;
+  color: #f8fbff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.copy-btn:hover {
+  transform: translateY(-1px);
+}
+.btn {
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn.primary {
+  background: #163a66;
+  color: #f8fbff;
+  box-shadow: 0 10px 20px rgba(22, 58, 102, 0.2);
+}
+.btn.ghost {
+  border: 1px solid rgba(22, 58, 102, 0.25);
+  color: #163a66;
+  background: transparent;
+}
+.btn:hover {
+  transform: translateY(-1px);
 }
 
 /* Social icons nav */
 .social-nav {
   display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 15px;
+  justify-content: flex-start;
+  gap: 10px;
 }
 .social-icon {
   display: inline-flex;
-  width: 32px;
-  height: 32px;
-  border-radius: 4px;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
   overflow: hidden;
   align-items: center;
   justify-content: center;
-  filter: grayscale(100%);
-  opacity: 0.8;
-  transition: opacity 0.3s;
+  background: #ffffff;
+  border: 1px solid rgba(13, 27, 42, 0.1);
+  opacity: 0.85;
+  transition: opacity 0.3s, transform 0.3s;
 }
 .social-icon:hover {
   opacity: 1;
+  transform: translateY(-2px);
 }
 .social-icon img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
 }
-
-/* Horizontal rule */
-hr {
-  margin: 20px 0;
+.scholar-icon {
+  color: #1b365d;
+}
+.scholar-icon svg {
+  width: 70%;
+  height: 70%;
 }
 
 /* Tab navigation */
@@ -564,12 +481,17 @@ hr {
   align-items: center;
   justify-content: center;
   position: relative;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 .desktop-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 10px;
+  padding: 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(13, 27, 42, 0.12);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
 }
 .mobile-menu {
   display: none;
@@ -577,26 +499,30 @@ hr {
   right: 0;
 }
 .hamburger {
-  width: 32px;
-  height: 24px;
-  background: none;
-  border: none;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(13, 27, 42, 0.12);
+  border-radius: 12px;
+  padding: 8px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 4px;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
 }
 .hamburger span {
   display: block;
-  height: 3px;
-  background-color: #333;
+  height: 2px;
+  background-color: #163a66;
   border-radius: 2px;
 }
 .mobile-dropdown {
   position: absolute;
   top: 32px;
   right: 0;
-  background-color: #fff;
+  background-color: #f7fbff;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   border-radius: 5px;
   padding: 10px;
@@ -605,131 +531,289 @@ hr {
   padding: 8px 16px;
   margin-bottom: 5px;
   border-radius: 4px;
-  background-color: #f9f9f9;
+  background-color: #e5f1ff;
   text-align: center;
 }
 .mobile-dropdown .tab-item:hover {
-  background-color: #f0f0f0;
+  background-color: #d7e9ff;
 }
 
 /* Common tab item styles */
 .tab-item {
   padding: 8px 16px;
   cursor: pointer;
-  border-radius: 4px;
-  color: #333;
-  transition: background-color 0.3s;
+  border-radius: 999px;
+  color: #2b4f7a;
+  font-weight: 600;
+  font-size: 13px;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s ease;
+  position: relative;
+  isolation: isolate;
 }
 .tab-item.active {
-  background-color: #ddd;
+  background: linear-gradient(130deg, #163a66, #2b6cb0);
+  color: #f7fbff;
+  box-shadow: 0 10px 18px rgba(22, 58, 102, 0.25);
 }
 .desktop-tabs .tab-item:hover {
-  background-color: #f0f0f0;
+  background-color: #dbeaff;
+  transform: translateY(-1px);
 }
 
 /* Tab content */
 .tab-content {
   text-align: left;
-  font-size: 16px;
-  color: #555;
-  line-height: 1.5;
+  font-size: 15px;
+  color: #3f5873;
+  line-height: 1.6;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
-.tab-content h2 {
+.tab-content :deep(h2) {
   text-align: center;
-  font-size: 22px;
-  margin-bottom: 20px;
-  color: #333;
+  font-size: 20px;
+  margin-bottom: 18px;
+  color: #163a66;
+  font-family: "Fraunces", "Times New Roman", serif;
 }
 
 /* Scrollable content within tabs */
-.scrollable-content {
-  max-height: 350px;
+.tab-content :deep(.scrollable-content) {
+  max-height: 360px;
   overflow-y: auto;
   padding-right: 10px;
   margin-bottom: 10px;
 }
 
 /* Content blocks */
-.pub-block,
-.work-block,
-.edu-block {
+.tab-content :deep(.pub-block),
+.tab-content :deep(.work-block),
+.tab-content :deep(.edu-block) {
   margin-bottom: 20px;
-  background-color: #fafafa;
-  padding: 12px 15px;
-  border-radius: 6px;
+  background-color: #f7fbff;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(13, 27, 42, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.pub-block h3,
-.work-block h3,
-.edu-block h3 {
-  font-size: 18px;
+.tab-content :deep(.pub-block:hover),
+.tab-content :deep(.work-block:hover),
+.tab-content :deep(.edu-block:hover) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+}
+
+.mobile-dropdown {
+  animation: fadeScale 0.25s ease-out;
+  transform-origin: top right;
+}
+
+.tab-item {
+  position: relative;
+  overflow: hidden;
+}
+.tab-item::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 6px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  transform: scaleX(0);
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+.tab-item.active::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.tab-fade-enter-active {
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.tab-fade-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.tab-fade-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+.tab-fade-leave-active {
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.tab-fade-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+.tab-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+.tab-content :deep(.pub-block h3),
+.tab-content :deep(.work-block h3),
+.tab-content :deep(.edu-block h3) {
+  font-size: 16px;
   margin-bottom: 5px;
-  color: #444;
+  color: #12355f;
   line-height: 1.3;
 }
-.pub-block p,
-.work-block p,
-.edu-block p {
-  font-size: 15px;
-  color: #666;
+.tab-content :deep(.pub-block p),
+.tab-content :deep(.work-block p),
+.tab-content :deep(.edu-block p) {
+  font-size: 14px;
+  color: #3d5874;
   line-height: 1.4;
 }
-.pub-block p a,
-.work-block p a,
-.edu-block p a {
-  color: #007BFF;
+.tab-content :deep(.pub-block p a),
+.tab-content :deep(.work-block p a),
+.tab-content :deep(.edu-block p a) {
+  color: #1b6dd1;
   text-decoration: none;
 }
-.pub-block p a:hover,
-.work-block p a:hover,
-.edu-block p a:hover {
+.tab-content :deep(.pub-block p a:hover),
+.tab-content :deep(.work-block p a:hover),
+.tab-content :deep(.edu-block p a:hover) {
   text-decoration: underline;
 }
 
 /* Hackathon achievements list */
-.hack-list {
+.tab-content :deep(.hack-list) {
   list-style: disc inside;
   margin: 10px 0 20px 0;
   padding-left: 10px;
-  color: #666;
+  color: #3d5874;
   line-height: 1.4;
 }
-.hack-list li {
+.tab-content :deep(.hack-list li) {
   margin-bottom: 8px;
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeScale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 
 /* Media query for mid-range screens */
 @media (max-width: 900px) {
   .portfolio-content {
-    width: 80%;
+    width: 90%;
+  }
+  .hero {
+    grid-template-columns: 1fr;
+  }
+  .hero-card {
+    order: -1;
   }
 }
 
 /* Media query for mobile screens */
 @media (max-width: 768px) {
+  #particles-js {
+    display: none;
+  }
   .desktop-tabs {
     display: none;
   }
   .mobile-menu {
     display: block;
   }
-  .portfolio-content {
-    width: 90%;
-    max-width: 100%;
-    padding: 15px 20px;
+  .portfolio-wrapper {
+    padding: 12px 8px 18px;
+    background: #eef6ff;
+  }
+  .hero {
+    gap: 10px;
+  }
+  .eyebrow {
+    display: none;
+  }
+  .profile-intro {
+    display: none;
+  }
+  .highlight-row {
+    display: none;
+  }
+  .hero-card {
+    padding: 10px 0 0;
+    border: 0;
     box-shadow: none;
+    background: transparent;
+  }
+  .avatar-wrap {
+    display: none;
+  }
+  .hero-meta {
+    display: none;
+  }
+  .social-nav {
+    display: none;
+  }
+  .avatar {
+    max-height: 160px;
+  }
+  .portfolio-content {
+    max-width: 100%;
+    padding: 0 4px;
     border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+    border: 0;
+    backdrop-filter: none;
   }
   .profile-name {
     font-size: 26px;
   }
   .profile-occupation {
-    font-size: 18px;
-  }
-  .tab-content {
     font-size: 15px;
   }
+  .profile-location {
+    font-size: 13px;
+  }
+  .tab-nav {
+    margin-bottom: 12px;
+  }
+  .tab-content {
+    font-size: 14px;
+  }
   .scrollable-content {
-    max-height: 250px;
+    max-height: 220px;
+  }
+  .hero-actions {
+    width: 100%;
+  }
+  .btn {
+    flex: 1;
+    text-align: center;
   }
 }
 </style>
