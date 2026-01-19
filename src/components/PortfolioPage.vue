@@ -11,21 +11,7 @@
           <h1 class="profile-name">{{ name }}</h1>
           <p class="profile-occupation">{{ occupation }}</p>
           <p class="profile-location">{{ currentLocation }}</p>
-          <p class="profile-intro">{{ intro }}</p>
-
-          <div class="highlight-row">
-            <span v-for="(item, index) in highlights" :key="index" class="pill">
-              {{ item }}
-            </span>
-          </div>
-        </div>
-
-        <div class="hero-card">
-          <div class="avatar-wrap">
-            <img class="avatar" :src="profileImage" alt="Portrait photo" />
-          </div>
-
-          <div class="hero-actions">
+          <div class="hero-actions hero-actions--mobile">
             <a class="social-icon" href="https://www.linkedin.com/in/horvathmar/" target="_blank">
               <img
                 src="https://cdn-icons-png.flaticon.com/512/145/145807.png"
@@ -51,6 +37,46 @@
               </button>
             </div>
           </div>
+          <p class="profile-intro">{{ intro }}</p>
+
+          <div class="highlight-row">
+            <span v-for="(item, index) in highlights" :key="index" class="pill">
+              {{ item }}
+            </span>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <div class="avatar-wrap">
+            <img class="avatar" :src="profileImage" alt="Portrait photo" />
+          </div>
+          <div class="hero-actions hero-actions--desktop">
+            <a class="social-icon" href="https://www.linkedin.com/in/horvathmar/" target="_blank">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/145/145807.png"
+                alt="LinkedIn"
+              />
+            </a>
+            <a
+              class="social-icon scholar-icon"
+              href="https://scholar.google.com/citations?user=9q0s2u4AAAAJ&hl=sk&oi=ao"
+              target="_blank"
+              title="Scholar"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 5.5 12 2l9 3.5-9 3.5L3 5.5Z" fill="currentColor" />
+                <path d="M6.5 9.2V14c0 2.2 2.6 4 5.5 4s5.5-1.8 5.5-4V9.2l-5.5 2.1-5.5-2.1Z" fill="currentColor" />
+                <path d="M18.5 9.5v4.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+              </svg>
+            </a>
+            <div class="email-chip">
+              <span class="email-text">{{ email }}</span>
+              <button class="copy-btn" type="button" @click="copyEmail">
+                {{ copyStatus || "Copy" }}
+              </button>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -387,6 +413,14 @@ export default {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
+}
+.hero-actions--mobile {
+  display: none;
+}
+.hero-actions--desktop {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
 }
 .email-chip {
   display: inline-flex;
@@ -742,10 +776,10 @@ export default {
     display: none;
   }
   .desktop-tabs {
-    display: none;
+    display: flex;
   }
   .mobile-menu {
-    display: block;
+    display: none;
   }
   .portfolio-wrapper {
     padding: 12px 8px 18px;
@@ -753,9 +787,7 @@ export default {
   }
   .hero {
     gap: 10px;
-  }
-  .eyebrow {
-    display: none;
+    text-align: left;
   }
   .profile-intro {
     display: none;
@@ -763,23 +795,23 @@ export default {
   .highlight-row {
     display: none;
   }
+  .hero-text {
+    gap: 6px;
+  }
   .hero-card {
-    padding: 10px 0 0;
+    padding: 0;
     border: 0;
     box-shadow: none;
     background: transparent;
+    order: 3;
   }
   .avatar-wrap {
-    display: none;
-  }
-  .hero-meta {
-    display: none;
-  }
-  .social-nav {
-    display: none;
+    background: transparent;
+    border: 0;
+    padding: 0;
   }
   .avatar {
-    max-height: 160px;
+    max-height: 220px;
   }
   .portfolio-content {
     max-width: 100%;
@@ -799,14 +831,42 @@ export default {
   .profile-location {
     font-size: 13px;
   }
+  .hero-actions {
+    justify-content: flex-start;
+  }
+  .hero-actions--mobile {
+    display: flex;
+  }
+  .hero-actions--desktop {
+    display: none;
+  }
   .tab-nav {
     margin-bottom: 12px;
+  }
+  .desktop-tabs {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 10px;
+    border-radius: 18px;
+    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+  }
+  .tab-item {
+    text-align: center;
+    padding: 10px 12px;
+    font-size: 13px;
   }
   .tab-content {
     font-size: 14px;
   }
   .scrollable-content {
     max-height: 220px;
+  }
+  .tab-content :deep(.scrollable-content) {
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
   }
   .hero-actions {
     width: 100%;
