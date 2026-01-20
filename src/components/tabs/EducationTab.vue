@@ -5,9 +5,8 @@
       <div class="edu-block">
         <h3>PhD Candidate in Informatics | SEP 2023 - Present</h3>
         <p>
-          <strong>Technical University of Košice</strong><br/>
-          Dissertation focuses on advanced static code analysis, code similarity detection,
-          and automation for programming education.
+          <strong>Technical University of Ko&scaron;ice</strong><br/>
+          Dissertation topic: identifying programmers through source code style analysis and behavioral biometrics.
         </p>
       </div>
 
@@ -22,25 +21,24 @@
       <div class="edu-block">
         <h3>Supplementary Pedagogical Studies | SEP 2022 - JUN 2024</h3>
         <p>
-          <strong>Technical University of Košice</strong><br/>
-          Qualified to teach computer science at primary and secondary school levels,
-          focusing on interactive methods and digital literacy.
+          <strong>Technical University of Ko&scaron;ice</strong><br/>
+          Qualified to teach computer science at primary and secondary school levels.
         </p>
       </div>
 
       <div class="edu-block">
         <h3>Ing. (Master's Degree) in Informatics | SEP 2021 - JUN 2023</h3>
         <p>
-          <strong>Technical University of Košice</strong><br/>
-          Specialized in software engineering, code quality, and large-scale system design.
+          <strong>Technical University of Ko&scaron;ice</strong><br/>
+          Thesis topic: plagiarism detection in source code.
         </p>
       </div>
 
       <div class="edu-block">
         <h3>Bc. (Bachelor's) in Informatics | SEP 2018 - JUN 2021</h3>
         <p>
-          <strong>Technical University of Košice</strong><br/>
-          Undergraduate focus on algorithms, data structures, and fundamentals of computer networking.
+          <strong>Technical University of Ko&scaron;ice</strong><br/>
+          Thesis topic: network traffic simulator for video conferencing devices.
         </p>
       </div>
     </div>

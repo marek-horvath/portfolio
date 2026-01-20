@@ -141,6 +141,12 @@
 
         <!-- HOBBIES TAB -->
         <HobbiesTab v-else-if="activeTab === 'Hobbies'" />
+
+        <!-- TEACHING TAB -->
+        <TeachingTab v-else-if="activeTab === 'Teaching'" />
+
+        <!-- OTHER ACTIVITIES TAB -->
+        <OtherActivitiesTab v-else-if="activeTab === 'Other Activities'" />
         </div>
       </transition>
     </div>
@@ -153,13 +159,17 @@ import PublicationsTab from "./tabs/PublicationsTab.vue";
 import WorkTab from "./tabs/WorkTab.vue";
 import EducationTab from "./tabs/EducationTab.vue";
 import HobbiesTab from "./tabs/HobbiesTab.vue";
+import OtherActivitiesTab from "./tabs/OtherActivitiesTab.vue";
+import TeachingTab from "./tabs/TeachingTab.vue";
 export default {
   name: "MinimalPortfolio",
   components: {
     PublicationsTab,
     WorkTab,
     EducationTab,
-    HobbiesTab
+    HobbiesTab,
+    OtherActivitiesTab,
+    TeachingTab
   },
   data() {
     return {
@@ -177,7 +187,7 @@ export default {
         "UI/UX",
         "Vue"
       ],
-      tabs: ["Publications", "Work", "Education", "Hobbies"],
+      tabs: ["Publications", "Work", "Education", "Hobbies", "Teaching", "Other Activities"],
       activeTab: "Publications",
       navOpen: false
     };
@@ -281,11 +291,11 @@ export default {
 
 /* Background particles */
 #particles-js {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   z-index: 0;
   pointer-events: none;
 }
