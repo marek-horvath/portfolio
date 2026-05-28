@@ -6,6 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "update:scholar": "node scripts/update-scholar-metrics.js",
+    "predeploy": "npm run update:scholar && npm run build",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {

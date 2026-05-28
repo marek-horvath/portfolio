@@ -3,30 +3,50 @@
     <h2>Other Activities</h2>
     <div class="scrollable-content">
       <div class="work-block">
-        <h3>Mobility | CEEPUS Program (September 2024)</h3>
-        <p>
-          <strong>Host:</strong> Palacký University Olomouc, Czech Republic<br/>
-          Focused mobility for concentrated research work on a mini-thesis topic.
-        </p>
-      </div>
-
-      <div class="work-block">
-        <h3>Research Mobility | National Scholarship Program (October 2025)</h3>
-        <p>
-          <strong>Host:</strong> Athens University of Economics and Business, Athens, Greece<br/>
-          Research mobility in collaboration with Diomidis Spinellis, focused on source code authorship
-          attribution and stylistic analysis. Outcome includes a joint survey paper and joining the
-          Business Analytics Lab (BALab).
-          <a href="https://www.balab.aueb.gr/" target="_blank" rel="noopener">balab.aueb.gr</a>
-        </p>
-      </div>
-
-      <div class="work-block">
         <h3>Reviewer</h3>
         <ul class="hack-list">
           <li>Acta Polytechnica Hungarica</li>
           <li>SAMI 2026</li>
           <li>Proceedings EEI</li>
+          <li>INES 2026</li>
+        </ul>
+      </div>
+
+      <div class="work-block">
+        <h3>Summer School of Statistics | AUG 2025</h3>
+        <p>
+          Participated in the Summer School of Statistics in Brno, focused on statistical methods and
+          practical data analysis.
+          <a href="https://www.sciserv.cz/letni-skola-statistiky/" target="_blank" rel="noopener">
+            sciserv.cz/letni-skola-statistiky
+          </a>
+        </p>
+      </div>
+
+      <div class="work-block">
+        <h3>Zenodo Research Artifacts</h3>
+        <ul class="hack-list">
+          <li>
+            Google Code Jam and Kick Start solutions dataset for source code authorship analysis
+            (2008-2023):
+            <a href="https://zenodo.org/records/18901762" target="_blank" rel="noopener">
+              Zenodo record 18901762
+            </a>
+          </li>
+          <li>
+            Synthetic dataset of C source code mutations for source code similarity and robustness
+            experiments:
+            <a href="https://zenodo.org/records/20312253" target="_blank" rel="noopener">
+              Zenodo record 20312253
+            </a>
+          </li>
+          <li>
+            Literature extraction script and curated bibliographic dataset for programmer attribution
+            research:
+            <a href="https://zenodo.org/records/18641274" target="_blank" rel="noopener">
+              Zenodo record 18641274
+            </a>
+          </li>
         </ul>
       </div>
 
@@ -35,7 +55,7 @@
         <p>
           International collaboration and a semester-long project for GymBeam. Served as Product Owner
           and Scrum Master, led communication with the partner company, coordinated tasks, and delivered
-          the final presentation at the University of Münster, Germany.
+          the final presentation at the University of M&uuml;nster, Germany.
         </p>
       </div>
 
@@ -50,7 +70,7 @@
       <div class="work-block">
         <h3>Buddy Program</h3>
         <p>
-          Volunteer mentoring at the Technical University of Košice, helping junior students adapt to
+          Volunteer mentoring at the Technical University of Ko&scaron;ice, helping junior students adapt to
           university life and navigate academic processes.
         </p>
       </div>
@@ -58,7 +78,7 @@
       <div class="work-block">
         <h3>Slovak-Hungarian Project (TeT)</h3>
         <p>
-          Long-term research collaboration with Eszterházy Károly Catholic University (Eger, Hungary)
+          Long-term research collaboration with Eszterh&aacute;zy K&aacute;roly Catholic University (Eger, Hungary)
           on TAIPO, an AI assistant supporting product owner workflows. Includes ongoing coordination
           and joint working meetings in Hungary.
         </p>

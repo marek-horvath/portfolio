@@ -11,32 +11,6 @@
           <h1 class="profile-name">{{ name }}</h1>
           <p class="profile-occupation">{{ occupation }}</p>
           <p class="profile-location">{{ currentLocation }}</p>
-          <div class="hero-actions hero-actions--mobile">
-            <a class="social-icon" href="https://www.linkedin.com/in/horvathmar/" target="_blank">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/145/145807.png"
-                alt="LinkedIn"
-              />
-            </a>
-            <a
-              class="social-icon scholar-icon"
-              href="https://scholar.google.com/citations?user=9q0s2u4AAAAJ&hl=sk&oi=ao"
-              target="_blank"
-              title="Scholar"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M3 5.5 12 2l9 3.5-9 3.5L3 5.5Z" fill="currentColor" />
-                <path d="M6.5 9.2V14c0 2.2 2.6 4 5.5 4s5.5-1.8 5.5-4V9.2l-5.5 2.1-5.5-2.1Z" fill="currentColor" />
-                <path d="M18.5 9.5v4.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
-              </svg>
-            </a>
-            <div class="email-chip">
-              <span class="email-text">{{ email }}</span>
-              <button class="copy-btn" type="button" @click="copyEmail">
-                {{ copyStatus || "Copy" }}
-              </button>
-            </div>
-          </div>
           <p class="profile-intro">{{ intro }}</p>
 
           <div class="highlight-row">
@@ -50,24 +24,12 @@
           <div class="avatar-wrap">
             <img class="avatar" :src="profileImage" alt="Portrait photo" />
           </div>
-          <div class="hero-actions hero-actions--desktop">
-            <a class="social-icon" href="https://www.linkedin.com/in/horvathmar/" target="_blank">
+          <div class="hero-actions hero-card-actions">
+            <a class="social-icon" href="https://www.linkedin.com/in/horvathmar/" target="_blank" rel="noopener">
               <img
                 src="https://cdn-icons-png.flaticon.com/512/145/145807.png"
                 alt="LinkedIn"
               />
-            </a>
-            <a
-              class="social-icon scholar-icon"
-              href="https://scholar.google.com/citations?user=9q0s2u4AAAAJ&hl=sk&oi=ao"
-              target="_blank"
-              title="Scholar"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M3 5.5 12 2l9 3.5-9 3.5L3 5.5Z" fill="currentColor" />
-                <path d="M6.5 9.2V14c0 2.2 2.6 4 5.5 4s5.5-1.8 5.5-4V9.2l-5.5 2.1-5.5-2.1Z" fill="currentColor" />
-                <path d="M18.5 9.5v4.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
-              </svg>
             </a>
             <div class="email-chip">
               <span class="email-text">{{ email }}</span>
@@ -424,12 +386,7 @@ export default {
   align-items: center;
   justify-content: center;
 }
-.hero-actions--mobile {
-  display: none;
-}
-.hero-actions--desktop {
-  display: flex;
-  justify-content: center;
+.hero-card-actions {
   margin-top: 12px;
 }
 .email-chip {
@@ -511,14 +468,6 @@ export default {
   height: 70%;
   object-fit: contain;
 }
-.scholar-icon {
-  color: #1b365d;
-}
-.scholar-icon svg {
-  width: 70%;
-  height: 70%;
-}
-
 /* Tab navigation */
 .tab-nav {
   display: flex;
@@ -840,15 +789,6 @@ export default {
   }
   .profile-location {
     font-size: 13px;
-  }
-  .hero-actions {
-    justify-content: flex-start;
-  }
-  .hero-actions--mobile {
-    display: flex;
-  }
-  .hero-actions--desktop {
-    display: none;
   }
   .tab-nav {
     margin-bottom: 12px;
