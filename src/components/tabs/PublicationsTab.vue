@@ -3,19 +3,19 @@
     <div class="publications-header">
       <a
         class="citation-chip"
-        :href="scholarUrl"
+        :href="localizedScholarUrl"
         target="_blank"
         rel="noopener"
         :title="scholarMetricsTitle"
       >
         <span class="citation-count">{{ scholarCitationsLabel }}</span>
-        <span>Google Scholar Citations</span>
+        <span>{{ copy.citationsLabel }}</span>
       </a>
     </div>
 
     <div class="pub-sections">
       <section
-        v-for="section in publicationSections"
+        v-for="section in localizedPublicationSections"
         :key="section.title"
         class="pub-section"
       >
@@ -28,7 +28,7 @@
           >
             <h3>{{ publication.title }}</h3>
             <p>
-              <strong>{{ publication.authors.length === 1 ? "Author" : "Authors" }}:</strong>
+              <strong>{{ publication.authors.length === 1 ? copy.authorLabel : copy.authorsLabel }}:</strong>
               {{ publication.authors.join(", ") }}
               <template v-if="publication.venue">
                 <br />
@@ -58,7 +58,7 @@
               </template>
               <template v-if="publication.status">
                 <br />
-                <strong>Status:</strong> {{ publication.status }}
+                <strong>{{ copy.statusLabel }}:</strong> {{ localizedStatus(publication.status) }}
               </template>
             </p>
           </article>
@@ -308,12 +308,77 @@ const publicationSections = [
   }
 ];
 
+const publicationsCopy = {
+  en: {
+    citationsLabel: "Google Scholar Citations",
+    authorLabel: "Author",
+    authorsLabel: "Authors",
+    statusLabel: "Status",
+    metricsTitle: "Google Scholar citations",
+    updatedLabel: "updated",
+    locale: "en-US",
+    dateLocale: "en-GB",
+    scholarLanguage: "en",
+    sectionTitles: {
+      "Scopus-Indexed Conferences": "Scopus-Indexed Conferences",
+      Journals: "Journals",
+      "Non-Scopus Conferences": "Non-Scopus Conferences",
+      "Non-Scopus Journals": "Non-Scopus Journals"
+    },
+    venueLabels: {
+      Conference: "Conference",
+      Journal: "Journal"
+    },
+    statuses: {
+      "In review": "In review"
+    }
+  },
+  sk: {
+    citationsLabel: "Citácie Google Scholar",
+    authorLabel: "Autor",
+    authorsLabel: "Autori",
+    statusLabel: "Stav",
+    metricsTitle: "Citácie Google Scholar",
+    updatedLabel: "aktualizované",
+    locale: "sk-SK",
+    dateLocale: "sk-SK",
+    scholarLanguage: "sk",
+    sectionTitles: {
+      "Scopus-Indexed Conferences": "Konferencie indexované v Scopuse",
+      Journals: "Časopisy",
+      "Non-Scopus Conferences": "Konferencie mimo Scopusu",
+      "Non-Scopus Journals": "Časopisy mimo Scopusu"
+    },
+    venueLabels: {
+      Conference: "Konferencia",
+      Journal: "Časopis"
+    },
+    statuses: {
+      "In review": "V recenznom konaní"
+    }
+  }
+};
+
+const productionScholarApiUrl =
+  "https://portfolio-scholar-api.167.233.132.16.sslip.io/api/scholar-metrics";
+
 export default {
   name: "PublicationsTab",
+  props: {
+    language: {
+      type: String,
+      default: "en"
+    }
+  },
   data() {
     return {
       publicationSections,
       scholarUrl: "https://scholar.google.com/citations?user=9q0s2u4AAAAJ&hl=sk&oi=ao",
+      scholarApiUrl:
+        process.env.VUE_APP_SCHOLAR_API_URL ||
+        (process.env.NODE_ENV === "development"
+          ? "http://127.0.0.1:3002/api/scholar-metrics"
+          : productionScholarApiUrl),
       scholarMetrics: {
         citations: 44,
         updatedAt: ""
@@ -321,49 +386,74 @@ export default {
     };
   },
   computed: {
+    copy() {
+      return publicationsCopy[this.language] || publicationsCopy.en;
+    },
+    localizedPublicationSections() {
+      return this.publicationSections.map((section) => ({
+        ...section,
+        title: this.copy.sectionTitles[section.title] || section.title,
+        venueLabel: this.copy.venueLabels[section.venueLabel] || section.venueLabel
+      }));
+    },
+    localizedScholarUrl() {
+      return this.scholarUrl.replace("hl=sk", `hl=${this.copy.scholarLanguage}`);
+    },
     scholarCitationsLabel() {
       const citations = Number.isFinite(this.scholarMetrics.citations)
         ? this.scholarMetrics.citations
         : 44;
-      return citations.toLocaleString("en-US");
+      return citations.toLocaleString(this.copy.locale);
     },
     scholarMetricsTitle() {
       if (!this.scholarMetrics.updatedAt) {
-        return "Google Scholar citations";
+        return this.copy.metricsTitle;
       }
 
       const updatedAt = new Date(this.scholarMetrics.updatedAt);
       if (Number.isNaN(updatedAt.getTime())) {
-        return "Google Scholar citations";
+        return this.copy.metricsTitle;
       }
 
-      return `Google Scholar citations, updated ${updatedAt.toLocaleDateString("en-GB")}`;
+      return `${this.copy.metricsTitle}, ${this.copy.updatedLabel} ${updatedAt.toLocaleDateString(this.copy.dateLocale)}`;
     }
   },
   mounted() {
     this.loadScholarMetrics();
   },
   methods: {
-    loadScholarMetrics() {
-      fetch(`${process.env.BASE_URL || "/"}scholar-metrics.json`, { cache: "no-store" })
-        .then((response) => {
+    async loadScholarMetrics() {
+      const metricSources = [
+        this.scholarApiUrl,
+        `${process.env.BASE_URL || "/"}scholar-metrics.json`
+      ].filter(Boolean);
+
+      for (const metricsUrl of metricSources) {
+        try {
+          const response = await fetch(metricsUrl, { cache: "no-store" });
           if (!response.ok) {
-            throw new Error("Unable to load Scholar metrics.");
+            throw new Error(`Unable to load Scholar metrics from ${metricsUrl}.`);
           }
-          return response.json();
-        })
-        .then((metrics) => {
+
+          const metrics = await response.json();
           const citations = Number(metrics.citations);
           if (!Number.isFinite(citations)) {
-            return;
+            throw new Error("Scholar citation count is not numeric.");
           }
 
           this.scholarMetrics = {
             citations,
             updatedAt: metrics.updatedAt || ""
           };
-        })
-        .catch(() => {});
+
+          return;
+        } catch {
+          // Try the next source. The static JSON keeps the page usable if the API is offline.
+        }
+      }
+    },
+    localizedStatus(status) {
+      return this.copy.statuses[status] || status;
     }
   }
 };

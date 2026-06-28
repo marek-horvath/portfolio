@@ -4,8 +4,12 @@ node_modules
 
 
 # local env files
+.env
 .env.local
 .env.*.local
+server/.env
+server/VPS_*.md
+server/*.pdf
 
 # Log files
 npm-debug.log*

@@ -5,16 +5,31 @@
 
     <!-- Main content -->
     <div class="portfolio-content">
+      <div class="language-dock">
+        <div class="language-switcher" role="group" :aria-label="copy.languageLabel">
+          <button
+            v-for="option in languageOptions"
+            :key="option.code"
+            type="button"
+            :class="['language-option', { active: language === option.code }]"
+            :aria-pressed="language === option.code"
+            @click="setLanguage(option.code)"
+          >
+            {{ option.label }}
+          </button>
+        </div>
+      </div>
+
       <!-- HERO / HEADER SECTION -->
       <section class="hero">
         <div class="hero-text">
-          <h1 class="profile-name">{{ name }}</h1>
-          <p class="profile-occupation">{{ occupation }}</p>
-          <p class="profile-location">{{ currentLocation }}</p>
-          <p class="profile-intro">{{ intro }}</p>
+          <h1 class="profile-name">{{ copy.name }}</h1>
+          <p class="profile-occupation">{{ copy.occupation }}</p>
+          <p class="profile-location">{{ copy.currentLocation }}</p>
+          <p class="profile-intro">{{ copy.intro }}</p>
 
           <div class="highlight-row">
-            <span v-for="(item, index) in highlights" :key="index" class="pill">
+            <span v-for="(item, index) in copy.highlights" :key="index" class="pill">
               {{ item }}
             </span>
           </div>
@@ -22,7 +37,7 @@
 
         <div class="hero-card">
           <div class="avatar-wrap">
-            <img class="avatar" :src="profileImage" alt="Portrait photo" />
+            <img class="avatar" :src="profileImage" :alt="copy.profileAlt" />
           </div>
           <div class="hero-actions hero-card-actions">
             <a class="social-icon" href="https://www.linkedin.com/in/horvathmar/" target="_blank" rel="noopener">
@@ -31,10 +46,19 @@
                 alt="LinkedIn"
               />
             </a>
+            <a
+              class="cv-download"
+              :href="cvUrl"
+              download="Marek-Horvath-CV.pdf"
+              :aria-label="copy.downloadCv"
+            >
+              <span>CV</span>
+              <span class="cv-download-type">PDF</span>
+            </a>
             <div class="email-chip">
               <span class="email-text">{{ email }}</span>
               <button class="copy-btn" type="button" @click="copyEmail">
-                {{ copyStatus || "Copy" }}
+                {{ copyButtonLabel }}
               </button>
             </div>
           </div>
@@ -47,12 +71,12 @@
         <!-- DESKTOP TABS (centered) -->
         <div class="desktop-tabs">
           <div
-            v-for="(tab, index) in tabs"
-            :key="index"
-            :class="['tab-item', { active: activeTab === tab }]"
-            @click="selectTab(tab)"
+            v-for="tab in tabItems"
+            :key="tab.id"
+            :class="['tab-item', { active: activeTab === tab.id }]"
+            @click="selectTab(tab.id)"
           >
-            {{ tab }}
+            {{ tab.label }}
           </div>
         </div>
 
@@ -66,12 +90,12 @@
 
           <div class="mobile-dropdown" v-if="navOpen">
             <div
-              v-for="(tab, index) in tabs"
-              :key="index"
-              :class="['tab-item', { active: activeTab === tab }]"
-              @click="selectTab(tab)"
+              v-for="tab in tabItems"
+              :key="tab.id"
+              :class="['tab-item', { active: activeTab === tab.id }]"
+              @click="selectTab(tab.id)"
             >
-              {{ tab }}
+              {{ tab.label }}
             </div>
           </div>
         </div>
@@ -93,22 +117,25 @@
 
 
         <!-- PUBLICATIONS TAB -->
-        <PublicationsTab v-if="activeTab === 'Publications'" />
+        <PublicationsTab v-if="activeTab === 'publications'" :language="language" />
 
         <!-- WORK TAB -->
-        <WorkTab v-else-if="activeTab === 'Work'" />
+        <WorkTab v-else-if="activeTab === 'work'" :language="language" />
+
+        <!-- WEB PROJECTS TAB -->
+        <ProjectsTab v-else-if="activeTab === 'projects'" :language="language" />
 
         <!-- EDUCATION TAB -->
-        <EducationTab v-else-if="activeTab === 'Education'" />
+        <EducationTab v-else-if="activeTab === 'education'" :language="language" />
 
         <!-- HOBBIES TAB -->
-        <HobbiesTab v-else-if="activeTab === 'Hobbies'" />
+        <HobbiesTab v-else-if="activeTab === 'hobbies'" :language="language" />
 
         <!-- TEACHING TAB -->
-        <TeachingTab v-else-if="activeTab === 'Teaching'" />
+        <TeachingTab v-else-if="activeTab === 'teaching'" :language="language" />
 
         <!-- OTHER ACTIVITIES TAB -->
-        <OtherActivitiesTab v-else-if="activeTab === 'Other Activities'" />
+        <OtherActivitiesTab v-else-if="activeTab === 'other'" :language="language" />
         </div>
       </transition>
     </div>
@@ -119,15 +146,91 @@
 import profileImage from "../assets/photo.jpg";
 import PublicationsTab from "./tabs/PublicationsTab.vue";
 import WorkTab from "./tabs/WorkTab.vue";
+import ProjectsTab from "./tabs/ProjectsTab.vue";
 import EducationTab from "./tabs/EducationTab.vue";
 import HobbiesTab from "./tabs/HobbiesTab.vue";
 import OtherActivitiesTab from "./tabs/OtherActivitiesTab.vue";
 import TeachingTab from "./tabs/TeachingTab.vue";
+
+const SUPPORTED_LANGUAGES = ["sk", "en"];
+
+const pageCopy = {
+  en: {
+    languageLabel: "Language",
+    name: "Marek Horváth",
+    currentLocation: "Košice, Slovakia",
+    occupation: "PhD Student (Informatics) & Software Engineer",
+    intro: "Identifying programmers through style analysis of source code and behavioral biometrics, while also exploring code similarity detection. In my free time, I engage in web development projects and actively participate in hackathons to refine my skills and collaborate with like-minded individuals.",
+    profileAlt: "Portrait photo of Marek Horváth",
+    downloadCv: "Download CV",
+    copy: "Copy",
+    copied: "Copied",
+    copyFailed: "Copy failed",
+    highlights: [
+      "Static Analysis",
+      "Code Similarity",
+      "Programmer Identification",
+      "UI/UX",
+      "Vue"
+    ],
+    tabs: {
+      publications: "Publications",
+      work: "Work",
+      projects: "Web Projects",
+      education: "Education",
+      hobbies: "Hobbies",
+      teaching: "Teaching",
+      other: "Other Activities"
+    }
+  },
+  sk: {
+    languageLabel: "Jazyk",
+    name: "Marek Horváth",
+    currentLocation: "Košice, Slovensko",
+    occupation: "Doktorand informatiky a softvérový inžinier",
+    intro: "Venujem sa identifikácii programátorov cez analýzu štýlu zdrojového kódu a behaviorálne biometrie a zároveň skúmam detekciu podobnosti kódu. Vo voľnom čase pracujem na webových projektoch a pravidelne sa zapájam do hackathonov.",
+    profileAlt: "Portrét Mareka Horvátha",
+    downloadCv: "Stiahnuť životopis",
+    copy: "Kopírovať",
+    copied: "Skopírované",
+    copyFailed: "Nepodarilo sa",
+    highlights: [
+      "Statická analýza",
+      "Podobnosť kódu",
+      "Identifikácia programátorov",
+      "UI/UX",
+      "Vue"
+    ],
+    tabs: {
+      publications: "Publikácie",
+      work: "Prax",
+      projects: "Weby",
+      education: "Vzdelanie",
+      hobbies: "Záujmy",
+      teaching: "Výučba",
+      other: "Aktivity"
+    }
+  }
+};
+
+const tabOrder = ["publications", "work", "projects", "education", "hobbies", "teaching", "other"];
+
+function getInitialLanguage() {
+  const storedLanguage = window.localStorage.getItem("portfolio-language");
+  if (SUPPORTED_LANGUAGES.includes(storedLanguage)) {
+    return storedLanguage;
+  }
+
+  const browserLanguage = (window.navigator.language || "").toLowerCase();
+  return browserLanguage.startsWith("sk") ? "sk" : "en";
+}
+
 export default {
   name: "MinimalPortfolio",
   components: {
     PublicationsTab,
     WorkTab,
+    ProjectsTab,
     EducationTab,
     HobbiesTab,
     OtherActivitiesTab,
@@ -135,46 +238,78 @@ export default {
   },
   data() {
     return {
-      name: "Marek Horváth",
-      currentLocation: "Košice, Slovakia",
-      occupation: "PhD Student (Informatics) & Software Engineer",
-      intro: "Identifying programmers through style analysis of source code and behavioral biometrics, while also exploring code similarity detection. In my free time, I engage in web development projects and actively participate in hackathons to refine my skills and collaborate with like-minded individuals.",
-      email: "marek.horvath@tuke.sk",
-      copyStatus: "",
-      profileImage,
-      highlights: [
-        "Static Analysis",
-        "Code Similarity",
-        "Programmer Identification",
-        "UI/UX",
-        "Vue"
+      language: getInitialLanguage(),
+      languageOptions: [
+        { code: "sk", label: "SK" },
+        { code: "en", label: "EN" }
       ],
-      tabs: ["Publications", "Work", "Education", "Hobbies", "Teaching", "Other Activities"],
-      activeTab: "Publications",
+      email: "marek.horvath@tuke.sk",
+      copyState: "",
+      copyTimeout: null,
+      profileImage,
+      activeTab: "publications",
       navOpen: false
     };
   },
+  computed: {
+    copy() {
+      return pageCopy[this.language] || pageCopy.en;
+    },
+    copyButtonLabel() {
+      if (this.copyState === "copied") {
+        return this.copy.copied;
+      }
+      if (this.copyState === "failed") {
+        return this.copy.copyFailed;
+      }
+      return this.copy.copy;
+    },
+    cvUrl() {
+      return `${process.env.BASE_URL || "/"}CV-short-en.pdf`;
+    },
+    tabItems() {
+      return tabOrder.map((id) => ({
+        id,
+        label: this.copy.tabs[id]
+      }));
+    }
+  },
+  watch: {
+    language(language) {
+      document.documentElement.lang = language;
+      window.localStorage.setItem("portfolio-language", language);
+    }
+  },
   mounted() {
+    document.documentElement.lang = this.language;
+
     /* global particlesJS */
     particlesJS.load("particles-js", "./particles-config.json", () => {
       console.log("Particles.js loaded!");
     });
   },
   methods: {
+    setLanguage(language) {
+      if (!SUPPORTED_LANGUAGES.includes(language) || this.language === language) {
+        return;
+      }
+
+      this.language = language;
+    },
     copyEmail() {
       const text = this.email;
       const done = () => {
-        this.copyStatus = "Copied";
+        this.copyState = "copied";
         clearTimeout(this.copyTimeout);
         this.copyTimeout = setTimeout(() => {
-          this.copyStatus = "";
+          this.copyState = "";
         }, 1600);
       };
       const fail = () => {
-        this.copyStatus = "Copy failed";
+        this.copyState = "failed";
         clearTimeout(this.copyTimeout);
         this.copyTimeout = setTimeout(() => {
-          this.copyStatus = "";
+          this.copyState = "";
         }, 1600);
       };
 
@@ -198,8 +333,8 @@ export default {
         fail();
       }
     },
-    selectTab(tab) {
-      this.activeTab = tab;
+    selectTab(tabId) {
+      this.activeTab = tabId;
       this.navOpen = false;
     }
   }
@@ -240,7 +375,7 @@ export default {
   position: relative;
   width: 100%;
   min-height: 100vh;
-  padding: 40px 20px 60px;
+  padding: 40px 82px 60px 20px;
   background:
     radial-gradient(900px 500px at 10% 10%, rgba(198, 222, 255, 0.45), transparent 60%),
     radial-gradient(700px 420px at 90% 20%, rgba(177, 216, 255, 0.4), transparent 60%),
@@ -264,17 +399,62 @@ export default {
 
 /* Main content area */
 .portfolio-content {
-  width: min(1100px, 92vw);
+  width: min(1100px, calc(100vw - 128px));
   background-color: rgba(255, 255, 255, 0.9);
   padding: 32px 36px 30px;
   box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
-  overflow: hidden;
+  overflow: visible;
   border-radius: 22px;
   border: 1px solid rgba(13, 27, 42, 0.08);
   position: relative;
   z-index: 2;
   backdrop-filter: blur(6px);
   animation: fadeIn 0.8s ease-out;
+}
+
+.language-dock {
+  position: absolute;
+  top: 34px;
+  right: -58px;
+  z-index: 5;
+}
+
+.language-switcher {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 0 18px 18px 0;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(13, 27, 42, 0.1);
+  border-left: 0;
+  box-shadow: 16px 18px 34px rgba(15, 23, 42, 0.12);
+  backdrop-filter: blur(6px);
+}
+
+.language-option {
+  width: 50px;
+  min-height: 36px;
+  border: 0;
+  border-radius: 13px;
+  padding: 7px 8px;
+  background: transparent;
+  color: #31577d;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.language-option.active {
+  background: #163a66;
+  color: #f8fbff;
+  box-shadow: 0 8px 16px rgba(22, 58, 102, 0.18);
+}
+
+.language-option:focus-visible {
+  outline: 2px solid #2b6cb0;
+  outline-offset: 2px;
 }
 
 /* Hero */
@@ -468,6 +648,36 @@ export default {
   height: 70%;
   object-fit: contain;
 }
+
+.cv-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 7px 11px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid rgba(13, 27, 42, 0.1);
+  color: #163a66;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+  transition: opacity 0.3s, transform 0.3s, box-shadow 0.2s ease;
+}
+
+.cv-download:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 18px rgba(15, 23, 42, 0.08);
+}
+
+.cv-download-type {
+  color: #4b6c8d;
+  font-size: 10px;
+  font-weight: 700;
+}
+
 /* Tab navigation */
 .tab-nav {
   display: flex;
@@ -721,6 +931,9 @@ export default {
   .portfolio-content {
     width: 90%;
   }
+  .language-dock {
+    right: -52px;
+  }
   .hero {
     grid-template-columns: 1fr;
   }
@@ -744,6 +957,21 @@ export default {
     padding: 12px 8px 18px;
     background: #eef6ff;
   }
+  .language-dock {
+    top: 0;
+    right: 4px;
+  }
+  .language-switcher {
+    flex-direction: row;
+    border-left: 1px solid rgba(13, 27, 42, 0.1);
+    border-radius: 999px;
+    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+  }
+  .language-option {
+    width: 42px;
+    min-height: 32px;
+    border-radius: 999px;
+  }
   .hero {
     gap: 10px;
     text-align: left;
@@ -763,6 +991,7 @@ export default {
     box-shadow: none;
     background: transparent;
     order: 3;
+    gap: 10px;
   }
   .avatar-wrap {
     background: transparent;
@@ -773,6 +1002,7 @@ export default {
     max-height: 220px;
   }
   .portfolio-content {
+    width: 100%;
     max-width: 100%;
     padding: 0 4px;
     border-radius: 0;
