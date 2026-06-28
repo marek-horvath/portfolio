@@ -238,4 +238,33 @@ export default {
     min-height: 0;
   }
 }
+
+@media (max-width: 768px) {
+  .projects-intro {
+    margin: -2px auto 14px;
+    font-size: 13px;
+    text-align: left;
+  }
+
+  .projects-grid {
+    gap: 12px;
+  }
+
+  .project-card {
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .project-card h3 {
+    font-size: 16px;
+  }
+
+  .project-card p {
+    font-size: 13px;
+  }
+
+  .project-tags {
+    gap: 6px;
+  }
+}
 </style>

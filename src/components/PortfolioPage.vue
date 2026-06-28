@@ -53,7 +53,6 @@
               :aria-label="copy.downloadCv"
             >
               <span>CV</span>
-              <span class="cv-download-type">PDF</span>
             </a>
             <div class="email-chip">
               <span class="email-text">{{ email }}</span>
@@ -153,6 +152,7 @@ import OtherActivitiesTab from "./tabs/OtherActivitiesTab.vue";
 import TeachingTab from "./tabs/TeachingTab.vue";
 
 const SUPPORTED_LANGUAGES = ["sk", "en"];
+const LANGUAGE_STORAGE_KEY = "portfolio-language-v3";
 
 const pageCopy = {
   en: {
@@ -164,6 +164,7 @@ const pageCopy = {
     profileAlt: "Portrait photo of Marek Horváth",
     downloadCv: "Download CV",
     copy: "Copy",
+    copyShort: "Copy",
     copied: "Copied",
     copyFailed: "Copy failed",
     highlights: [
@@ -191,9 +192,10 @@ const pageCopy = {
     intro: "Venujem sa identifikácii programátorov cez analýzu štýlu zdrojového kódu a behaviorálne biometrie a zároveň skúmam detekciu podobnosti kódu. Vo voľnom čase pracujem na webových projektoch a pravidelne sa zapájam do hackathonov.",
     profileAlt: "Portrét Mareka Horvátha",
     downloadCv: "Stiahnuť životopis",
-    copy: "Kopírovať",
-    copied: "Skopírované",
-    copyFailed: "Nepodarilo sa",
+    copy: "Copy",
+    copyShort: "Copy",
+    copied: "Copied",
+    copyFailed: "Error",
     highlights: [
       "Statická analýza",
       "Podobnosť kódu",
@@ -216,13 +218,12 @@ const pageCopy = {
 const tabOrder = ["publications", "work", "projects", "education", "hobbies", "teaching", "other"];
 
 function getInitialLanguage() {
-  const storedLanguage = window.localStorage.getItem("portfolio-language");
+  const storedLanguage = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
   if (SUPPORTED_LANGUAGES.includes(storedLanguage)) {
     return storedLanguage;
   }
 
-  const browserLanguage = (window.navigator.language || "").toLowerCase();
-  return browserLanguage.startsWith("sk") ? "sk" : "en";
+  return "en";
 }
 
 export default {
@@ -246,6 +247,7 @@ export default {
       email: "marek.horvath@tuke.sk",
       copyState: "",
       copyTimeout: null,
+      isMobileViewport: window.innerWidth <= 768,
       profileImage,
       activeTab: "publications",
       navOpen: false
@@ -262,6 +264,9 @@ export default {
       if (this.copyState === "failed") {
         return this.copy.copyFailed;
       }
+      if (this.isMobileViewport) {
+        return this.copy.copyShort;
+      }
       return this.copy.copy;
     },
     cvUrl() {
@@ -277,18 +282,26 @@ export default {
   watch: {
     language(language) {
       document.documentElement.lang = language;
-      window.localStorage.setItem("portfolio-language", language);
+      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
     }
   },
   mounted() {
     document.documentElement.lang = this.language;
+    window.addEventListener("resize", this.updateViewport);
 
     /* global particlesJS */
     particlesJS.load("particles-js", "./particles-config.json", () => {
       console.log("Particles.js loaded!");
     });
   },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.updateViewport);
+    clearTimeout(this.copyTimeout);
+  },
   methods: {
+    updateViewport() {
+      this.isMobileViewport = window.innerWidth <= 768;
+    },
     setLanguage(language) {
       if (!SUPPORTED_LANGUAGES.includes(language) || this.language === language) {
         return;
@@ -672,12 +685,6 @@ export default {
   box-shadow: 0 10px 18px rgba(15, 23, 42, 0.08);
 }
 
-.cv-download-type {
-  color: #4b6c8d;
-  font-size: 10px;
-  font-weight: 700;
-}
-
 /* Tab navigation */
 .tab-nav {
   display: flex;
@@ -947,25 +954,39 @@ export default {
   #particles-js {
     display: none;
   }
-  .desktop-tabs {
-    display: flex;
-  }
   .mobile-menu {
     display: none;
   }
   .portfolio-wrapper {
-    padding: 12px 8px 18px;
-    background: #eef6ff;
+    align-items: flex-start;
+    padding: 14px 10px 28px;
+    background:
+      radial-gradient(420px 240px at 0% 0%, rgba(183, 214, 255, 0.42), transparent 70%),
+      linear-gradient(180deg, #eaf4ff 0%, #f7fbff 100%);
+  }
+  .portfolio-content {
+    width: 100%;
+    max-width: 480px;
+    padding: 14px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(13, 27, 42, 0.08);
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
+    backdrop-filter: blur(6px);
   }
   .language-dock {
-    top: 0;
-    right: 4px;
+    position: static;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
   }
   .language-switcher {
     flex-direction: row;
+    padding: 4px;
     border-left: 1px solid rgba(13, 27, 42, 0.1);
     border-radius: 999px;
-    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+    background: #eef6ff;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
   }
   .language-option {
     width: 42px;
@@ -973,72 +994,115 @@ export default {
     border-radius: 999px;
   }
   .hero {
-    gap: 10px;
-    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+    margin-bottom: 16px;
   }
   .profile-intro {
     display: none;
   }
   .highlight-row {
-    display: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    margin-top: 8px;
+    padding: 2px 0 4px;
+    overflow: visible;
+  }
+  .pill {
+    flex: 0 1 auto;
+    max-width: 100%;
+    padding: 6px 10px;
+    font-size: 11px;
+    line-height: 1.25;
+    white-space: normal;
   }
   .hero-text {
+    order: 1;
     gap: 6px;
+    width: 100%;
   }
   .hero-card {
-    padding: 0;
-    border: 0;
-    box-shadow: none;
-    background: transparent;
-    order: 3;
-    gap: 10px;
+    order: 0;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(44, 94, 168, 0.16);
+    border-radius: 20px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+    background: linear-gradient(160deg, #f8fbff, #eaf4ff);
+    gap: 12px;
   }
   .avatar-wrap {
-    background: transparent;
-    border: 0;
-    padding: 0;
+    background: #ffffff;
+    border: 1px solid rgba(13, 27, 42, 0.08);
+    border-radius: 16px;
+    padding: 8px;
   }
   .avatar {
-    max-height: 220px;
-  }
-  .portfolio-content {
-    width: 100%;
-    max-width: 100%;
-    padding: 0 4px;
-    border-radius: 0;
-    background-color: transparent;
-    box-shadow: none;
-    border: 0;
-    backdrop-filter: none;
+    aspect-ratio: 4 / 3;
+    max-height: none;
+    border-radius: 12px;
+    object-position: center;
   }
   .profile-name {
-    font-size: 26px;
+    font-size: 28px;
+    line-height: 1.08;
   }
   .profile-occupation {
-    font-size: 15px;
+    max-width: 320px;
+    margin: 0 auto;
+    font-size: 14px;
+    line-height: 1.35;
   }
   .profile-location {
     font-size: 13px;
   }
   .tab-nav {
-    margin-bottom: 12px;
+    width: 100%;
+    margin: 2px 0 14px;
+    overflow: visible;
   }
   .desktop-tabs {
-    width: 100%;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
-    padding: 10px;
+    padding: 8px;
+    overflow: visible;
+    border: 1px solid rgba(13, 27, 42, 0.08);
     border-radius: 18px;
-    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
   }
   .tab-item {
+    display: flex;
+    min-width: 0;
+    min-height: 38px;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    padding: 10px 12px;
-    font-size: 13px;
+    padding: 8px 7px;
+    border: 1px solid rgba(13, 27, 42, 0.08);
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+    font-size: 12px;
+    line-height: 1.15;
+    white-space: normal;
+  }
+  .tab-item.active {
+    box-shadow: 0 10px 18px rgba(22, 58, 102, 0.22);
   }
   .tab-content {
     font-size: 14px;
+    padding-bottom: 2px;
+  }
+  .tab-content :deep(h2) {
+    margin-bottom: 14px;
+    font-size: 22px;
   }
   .scrollable-content {
     max-height: 220px;
@@ -1048,12 +1112,104 @@ export default {
     overflow: visible;
     padding-right: 0;
   }
+  .tab-content :deep(.pub-block),
+  .tab-content :deep(.work-block),
+  .tab-content :deep(.edu-block) {
+    margin-bottom: 12px;
+    padding: 13px 14px;
+    border-radius: 14px;
+    background: rgba(247, 251, 255, 0.94);
+  }
+  .tab-content :deep(.pub-block:hover),
+  .tab-content :deep(.work-block:hover),
+  .tab-content :deep(.edu-block:hover) {
+    transform: none;
+  }
   .hero-actions {
     width: 100%;
+    display: grid;
+    grid-template-columns: 38px 44px minmax(0, 1fr);
+    justify-content: center;
+    gap: 8px;
+    margin-top: 0;
+  }
+  .social-icon,
+  .cv-download,
+  .email-chip {
+    min-height: 38px;
+  }
+  .social-icon {
+    width: 38px;
+    height: 38px;
+  }
+  .cv-download {
+    min-width: 44px;
+    padding: 8px 10px;
+  }
+  .email-chip {
+    min-width: 0;
+    max-width: none;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 7px 7px 7px 11px;
+  }
+  .email-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .copy-btn {
+    flex: 0 0 auto;
+    min-width: 55px;
+    padding: 6px 8px;
   }
   .btn {
     flex: 1;
     text-align: center;
+  }
+}
+
+@media (max-width: 380px) {
+  .portfolio-content {
+    padding: 12px;
+  }
+  .hero-actions {
+    grid-template-columns: 34px 42px minmax(0, 1fr);
+    gap: 7px;
+  }
+  .social-icon {
+    width: 34px;
+    height: 34px;
+  }
+  .social-icon,
+  .cv-download,
+  .email-chip {
+    min-height: 34px;
+  }
+  .cv-download {
+    min-width: 42px;
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+  .email-chip {
+    max-width: 100%;
+    padding: 6px 6px 6px 9px;
+    font-size: 12px;
+  }
+  .copy-btn {
+    min-width: 52px;
+    padding: 5px 7px;
+    font-size: 11px;
+  }
+  .tab-nav {
+    width: 100%;
+    margin-right: 0;
+    margin-left: 0;
+  }
+  .desktop-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-right: 8px;
+    padding-left: 8px;
   }
 }
 </style>
