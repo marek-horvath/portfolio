@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "serve:api": "node server/index.js",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build && node scripts/create-github-pages-routes.js",
     "lint": "vue-cli-service lint",
     "update:scholar": "node scripts/update-scholar-metrics.js",
     "predeploy": "npm run update:scholar && npm run build",
