@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Redirecting...</title>
+  </head>
+  <body>
+    <script>
+      (function () {
+        var base = "/portfolio/";
+        var path = window.location.pathname;
+
+        if (path.indexOf(base) !== 0) {
+          window.location.replace(base);
+          return;
+        }
+
+        var alias = path.slice(base.length).replace(/^\/+|\/+$/g, "").split("/")[0];
+        if (alias === "admin") {
+          window.location.replace(base + "?admin=1");
+          return;
+        }
+
+        if (alias) {
+          window.location.replace(base + "?source=" + encodeURIComponent(alias));
+          return;
+        }
+
+        window.location.replace(base);
+      })();
+    </script>
+  </body>
+</html>
