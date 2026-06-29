@@ -10,6 +10,7 @@ node_modules
 server/.env
 server/VPS_*.md
 server/*.pdf
+server/data/
 
 # Log files
 npm-debug.log*

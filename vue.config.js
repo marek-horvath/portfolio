@@ -1,5 +1,15 @@
-const { defineConfig } = require('@vue/cli-service')
+const { defineConfig } = require("@vue/cli-service");
+
 module.exports = defineConfig({
   transpileDependencies: true,
-  publicPath: '/portfolio/' // Pridaj názov svojho repozitára
-})
+  publicPath: "/portfolio/",
+  devServer: {
+    historyApiFallback: {
+      disableDotRule: true,
+      rewrites: [
+        { from: /^\/portfolio\/admin\/?$/, to: "/portfolio/" },
+        { from: /^\/portfolio\/.*$/, to: "/portfolio/" }
+      ]
+    }
+  }
+});

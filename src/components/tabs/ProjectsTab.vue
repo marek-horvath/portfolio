@@ -12,7 +12,17 @@
           :href="project.url"
           target="_blank"
           rel="noopener"
+          :aria-label="`${copy.openProjectLabel} ${project.name}`"
+          @click="trackProject(project)"
         >
+          <div class="project-preview">
+            <img
+              :src="projectImages[project.imageKey]"
+              :alt="project.previewAlt"
+              loading="lazy"
+            />
+          </div>
+
           <div class="project-card-top">
             <span class="project-type">{{ project.type }}</span>
             <span class="project-open">{{ copy.openLabel }}</span>
@@ -31,17 +41,35 @@
 </template>
 
 <script>
+import demaImage from "../../assets/dema.png";
+import krajcirstvoImage from "../../assets/krajcirstvo.png";
+import revikImage from "../../assets/revik.png";
+import seugImage from "../../assets/seug.png";
+import slovakdleImage from "../../assets/slovakdle.png";
+import { trackClick } from "../../utils/analytics";
+
+const projectImages = {
+  dema: demaImage,
+  krajcirstvo: krajcirstvoImage,
+  revik: revikImage,
+  seug: seugImage,
+  slovakdle: slovakdleImage
+};
+
 const projectsCopy = {
   en: {
     title: "Web Projects",
     intro: "Selected websites and small web products I build outside of research and teaching, mostly for real people, small teams, and public-facing ideas.",
     openLabel: "Open",
+    openProjectLabel: "Open project",
     tagsLabel: "Project tags",
     projects: [
       {
         name: "Revik",
         type: "Business website",
         url: "https://www.revik.sk/",
+        imageKey: "revik",
+        previewAlt: "Preview of the Revik website",
         description: "Presentation website for a local cleaning service, focused on a clear service offer, trust, and fast contact from visitors.",
         tags: ["Services", "Local business", "Contact flow"]
       },
@@ -49,6 +77,8 @@ const projectsCopy = {
         name: "SEUG",
         type: "Academic website",
         url: "https://seug.kpi.fei.tuke.sk/",
+        imageKey: "seug",
+        previewAlt: "Preview of the SEUG website",
         description: "Website for a university group at KPI FEI TUKE, built to present activities, people, and academic context in one place.",
         tags: ["University", "Group website", "TUKE"]
       },
@@ -56,6 +86,8 @@ const projectsCopy = {
         name: "Krajčírstvo July",
         type: "Service website",
         url: "https://krajcirstvo.vercel.app/",
+        imageKey: "krajcirstvo",
+        previewAlt: "Preview of the Krajčírstvo July website",
         description: "Public website for a tailoring service with a practical service overview and a reservation-oriented workflow.",
         tags: ["Tailoring", "Reservations", "Small business"]
       },
@@ -63,6 +95,8 @@ const projectsCopy = {
         name: "Dema: Signal Breach",
         type: "Interactive project",
         url: "https://dema-jade.vercel.app/",
+        imageKey: "dema",
+        previewAlt: "Preview of the Dema Signal Breach web project",
         description: "Interactive web project with a game-like presentation and a more experimental visual direction.",
         tags: ["Interactive", "Game feel", "Vercel"]
       },
@@ -70,6 +104,8 @@ const projectsCopy = {
         name: "Slovakdle",
         type: "Browser game",
         url: "https://slovakdle.vercel.app/",
+        imageKey: "slovakdle",
+        previewAlt: "Preview of the Slovakdle browser game",
         description: "A Slovak guessing game inspired by daily puzzle formats, centered around Slovak personalities and simple repeat play.",
         tags: ["Game", "Slovak content", "Daily puzzle"]
       }
@@ -79,12 +115,15 @@ const projectsCopy = {
     title: "Weby",
     intro: "Výber webov a menších webových produktov, ktoré robím mimo výskumu a výučby pre ľudí, malé tímy a verejné nápady.",
     openLabel: "Otvoriť",
+    openProjectLabel: "Otvoriť projekt",
     tagsLabel: "Tagy projektu",
     projects: [
       {
         name: "Revik",
         type: "Firemný web",
         url: "https://www.revik.sk/",
+        imageKey: "revik",
+        previewAlt: "Náhľad webu Revik",
         description: "Prezentačný web pre lokálnu čistiacu službu so zameraním na jasnú ponuku služieb, dôveryhodnosť a rýchly kontakt.",
         tags: ["Služby", "Lokálny biznis", "Kontakt"]
       },
@@ -92,6 +131,8 @@ const projectsCopy = {
         name: "SEUG",
         type: "Akademický web",
         url: "https://seug.kpi.fei.tuke.sk/",
+        imageKey: "seug",
+        previewAlt: "Náhľad webu SEUG",
         description: "Web univerzitnej skupiny na KPI FEI TUKE, ktorý sústreďuje aktivity, ľudí a akademický kontext na jednom mieste.",
         tags: ["Univerzita", "Skupina", "TUKE"]
       },
@@ -99,6 +140,8 @@ const projectsCopy = {
         name: "Krajčírstvo July",
         type: "Web služieb",
         url: "https://krajcirstvo.vercel.app/",
+        imageKey: "krajcirstvo",
+        previewAlt: "Náhľad webu Krajčírstvo July",
         description: "Verejný web pre krajčírstvo s praktickým prehľadom služieb a workflow orientovaným na rezervácie.",
         tags: ["Krajčírstvo", "Rezervácie", "Malý biznis"]
       },
@@ -106,6 +149,8 @@ const projectsCopy = {
         name: "Dema: Signal Breach",
         type: "Interaktívny projekt",
         url: "https://dema-jade.vercel.app/",
+        imageKey: "dema",
+        previewAlt: "Náhľad projektu Dema Signal Breach",
         description: "Interaktívny webový projekt s hernou prezentáciou a experimentálnejším vizuálnym smerovaním.",
         tags: ["Interaktivita", "Herný feeling", "Vercel"]
       },
@@ -113,6 +158,8 @@ const projectsCopy = {
         name: "Slovakdle",
         type: "Browser hra",
         url: "https://slovakdle.vercel.app/",
+        imageKey: "slovakdle",
+        previewAlt: "Náhľad hry Slovakdle",
         description: "Slovenská hádacia hra inšpirovaná dennými puzzle formátmi, zameraná na slovenské osobnosti a jednoduché opakované hranie.",
         tags: ["Hra", "Slovenský obsah", "Denné puzzle"]
       }
@@ -129,8 +176,23 @@ export default {
     }
   },
   computed: {
+    projectImages() {
+      return projectImages;
+    },
     copy() {
       return projectsCopy[this.language] || projectsCopy.en;
+    }
+  },
+  methods: {
+    trackProject(project) {
+      trackClick("project_open", {
+        label: project.name,
+        targetUrl: project.url,
+        language: this.language,
+        metadata: {
+          type: project.type
+        }
+      });
     }
   }
 };
@@ -172,6 +234,33 @@ export default {
   transform: translateY(-2px);
   border-color: rgba(43, 108, 176, 0.26);
   box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+}
+
+.project-card:focus-visible {
+  border-color: rgba(43, 108, 176, 0.58);
+  box-shadow: 0 0 0 4px rgba(43, 108, 176, 0.18), 0 12px 24px rgba(15, 23, 42, 0.08);
+  outline: none;
+}
+
+.project-preview {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid rgba(13, 27, 42, 0.08);
+  background: #eaf4ff;
+  aspect-ratio: 16 / 9;
+}
+
+.project-preview img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.24s ease;
+}
+
+.project-card:hover .project-preview img {
+  transform: scale(1.025);
 }
 
 .project-card-top {
@@ -253,6 +342,10 @@ export default {
   .project-card {
     padding: 14px;
     border-radius: 14px;
+  }
+
+  .project-preview {
+    border-radius: 12px;
   }
 
   .project-card h3 {

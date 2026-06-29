@@ -1,7 +1,7 @@
 <template>
-  <div class="portfolio-wrapper unselectable">
+  <div class="portfolio-wrapper">
     <!-- Background particles -->
-    <div id="particles-js"></div>
+    <div id="particles-js" aria-hidden="true"></div>
 
     <!-- Main content -->
     <div class="portfolio-content">
@@ -13,6 +13,7 @@
             type="button"
             :class="['language-option', { active: language === option.code }]"
             :aria-pressed="language === option.code"
+            :aria-label="`${copy.languageLabel}: ${option.label}`"
             @click="setLanguage(option.code)"
           >
             {{ option.label }}
@@ -33,6 +34,28 @@
               {{ item }}
             </span>
           </div>
+
+          <div class="mobile-hero-cta" :aria-label="copy.primaryActionsLabel">
+            <a
+              class="mobile-cta primary"
+              :href="cvUrl"
+              download="Marek-Horvath-CV.pdf"
+              :aria-label="copy.downloadCv"
+              @click="trackAction('hero_cv_download', 'CV', cvUrl)"
+            >
+              CV
+            </a>
+            <a
+              class="mobile-cta secondary"
+              :href="linkedinUrl"
+              target="_blank"
+              rel="noopener"
+              :aria-label="copy.openLinkedIn"
+              @click="trackAction('hero_linkedin', 'LinkedIn', linkedinUrl)"
+            >
+              LinkedIn
+            </a>
+          </div>
         </div>
 
         <div class="hero-card">
@@ -40,10 +63,18 @@
             <img class="avatar" :src="profileImage" :alt="copy.profileAlt" />
           </div>
           <div class="hero-actions hero-card-actions">
-            <a class="social-icon" href="https://www.linkedin.com/in/horvathmar/" target="_blank" rel="noopener">
+            <a
+              class="social-icon"
+              :href="linkedinUrl"
+              target="_blank"
+              rel="noopener"
+              :aria-label="copy.openLinkedIn"
+              @click="trackAction('hero_icon_linkedin', 'LinkedIn', linkedinUrl)"
+            >
               <img
                 src="https://cdn-icons-png.flaticon.com/512/145/145807.png"
-                alt="LinkedIn"
+                alt=""
+                aria-hidden="true"
               />
             </a>
             <a
@@ -51,12 +82,18 @@
               :href="cvUrl"
               download="Marek-Horvath-CV.pdf"
               :aria-label="copy.downloadCv"
+              @click="trackAction('hero_card_cv_download', 'CV', cvUrl)"
             >
               <span>CV</span>
             </a>
             <div class="email-chip">
               <span class="email-text">{{ email }}</span>
-              <button class="copy-btn" type="button" @click="copyEmail">
+              <button
+                class="copy-btn"
+                type="button"
+                :aria-label="copy.copyEmail"
+                @click="copyEmail"
+              >
                 {{ copyButtonLabel }}
               </button>
             </div>
@@ -66,43 +103,64 @@
       </section>
 
       <!-- TABS NAVIGATION -->
-      <nav class="tab-nav">
+      <nav class="tab-nav" :aria-label="copy.tabsLabel">
         <!-- DESKTOP TABS (centered) -->
-        <div class="desktop-tabs">
-          <div
+        <div class="desktop-tabs" role="tablist" :aria-label="copy.tabsLabel">
+          <button
             v-for="tab in tabItems"
             :key="tab.id"
+            type="button"
             :class="['tab-item', { active: activeTab === tab.id }]"
+            role="tab"
+            :aria-selected="activeTab === tab.id"
+            :aria-controls="`panel-${tab.id}`"
             @click="selectTab(tab.id)"
           >
             {{ tab.label }}
-          </div>
+          </button>
         </div>
 
         <!-- HAMBURGER (mobile only, right side) -->
         <div class="mobile-menu">
-          <button class="hamburger" @click="navOpen = !navOpen">
+          <button
+            class="hamburger"
+            type="button"
+            :aria-label="copy.menuLabel"
+            :aria-expanded="navOpen"
+            aria-controls="mobile-tab-menu"
+            @click="toggleNavigation"
+          >
             <span></span>
             <span></span>
             <span></span>
           </button>
 
-          <div class="mobile-dropdown" v-if="navOpen">
-            <div
+          <div id="mobile-tab-menu" class="mobile-dropdown" v-if="navOpen" role="tablist">
+            <button
               v-for="tab in tabItems"
               :key="tab.id"
+              type="button"
               :class="['tab-item', { active: activeTab === tab.id }]"
+              role="tab"
+              :aria-selected="activeTab === tab.id"
+              :aria-controls="`panel-${tab.id}`"
               @click="selectTab(tab.id)"
             >
               {{ tab.label }}
-            </div>
+            </button>
           </div>
         </div>
       </nav>
 
       <!-- TABS CONTENT -->
       <transition name="tab-fade" mode="out-in">
-        <div :key="activeTab" class="tab-content">
+        <div
+          :id="`panel-${activeTab}`"
+          :key="activeTab"
+          class="tab-content"
+          role="tabpanel"
+          tabindex="-1"
+        >
 
 
 
@@ -137,6 +195,47 @@
         <OtherActivitiesTab v-else-if="activeTab === 'other'" :language="language" />
         </div>
       </transition>
+
+      <footer class="site-footer">
+        <p class="last-updated">
+          {{ copy.lastUpdatedLabel }} <span>{{ copy.lastUpdated }}</span>
+        </p>
+        <nav class="footer-links" :aria-label="copy.footerLinksLabel">
+          <a
+            :href="`mailto:${email}`"
+            :aria-label="copy.emailLinkLabel"
+            @click="trackAction('footer_email', 'Email', `mailto:${email}`)"
+          >
+            {{ copy.emailLabel }}
+          </a>
+          <a
+            :href="scholarUrl"
+            target="_blank"
+            rel="noopener"
+            :aria-label="copy.openScholar"
+            @click="trackAction('footer_scholar', 'Google Scholar', scholarUrl)"
+          >
+            Google Scholar
+          </a>
+          <a
+            :href="linkedinUrl"
+            target="_blank"
+            rel="noopener"
+            :aria-label="copy.openLinkedIn"
+            @click="trackAction('footer_linkedin', 'LinkedIn', linkedinUrl)"
+          >
+            LinkedIn
+          </a>
+          <a
+            :href="cvUrl"
+            download="Marek-Horvath-CV.pdf"
+            :aria-label="copy.downloadCv"
+            @click="trackAction('footer_cv_download', 'CV', cvUrl)"
+          >
+            CV
+          </a>
+        </nav>
+      </footer>
     </div>
   </div>
 </template>
@@ -150,6 +249,7 @@ import EducationTab from "./tabs/EducationTab.vue";
 import HobbiesTab from "./tabs/HobbiesTab.vue";
 import OtherActivitiesTab from "./tabs/OtherActivitiesTab.vue";
 import TeachingTab from "./tabs/TeachingTab.vue";
+import { trackClick } from "../utils/analytics";
 
 const SUPPORTED_LANGUAGES = ["sk", "en"];
 const LANGUAGE_STORAGE_KEY = "portfolio-language-v3";
@@ -163,10 +263,21 @@ const pageCopy = {
     intro: "Identifying programmers through style analysis of source code and behavioral biometrics, while also exploring code similarity detection. In my free time, I engage in web development projects and actively participate in hackathons to refine my skills and collaborate with like-minded individuals.",
     profileAlt: "Portrait photo of Marek Horváth",
     downloadCv: "Download CV",
+    openLinkedIn: "Open LinkedIn profile",
+    openScholar: "Open Google Scholar profile",
+    primaryActionsLabel: "Primary actions",
+    copyEmail: "Copy email address",
     copy: "Copy",
     copyShort: "Copy",
     copied: "Copied",
     copyFailed: "Copy failed",
+    tabsLabel: "Portfolio sections",
+    menuLabel: "Open section menu",
+    lastUpdatedLabel: "Last updated:",
+    lastUpdated: "June 29, 2026",
+    footerLinksLabel: "Footer links",
+    emailLabel: "Email",
+    emailLinkLabel: "Send email",
     highlights: [
       "Static Analysis",
       "Code Similarity",
@@ -192,10 +303,21 @@ const pageCopy = {
     intro: "Venujem sa identifikácii programátorov cez analýzu štýlu zdrojového kódu a behaviorálne biometrie a zároveň skúmam detekciu podobnosti kódu. Vo voľnom čase pracujem na webových projektoch a pravidelne sa zapájam do hackathonov.",
     profileAlt: "Portrét Mareka Horvátha",
     downloadCv: "Stiahnuť životopis",
+    openLinkedIn: "Otvoriť LinkedIn profil",
+    openScholar: "Otvoriť Google Scholar profil",
+    primaryActionsLabel: "Hlavné akcie",
+    copyEmail: "Skopírovať emailovú adresu",
     copy: "Copy",
     copyShort: "Copy",
     copied: "Copied",
     copyFailed: "Error",
+    tabsLabel: "Sekcie portfólia",
+    menuLabel: "Otvoriť menu sekcií",
+    lastUpdatedLabel: "Posledná aktualizácia:",
+    lastUpdated: "29. júna 2026",
+    footerLinksLabel: "Odkazy v pätičke",
+    emailLabel: "Email",
+    emailLinkLabel: "Poslať email",
     highlights: [
       "Statická analýza",
       "Podobnosť kódu",
@@ -245,6 +367,8 @@ export default {
         { code: "en", label: "EN" }
       ],
       email: "marek.horvath@tuke.sk",
+      linkedinUrl: "https://www.linkedin.com/in/horvathmar/",
+      scholarUrl: "https://scholar.google.com/citations?user=9q0s2u4AAAAJ&hl=en&oi=ao",
       copyState: "",
       copyTimeout: null,
       isMobileViewport: window.innerWidth <= 768,
@@ -308,8 +432,17 @@ export default {
       }
 
       this.language = language;
+      this.trackAction("language_switch", language.toUpperCase(), "", {
+        language
+      });
+    },
+    toggleNavigation() {
+      this.navOpen = !this.navOpen;
+      this.trackAction(this.navOpen ? "mobile_menu_open" : "mobile_menu_close", "Mobile menu");
     },
     copyEmail() {
+      this.trackAction("copy_email", "Email", `mailto:${this.email}`);
+
       const text = this.email;
       const done = () => {
         this.copyState = "copied";
@@ -347,8 +480,22 @@ export default {
       }
     },
     selectTab(tabId) {
+      if (this.activeTab !== tabId) {
+        this.trackAction("tab_select", this.copy.tabs[tabId] || tabId, "", {
+          tab: tabId
+        });
+      }
+
       this.activeTab = tabId;
       this.navOpen = false;
+    },
+    trackAction(eventName, label, targetUrl = "", metadata = {}) {
+      trackClick(eventName, {
+        label,
+        targetUrl,
+        language: this.language,
+        metadata
+      });
     }
   }
 };
@@ -378,6 +525,13 @@ export default {
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
+}
+
+:global(a:focus-visible),
+:global(button:focus-visible),
+:global([role="tab"]:focus-visible) {
+  outline: 3px solid #2b6cb0;
+  outline-offset: 3px;
 }
 
 /* Wrapper that centers content horizontally and allows vertical scroll if needed */
@@ -579,6 +733,9 @@ export default {
   align-items: center;
   justify-content: center;
 }
+.mobile-hero-cta {
+  display: none;
+}
 .hero-card-actions {
   margin-top: 12px;
 }
@@ -750,10 +907,14 @@ export default {
 
 /* Common tab item styles */
 .tab-item {
+  appearance: none;
+  border: 0;
   padding: 8px 16px;
   cursor: pointer;
   border-radius: 999px;
+  background: transparent;
   color: #2b4f7a;
+  font: inherit;
   font-weight: 600;
   font-size: 13px;
   transition: background-color 0.3s, color 0.3s, transform 0.2s ease;
@@ -899,6 +1060,59 @@ export default {
   margin-bottom: 8px;
 }
 
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(13, 27, 42, 0.08);
+  color: #4b6c8d;
+  font-size: 12px;
+}
+
+.last-updated {
+  margin: 0;
+  font-weight: 600;
+}
+
+.last-updated span {
+  color: #163a66;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.footer-links a {
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: #edf5ff;
+  color: #163a66;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.footer-links a:hover {
+  background: #dbeaff;
+  transform: translateY(-1px);
+}
+
+.footer-links a:focus-visible,
+.project-card:focus-visible,
+.citation-chip:focus-visible,
+.cv-download:focus-visible,
+.social-icon:focus-visible,
+.copy-btn:focus-visible,
+.mobile-cta:focus-visible {
+  box-shadow: 0 0 0 4px rgba(43, 108, 176, 0.18);
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -1004,14 +1218,7 @@ export default {
     display: none;
   }
   .highlight-row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 7px;
-    width: 100%;
-    margin-top: 8px;
-    padding: 2px 0 4px;
-    overflow: visible;
+    display: none;
   }
   .pill {
     flex: 0 1 auto;
@@ -1022,12 +1229,45 @@ export default {
     white-space: normal;
   }
   .hero-text {
-    order: 1;
-    gap: 6px;
+    order: 0;
+    gap: 7px;
     width: 100%;
   }
+  .mobile-hero-cta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    width: min(100%, 280px);
+    margin: 4px auto 0;
+  }
+  .mobile-cta {
+    display: inline-flex;
+    min-height: 40px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 9px 14px;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+  .mobile-cta.primary {
+    background: #163a66;
+    color: #f8fbff;
+    box-shadow: 0 10px 20px rgba(22, 58, 102, 0.2);
+  }
+  .mobile-cta.secondary {
+    border: 1px solid rgba(22, 58, 102, 0.24);
+    background: #ffffff;
+    color: #163a66;
+  }
+  .mobile-cta:hover {
+    transform: translateY(-1px);
+  }
   .hero-card {
-    order: 0;
+    order: 1;
     width: 100%;
     padding: 10px;
     border: 1px solid rgba(44, 94, 168, 0.16);
@@ -1059,7 +1299,7 @@ export default {
     line-height: 1.35;
   }
   .profile-location {
-    font-size: 13px;
+    display: none;
   }
   .tab-nav {
     width: 100%;
@@ -1133,6 +1373,9 @@ export default {
     gap: 8px;
     margin-top: 0;
   }
+  .hero-card-actions {
+    display: none;
+  }
   .social-icon,
   .cv-download,
   .email-chip {
@@ -1166,6 +1409,19 @@ export default {
   .btn {
     flex: 1;
     text-align: center;
+  }
+  .site-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 18px;
+    text-align: center;
+  }
+  .footer-links {
+    justify-content: center;
+  }
+  .footer-links a {
+    padding: 7px 11px;
   }
 }
 

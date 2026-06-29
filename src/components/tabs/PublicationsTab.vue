@@ -7,6 +7,8 @@
         target="_blank"
         rel="noopener"
         :title="scholarMetricsTitle"
+        :aria-label="scholarMetricsTitle"
+        @click="trackScholarClick"
       >
         <span class="citation-count">{{ scholarCitationsLabel }}</span>
         <span>{{ copy.citationsLabel }}</span>
@@ -69,6 +71,8 @@
 </template>
 
 <script>
+import { trackClick } from "../../utils/analytics";
+
 const publicationSections = [
   {
     title: "Scopus-Indexed Conferences",
@@ -454,6 +458,13 @@ export default {
     },
     localizedStatus(status) {
       return this.copy.statuses[status] || status;
+    },
+    trackScholarClick() {
+      trackClick("scholar_open", {
+        label: "Google Scholar",
+        targetUrl: this.localizedScholarUrl,
+        language: this.language
+      });
     }
   }
 };
@@ -488,6 +499,12 @@ export default {
 .citation-chip:hover {
   transform: translateY(-1px);
   box-shadow: 0 10px 18px rgba(25, 95, 56, 0.12);
+}
+
+.citation-chip:focus-visible {
+  outline: 3px solid #2b6cb0;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(43, 108, 176, 0.18);
 }
 
 .citation-count {
