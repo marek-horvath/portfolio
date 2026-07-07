@@ -382,16 +382,15 @@ export default {
   computed: {
     copy() {
       const baseCopy = pageCopy[this.language] || pageCopy.en;
-      const textBlocks = (this.content && this.content.textBlocks) || {};
-      const getContentText = (key) =>
-        textBlocks[key] && textBlocks[key][this.language] ? textBlocks[key][this.language] : "";
+      const contentDate =
+        this.content &&
+        this.content.textBlocks &&
+        this.content.textBlocks.lastUpdated &&
+        this.content.textBlocks.lastUpdated[this.language];
 
       return {
         ...baseCopy,
-        currentLocation: getContentText("currentLocation") || baseCopy.currentLocation,
-        occupation: getContentText("occupation") || baseCopy.occupation,
-        intro: getContentText("intro") || baseCopy.intro,
-        lastUpdated: getContentText("lastUpdated") || baseCopy.lastUpdated
+        lastUpdated: contentDate || baseCopy.lastUpdated
       };
     },
     copyButtonLabel() {

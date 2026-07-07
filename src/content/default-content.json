@@ -3,18 +3,6 @@
     "lastUpdated": {
       "en": "July 7, 2026",
       "sk": "7. júla 2026"
-    },
-    "currentLocation": {
-      "en": "Košice, Slovakia",
-      "sk": "Košice, Slovensko"
-    },
-    "occupation": {
-      "en": "PhD Student (Informatics) & Software Engineer",
-      "sk": "Doktorand informatiky a softvérový inžinier"
-    },
-    "intro": {
-      "en": "Identifying programmers through style analysis of source code and behavioral biometrics, while also exploring code similarity detection. In my free time, I engage in web development projects and actively participate in hackathons to refine my skills and collaborate with like-minded individuals.",
-      "sk": "Venujem sa identifikácii programátorov cez analýzu štýlu zdrojového kódu a behaviorálne biometrie a zároveň skúmam detekciu podobnosti kódu. Vo voľnom čase pracujem na webových projektoch a pravidelne sa zapájam do hackathonov."
     }
   },
   "projects": [
