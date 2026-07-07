@@ -250,6 +250,7 @@ import HobbiesTab from "./tabs/HobbiesTab.vue";
 import OtherActivitiesTab from "./tabs/OtherActivitiesTab.vue";
 import TeachingTab from "./tabs/TeachingTab.vue";
 import { trackClick } from "../utils/analytics";
+import { fetchPortfolioContent, getDefaultContent } from "../utils/content";
 
 const SUPPORTED_LANGUAGES = ["sk", "en"];
 const LANGUAGE_STORAGE_KEY = "portfolio-language-v3";
@@ -274,7 +275,7 @@ const pageCopy = {
     tabsLabel: "Portfolio sections",
     menuLabel: "Open section menu",
     lastUpdatedLabel: "Last updated:",
-    lastUpdated: "June 29, 2026",
+    lastUpdated: "July 7, 2026",
     footerLinksLabel: "Footer links",
     emailLabel: "Email",
     emailLinkLabel: "Send email",
@@ -314,7 +315,7 @@ const pageCopy = {
     tabsLabel: "Sekcie portfólia",
     menuLabel: "Otvoriť menu sekcií",
     lastUpdatedLabel: "Posledná aktualizácia:",
-    lastUpdated: "29. júna 2026",
+    lastUpdated: "7. júla 2026",
     footerLinksLabel: "Odkazy v pätičke",
     emailLabel: "Email",
     emailLinkLabel: "Poslať email",
@@ -373,13 +374,24 @@ export default {
       copyTimeout: null,
       isMobileViewport: window.innerWidth <= 768,
       profileImage,
+      content: getDefaultContent(),
       activeTab: "publications",
       navOpen: false
     };
   },
   computed: {
     copy() {
-      return pageCopy[this.language] || pageCopy.en;
+      const baseCopy = pageCopy[this.language] || pageCopy.en;
+      const contentDate =
+        this.content &&
+        this.content.textBlocks &&
+        this.content.textBlocks.lastUpdated &&
+        this.content.textBlocks.lastUpdated[this.language];
+
+      return {
+        ...baseCopy,
+        lastUpdated: contentDate || baseCopy.lastUpdated
+      };
     },
     copyButtonLabel() {
       if (this.copyState === "copied") {
@@ -417,6 +429,8 @@ export default {
     particlesJS.load("particles-js", "./particles-config.json", () => {
       console.log("Particles.js loaded!");
     });
+
+    this.loadContent();
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.updateViewport);
@@ -435,6 +449,13 @@ export default {
       this.trackAction("language_switch", language.toUpperCase(), "", {
         language
       });
+    },
+    async loadContent() {
+      try {
+        this.content = await fetchPortfolioContent();
+      } catch {
+        this.content = getDefaultContent();
+      }
     },
     toggleNavigation() {
       this.navOpen = !this.navOpen;

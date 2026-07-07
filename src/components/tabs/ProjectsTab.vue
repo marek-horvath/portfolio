@@ -6,8 +6,8 @@
     <div class="scrollable-content">
       <div class="projects-grid">
         <a
-          v-for="project in copy.projects"
-          :key="project.url"
+          v-for="project in localizedProjects"
+          :key="project.id || project.url"
           class="project-card"
           :href="project.url"
           target="_blank"
@@ -17,7 +17,7 @@
         >
           <div class="project-preview">
             <img
-              :src="projectImages[project.imageKey]"
+              :src="getProjectImage(project)"
               :alt="project.previewAlt"
               loading="lazy"
             />
@@ -50,6 +50,12 @@ import revikImage from "../../assets/revik.png";
 import seugImage from "../../assets/seug.png";
 import slovakdleImage from "../../assets/slovakdle.png";
 import { trackClick } from "../../utils/analytics";
+import {
+  fetchPortfolioContent,
+  getDefaultContent,
+  getLocalizedProject,
+  sortContentItems
+} from "../../utils/content";
 
 const projectImages = {
   athena: athenaImage,
@@ -68,165 +74,16 @@ const projectsCopy = {
     intro: "Selected websites and small web products I build outside of research and teaching, mostly for real people, small teams, and public-facing ideas.",
     openLabel: "Open",
     openProjectLabel: "Open project",
-    tagsLabel: "Project tags",
-    projects: [
-      {
-        name: "WC Predictions",
-        type: "Prediction app",
-        url: "http://167.233.132.16",
-        imageKey: "football",
-        previewAlt: "Preview of the WC Predictions football app",
-        description: "A football prediction app for the FIFA World Cup 2026 with match picks, leaderboards, comparison views, and export tools.",
-        tags: ["Football", "Predictions", "Dashboard"]
-      },
-      {
-        name: "Athena Dashboard",
-        type: "Testing dashboard",
-        url: "https://athena-kappa-one.vercel.app",
-        imageKey: "athena",
-        previewAlt: "Preview of the Athena testing dashboard",
-        description: "Dashboard for reviewing programming test results, student submissions, grouped runs, and task-level feedback in a clear admin interface.",
-        tags: ["Testing", "Education", "Admin UI"]
-      },
-      {
-        name: "Cloud Native Kosice",
-        type: "Community website",
-        url: "https://marek-horvath.github.io/cnk",
-        imageKey: "cnk",
-        previewAlt: "Preview of the Cloud Native Kosice meetup website",
-        description: "Website for Cloud Native Kosice meetups, presenting event information, program details, history, location, and email signup.",
-        tags: ["Community", "Meetups", "Static site"]
-      },
-      {
-        name: "Revik",
-        type: "Business website",
-        url: "https://www.revik.sk/",
-        imageKey: "revik",
-        previewAlt: "Preview of the Revik website",
-        description: "Presentation website for a local cleaning service, focused on a clear service offer, trust, and fast contact from visitors.",
-        tags: ["Services", "Local business", "Contact flow"]
-      },
-      {
-        name: "SEUG",
-        type: "Academic website",
-        url: "https://seug.kpi.fei.tuke.sk/",
-        imageKey: "seug",
-        previewAlt: "Preview of the SEUG website",
-        description: "Website for a university group at KPI FEI TUKE, built to present activities, people, and academic context in one place.",
-        tags: ["University", "Group website", "TUKE"]
-      },
-      {
-        name: "Krajčírstvo July",
-        type: "Service website",
-        url: "https://krajcirstvo.vercel.app/",
-        imageKey: "krajcirstvo",
-        previewAlt: "Preview of the Krajčírstvo July website",
-        description: "Public website for a tailoring service with a practical service overview and a reservation-oriented workflow.",
-        tags: ["Tailoring", "Reservations", "Small business"]
-      },
-      {
-        name: "Dema: Signal Breach",
-        type: "Interactive project",
-        url: "https://dema-jade.vercel.app/",
-        imageKey: "dema",
-        previewAlt: "Preview of the Dema Signal Breach web project",
-        description: "Interactive web project with a game-like presentation and a more experimental visual direction.",
-        tags: ["Interactive", "Game feel", "Vercel"]
-      },
-      {
-        name: "Slovakdle",
-        type: "Browser game",
-        url: "https://slovakdle.vercel.app/",
-        imageKey: "slovakdle",
-        previewAlt: "Preview of the Slovakdle browser game",
-        description: "A Slovak guessing game inspired by daily puzzle formats, centered around Slovak personalities and simple repeat play.",
-        tags: ["Game", "Slovak content", "Daily puzzle"]
-      }
-    ]
+    tagsLabel: "Project tags"
   },
   sk: {
     title: "Weby",
     intro: "Výber webov a menších webových produktov, ktoré robím mimo výskumu a výučby pre ľudí, malé tímy a verejné nápady.",
     openLabel: "Otvoriť",
     openProjectLabel: "Otvoriť projekt",
-    tagsLabel: "Tagy projektu",
-    projects: [
-      {
-        name: "WC Predictions",
-        type: "Predikčná aplikácia",
-        url: "http://167.233.132.16",
-        imageKey: "football",
-        previewAlt: "Náhľad futbalovej aplikácie WC Predictions",
-        description: "Aplikácia na tipovanie zápasov FIFA World Cup 2026 s výbermi zápasov, leaderboardom, porovnávaním tipov a exportom.",
-        tags: ["Futbal", "Tipovanie", "Dashboard"]
-      },
-      {
-        name: "Athena Dashboard",
-        type: "Testovací dashboard",
-        url: "https://athena-kappa-one.vercel.app",
-        imageKey: "athena",
-        previewAlt: "Náhľad testovacieho dashboardu Athena",
-        description: "Dashboard na prezeranie výsledkov programátorských testov, študentských riešení, skupinových behov a spätnej väzby po úlohách.",
-        tags: ["Testovanie", "Vzdelávanie", "Admin UI"]
-      },
-      {
-        name: "Cloud Native Kosice",
-        type: "Komunitný web",
-        url: "https://marek-horvath.github.io/cnk",
-        imageKey: "cnk",
-        previewAlt: "Náhľad webu Cloud Native Kosice",
-        description: "Web pre Cloud Native Kosice meetupy s informáciami o akciách, programom, históriou, miestom konania a emailovým prihlásením.",
-        tags: ["Komunita", "Meetupy", "Statický web"]
-      },
-      {
-        name: "Revik",
-        type: "Firemný web",
-        url: "https://www.revik.sk/",
-        imageKey: "revik",
-        previewAlt: "Náhľad webu Revik",
-        description: "Prezentačný web pre lokálnu čistiacu službu so zameraním na jasnú ponuku služieb, dôveryhodnosť a rýchly kontakt.",
-        tags: ["Služby", "Lokálny biznis", "Kontakt"]
-      },
-      {
-        name: "SEUG",
-        type: "Akademický web",
-        url: "https://seug.kpi.fei.tuke.sk/",
-        imageKey: "seug",
-        previewAlt: "Náhľad webu SEUG",
-        description: "Web univerzitnej skupiny na KPI FEI TUKE, ktorý sústreďuje aktivity, ľudí a akademický kontext na jednom mieste.",
-        tags: ["Univerzita", "Skupina", "TUKE"]
-      },
-      {
-        name: "Krajčírstvo July",
-        type: "Web služieb",
-        url: "https://krajcirstvo.vercel.app/",
-        imageKey: "krajcirstvo",
-        previewAlt: "Náhľad webu Krajčírstvo July",
-        description: "Verejný web pre krajčírstvo s praktickým prehľadom služieb a workflow orientovaným na rezervácie.",
-        tags: ["Krajčírstvo", "Rezervácie", "Malý biznis"]
-      },
-      {
-        name: "Dema: Signal Breach",
-        type: "Interaktívny projekt",
-        url: "https://dema-jade.vercel.app/",
-        imageKey: "dema",
-        previewAlt: "Náhľad projektu Dema Signal Breach",
-        description: "Interaktívny webový projekt s hernou prezentáciou a experimentálnejším vizuálnym smerovaním.",
-        tags: ["Interaktivita", "Herný feeling", "Vercel"]
-      },
-      {
-        name: "Slovakdle",
-        type: "Browser hra",
-        url: "https://slovakdle.vercel.app/",
-        imageKey: "slovakdle",
-        previewAlt: "Náhľad hry Slovakdle",
-        description: "Slovenská hádacia hra inšpirovaná dennými puzzle formátmi, zameraná na slovenské osobnosti a jednoduché opakované hranie.",
-        tags: ["Hra", "Slovenský obsah", "Denné puzzle"]
-      }
-    ]
+    tagsLabel: "Tagy projektu"
   }
 };
-
 export default {
   name: "ProjectsTab",
   props: {
@@ -235,15 +92,38 @@ export default {
       default: "en"
     }
   },
+  data() {
+    return {
+      content: getDefaultContent()
+    };
+  },
   computed: {
     projectImages() {
       return projectImages;
     },
     copy() {
       return projectsCopy[this.language] || projectsCopy.en;
+    },
+    localizedProjects() {
+      return sortContentItems(this.content.projects || [])
+        .filter((project) => project.visible !== false)
+        .map((project) => getLocalizedProject(project, this.language));
     }
   },
+  mounted() {
+    this.loadContent();
+  },
   methods: {
+    async loadContent() {
+      try {
+        this.content = await fetchPortfolioContent();
+      } catch {
+        this.content = getDefaultContent();
+      }
+    },
+    getProjectImage(project) {
+      return project.imageUrl || projectImages[project.imageKey] || projectImages.revik;
+    },
     trackProject(project) {
       trackClick("project_open", {
         label: project.name,
@@ -421,3 +301,4 @@ export default {
   }
 }
 </style>
+

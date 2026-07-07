@@ -15,6 +15,7 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || "*")
   .map((origin) => origin.trim())
   .filter(Boolean);
 const fallbackMetricsPath = path.join(__dirname, "..", "public", "scholar-metrics.json");
+const defaultContentPath = path.join(__dirname, "..", "src", "content", "default-content.json");
 const analyticsDbPath =
   process.env.ANALYTICS_DB_PATH || path.join(__dirname, "data", "analytics-db.json");
 const analyticsEventLimit = Number(process.env.ANALYTICS_EVENT_LIMIT || 5000);
@@ -51,6 +52,31 @@ function loadFallbackMetrics() {
   }
 }
 
+function loadDefaultContent() {
+  try {
+    return JSON.parse(fs.readFileSync(defaultContentPath, "utf8"));
+  } catch (error) {
+    return {
+      textBlocks: {
+        lastUpdated: {
+          en: "July 7, 2026",
+          sk: "7. júla 2026"
+        }
+      },
+      projects: [],
+      articles: []
+    };
+  }
+}
+
+function cloneContent(content) {
+  return JSON.parse(JSON.stringify(content));
+}
+
+function getDefaultContent() {
+  return cloneContent(loadDefaultContent());
+}
+
 function ensureAnalyticsDb() {
   const directory = path.dirname(analyticsDbPath);
   fs.mkdirSync(directory, { recursive: true });
@@ -58,7 +84,16 @@ function ensureAnalyticsDb() {
   if (!fs.existsSync(analyticsDbPath)) {
     fs.writeFileSync(
       analyticsDbPath,
-      `${JSON.stringify({ events: [], updatedAt: new Date().toISOString() }, null, 2)}\n`,
+      `${JSON.stringify(
+        {
+          events: [],
+          content: getDefaultContent(),
+          updatedAt: new Date().toISOString(),
+          contentUpdatedAt: new Date().toISOString()
+        },
+        null,
+        2
+      )}\n`,
       "utf8"
     );
   }
@@ -70,18 +105,27 @@ function readAnalyticsDb() {
     const db = JSON.parse(fs.readFileSync(analyticsDbPath, "utf8"));
     return {
       events: Array.isArray(db.events) ? db.events : [],
+      content: normalizeContent(db.content),
+      contentUpdatedAt: db.contentUpdatedAt || "",
       updatedAt: db.updatedAt || ""
     };
   } catch (error) {
-    return { events: [], updatedAt: "" };
+    return {
+      events: [],
+      content: getDefaultContent(),
+      contentUpdatedAt: "",
+      updatedAt: ""
+    };
   }
 }
 
 function writeAnalyticsDb(db) {
   ensureAnalyticsDb();
-  const trimmedEvents = db.events.slice(-analyticsEventLimit);
+  const trimmedEvents = Array.isArray(db.events) ? db.events.slice(-analyticsEventLimit) : [];
   const payload = {
     events: trimmedEvents,
+    content: normalizeContent(db.content),
+    contentUpdatedAt: db.contentUpdatedAt || "",
     updatedAt: new Date().toISOString()
   };
   const temporaryPath = `${analyticsDbPath}.tmp`;
@@ -96,6 +140,164 @@ function sanitizeString(value, maxLength = 160) {
   }
 
   return value.replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, maxLength);
+}
+
+function sanitizeBoolean(value, fallback = true) {
+  if (typeof value === "boolean") {
+    return value;
+  }
+
+  return fallback;
+}
+
+function sanitizeNumber(value, fallback = 9999) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return fallback;
+  }
+
+  return Math.max(0, Math.min(Math.round(number), 9999));
+}
+
+function sanitizeTags(value) {
+  const tags = Array.isArray(value)
+    ? value
+    : typeof value === "string"
+      ? value.split(",")
+      : [];
+
+  return tags
+    .map((tag) => sanitizeString(String(tag), 40))
+    .filter(Boolean)
+    .slice(0, 8);
+}
+
+function createSlug(value) {
+  const slug = sanitizeString(value, 120)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return slug || `item-${Date.now()}`;
+}
+
+function sanitizeLocalizedProject(value = {}) {
+  return {
+    name: sanitizeString(value.name, 120),
+    type: sanitizeString(value.type, 80),
+    previewAlt: sanitizeString(value.previewAlt, 180),
+    description: sanitizeString(value.description, 520),
+    tags: sanitizeTags(value.tags)
+  };
+}
+
+function sanitizeProject(project = {}, index = 0) {
+  const en = sanitizeLocalizedProject(project.en);
+  const sk = sanitizeLocalizedProject(project.sk);
+  const id = sanitizeString(project.id, 100) || createSlug(en.name || sk.name || `project-${index + 1}`);
+
+  return {
+    id,
+    order: sanitizeNumber(project.order, (index + 1) * 10),
+    visible: sanitizeBoolean(project.visible, true),
+    url: sanitizeString(project.url, 500),
+    imageKey: sanitizeString(project.imageKey, 80),
+    imageUrl: sanitizeString(project.imageUrl, 500),
+    en,
+    sk
+  };
+}
+
+function sanitizeLocalizedArticle(value = {}) {
+  return {
+    title: sanitizeString(value.title, 180),
+    summary: sanitizeString(value.summary, 700),
+    tags: sanitizeTags(value.tags)
+  };
+}
+
+function sanitizeArticle(article = {}, index = 0) {
+  const en = sanitizeLocalizedArticle(article.en);
+  const sk = sanitizeLocalizedArticle(article.sk);
+  const id = sanitizeString(article.id, 100) || createSlug(en.title || sk.title || `article-${index + 1}`);
+
+  return {
+    id,
+    order: sanitizeNumber(article.order, (index + 1) * 10),
+    visible: sanitizeBoolean(article.visible, true),
+    date: sanitizeString(article.date, 40),
+    url: sanitizeString(article.url, 500),
+    en,
+    sk
+  };
+}
+
+function sanitizeTextBlocks(textBlocks, fallbackTextBlocks) {
+  const source =
+    textBlocks && typeof textBlocks === "object" && !Array.isArray(textBlocks) ? textBlocks : {};
+  const lastUpdated = source.lastUpdated || {};
+
+  return {
+    ...fallbackTextBlocks,
+    lastUpdated: {
+      en: sanitizeString(lastUpdated.en, 80) || fallbackTextBlocks.lastUpdated.en,
+      sk: sanitizeString(lastUpdated.sk, 80) || fallbackTextBlocks.lastUpdated.sk
+    }
+  };
+}
+
+function sortContentItems(items) {
+  return [...items].sort((left, right) => {
+    if (left.order !== right.order) {
+      return left.order - right.order;
+    }
+
+    return left.id.localeCompare(right.id);
+  });
+}
+
+function normalizeContent(content) {
+  const fallback = getDefaultContent();
+  const source = content && typeof content === "object" && !Array.isArray(content) ? content : {};
+  const projectsSource = Array.isArray(source.projects) ? source.projects : fallback.projects;
+  const articlesSource = Array.isArray(source.articles) ? source.articles : fallback.articles;
+
+  return {
+    textBlocks: sanitizeTextBlocks(source.textBlocks, fallback.textBlocks),
+    projects: sortContentItems(projectsSource.map(sanitizeProject)),
+    articles: sortContentItems(articlesSource.map(sanitizeArticle))
+  };
+}
+
+function getPublicContent() {
+  const db = readAnalyticsDb();
+  const content = normalizeContent(db.content);
+
+  return {
+    ...content,
+    projects: content.projects.filter((project) => project.visible !== false),
+    articles: content.articles.filter((article) => article.visible !== false),
+    updatedAt: db.contentUpdatedAt || ""
+  };
+}
+
+function saveContent(content) {
+  const db = readAnalyticsDb();
+  const now = new Date().toISOString();
+  const normalizedContent = normalizeContent(content);
+
+  writeAnalyticsDb({
+    ...db,
+    content: normalizedContent,
+    contentUpdatedAt: now
+  });
+
+  return {
+    ...normalizedContent,
+    updatedAt: now
+  };
 }
 
 function sanitizeMetadata(metadata) {
@@ -259,25 +461,33 @@ function getTabCounts(events) {
 }
 
 function getProjectCounts(events) {
-  const knownProjects = [
-    "WC Predictions",
-    "Athena Dashboard",
-    "Cloud Native Kosice",
-    "Revik",
-    "SEUG",
-    "Krajčírstvo July",
-    "Dema: Signal Breach",
-    "Slovakdle"
-  ];
+  const knownProjects = normalizeContent(readAnalyticsDb().content).projects.map((project) => ({
+    value: project.id,
+    label: project.en.name || project.sk.name || project.id,
+    labels: [project.en.name, project.sk.name].filter(Boolean),
+    targetUrl: project.url
+  }));
   const knownCounts = createOrderedCounts(
-    knownProjects.map((project) => ({ value: project, label: project })),
+    knownProjects,
     events,
-    (event, project) => event.eventName === "project_open" && event.label === project.value
+    (event, project) =>
+      event.eventName === "project_open" &&
+      (project.labels.includes(event.label) ||
+        (project.targetUrl && event.targetUrl === project.targetUrl))
+  ).map((project) => ({
+    value: project.value,
+    label: project.label,
+    count: project.count
+  }));
+  const knownProjectLabels = new Set(
+    knownProjects.flatMap((project) => [...project.labels, project.targetUrl]).filter(Boolean)
   );
-  const knownProjectSet = new Set(knownProjects);
   const extraCounts = summarizeMatching(
     events,
-    (event) => event.eventName === "project_open" && !knownProjectSet.has(event.label),
+    (event) =>
+      event.eventName === "project_open" &&
+      !knownProjectLabels.has(event.label) &&
+      !knownProjectLabels.has(event.targetUrl),
     (event) => ({
       value: event.label || event.targetUrl,
       label: event.label || event.targetUrl
@@ -286,7 +496,6 @@ function getProjectCounts(events) {
 
   return [...knownCounts, ...extraCounts];
 }
-
 function getSourceCounts(events) {
   return summarizeMatching(
     events,
@@ -554,7 +763,7 @@ function setCorsHeaders(request, response) {
     response.setHeader("Vary", "Origin");
   }
 
-  response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS");
   response.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Admin-Password");
 }
 
@@ -590,6 +799,22 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
+  if (request.method === "PUT" && url.pathname === "/api/admin/content") {
+    if (!isAnalyticsAdminAuthorized(request)) {
+      sendJson(request, response, 401, { ok: false, error: "Invalid admin password." });
+      return;
+    }
+
+    try {
+      const payload = await readJsonBody(request, 180 * 1024);
+      const content = saveContent(payload.content || payload);
+      sendJson(request, response, 200, { ok: true, content });
+    } catch (error) {
+      sendJson(request, response, 400, { ok: false, error: error.message });
+    }
+    return;
+  }
+
   if (request.method !== "GET") {
     sendJson(request, response, 405, { ok: false, error: "Method not allowed." });
     return;
@@ -619,6 +844,28 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
+  if (url.pathname === "/api/content") {
+    sendJson(request, response, 200, { ok: true, content: getPublicContent() });
+    return;
+  }
+
+  if (url.pathname === "/api/admin/content") {
+    if (!isAnalyticsAdminAuthorized(request)) {
+      sendJson(request, response, 401, { ok: false, error: "Invalid admin password." });
+      return;
+    }
+
+    const db = readAnalyticsDb();
+    sendJson(request, response, 200, {
+      ok: true,
+      content: {
+        ...normalizeContent(db.content),
+        updatedAt: db.contentUpdatedAt || ""
+      }
+    });
+    return;
+  }
+
   if (url.pathname === "/api/analytics/summary") {
     if (!isAnalyticsAdminAuthorized(request)) {
       sendJson(request, response, 401, { ok: false, error: "Invalid admin password." });
@@ -645,3 +892,4 @@ setInterval(() => {
     console.warn(`Scheduled Scholar refresh failed: ${error.message}`);
   });
 }, refreshIntervalMs).unref();
+
