@@ -8,10 +8,10 @@
       <header v-if="authorized" class="admin-header">
         <a class="back-link" :href="portfolioUrl">Portfolio</a>
         <div>
-          <p class="eyebrow">Private admin</p>
+          <p class="eyebrow">Private analytics</p>
           <h1 id="admin-title">Portfolio admin</h1>
           <p class="admin-subtitle">
-            Prehlad klikov a jednoduchy management obsahu portfolia.
+            Prehľad klikov na taby, CV, LinkedIn, Scholar, email a web projekty.
           </p>
         </div>
       </header>
@@ -41,8 +41,6 @@
         </div>
 
         <p v-if="error" class="error-message" role="alert">{{ error }}</p>
-
-        <ContentManager :api-base-url="apiBaseUrl" :password="password" />
 
         <section v-if="summary" class="stats-grid" aria-label="Analytics summary">
           <article class="stat-card">
@@ -207,16 +205,12 @@
 </template>
 
 <script>
-import ContentManager from "./admin/ContentManager.vue";
 import { getAnalyticsApiBaseUrl } from "../utils/analytics";
 
 const ADMIN_PASSWORD_STORAGE_KEY = "portfolio-admin-password";
 
 export default {
   name: "AdminPage",
-  components: {
-    ContentManager
-  },
   data() {
     return {
       password: "",

@@ -22,15 +22,7 @@ POST http://127.0.0.1:3002/api/analytics/events
 GET  http://127.0.0.1:3002/api/analytics/summary
 ```
 
-Content endpoints:
-
-```text
-GET  http://127.0.0.1:3002/api/content
-GET  http://127.0.0.1:3002/api/admin/content
-PUT  http://127.0.0.1:3002/api/admin/content
-```
-
-The summary and admin content endpoints require the `X-Admin-Password` header.
+The summary endpoint requires the `X-Admin-Password` header.
 
 Portfolio shortcuts such as `/portfolio/li`, `/portfolio/ig`,
 `/portfolio/cv`, or any custom `/portfolio/{source}` are tracked as
