@@ -120,6 +120,30 @@
             Last updated SK
             <input v-model.trim="content.textBlocks.lastUpdated.sk" type="text" />
           </label>
+          <label>
+            Lokacia EN
+            <input v-model.trim="content.textBlocks.currentLocation.en" type="text" />
+          </label>
+          <label>
+            Lokacia SK
+            <input v-model.trim="content.textBlocks.currentLocation.sk" type="text" />
+          </label>
+          <label>
+            Profesie EN
+            <input v-model.trim="content.textBlocks.occupation.en" type="text" />
+          </label>
+          <label>
+            Profesie SK
+            <input v-model.trim="content.textBlocks.occupation.sk" type="text" />
+          </label>
+          <label>
+            Intro EN
+            <textarea v-model.trim="content.textBlocks.intro.en" rows="4"></textarea>
+          </label>
+          <label>
+            Intro SK
+            <textarea v-model.trim="content.textBlocks.intro.sk" rows="4"></textarea>
+          </label>
         </section>
 
         <section class="content-section compact">
@@ -275,14 +299,22 @@ function serializeArticle(article) {
   };
 }
 
+function normalizeTextBlocks(textBlocks = {}) {
+  const keys = ["lastUpdated", "currentLocation", "occupation", "intro"];
+
+  return keys.reduce((normalized, key) => {
+    normalized[key] = {
+      en: textBlocks[key]?.en || "",
+      sk: textBlocks[key]?.sk || ""
+    };
+
+    return normalized;
+  }, {});
+}
+
 function normalizeContent(content = {}) {
   return {
-    textBlocks: {
-      lastUpdated: {
-        en: content.textBlocks?.lastUpdated?.en || "",
-        sk: content.textBlocks?.lastUpdated?.sk || ""
-      }
-    },
+    textBlocks: normalizeTextBlocks(content.textBlocks),
     projects: Array.isArray(content.projects) ? content.projects.map(normalizeProject) : [],
     articles: Array.isArray(content.articles) ? content.articles.map(normalizeArticle) : []
   };
@@ -290,12 +322,7 @@ function normalizeContent(content = {}) {
 
 function serializeContent(content) {
   return {
-    textBlocks: {
-      lastUpdated: {
-        en: content.textBlocks.lastUpdated.en,
-        sk: content.textBlocks.lastUpdated.sk
-      }
-    },
+    textBlocks: normalizeTextBlocks(content.textBlocks),
     projects: content.projects.map(serializeProject),
     articles: content.articles.map(serializeArticle)
   };

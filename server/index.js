@@ -237,15 +237,25 @@ function sanitizeArticle(article = {}, index = 0) {
 function sanitizeTextBlocks(textBlocks, fallbackTextBlocks) {
   const source =
     textBlocks && typeof textBlocks === "object" && !Array.isArray(textBlocks) ? textBlocks : {};
-  const lastUpdated = source.lastUpdated || {};
-
-  return {
-    ...fallbackTextBlocks,
-    lastUpdated: {
-      en: sanitizeString(lastUpdated.en, 80) || fallbackTextBlocks.lastUpdated.en,
-      sk: sanitizeString(lastUpdated.sk, 80) || fallbackTextBlocks.lastUpdated.sk
-    }
+  const maxLengths = {
+    lastUpdated: 80,
+    currentLocation: 100,
+    occupation: 160,
+    intro: 900
   };
+
+  return Object.keys(fallbackTextBlocks).reduce((cleanTextBlocks, key) => {
+    const block = source[key] || {};
+    const fallbackBlock = fallbackTextBlocks[key] || {};
+    const maxLength = maxLengths[key] || 400;
+
+    cleanTextBlocks[key] = {
+      en: sanitizeString(block.en, maxLength) || fallbackBlock.en || "",
+      sk: sanitizeString(block.sk, maxLength) || fallbackBlock.sk || ""
+    };
+
+    return cleanTextBlocks;
+  }, {});
 }
 
 function sortContentItems(items) {
