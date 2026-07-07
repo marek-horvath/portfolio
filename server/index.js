@@ -259,7 +259,16 @@ function getTabCounts(events) {
 }
 
 function getProjectCounts(events) {
-  const knownProjects = ["Revik", "SEUG", "Krajčírstvo July", "Dema: Signal Breach", "Slovakdle"];
+  const knownProjects = [
+    "WC Predictions",
+    "Athena Dashboard",
+    "Cloud Native Kosice",
+    "Revik",
+    "SEUG",
+    "Krajčírstvo July",
+    "Dema: Signal Breach",
+    "Slovakdle"
+  ];
   const knownCounts = createOrderedCounts(
     knownProjects.map((project) => ({ value: project, label: project })),
     events,

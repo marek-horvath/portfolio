@@ -41,7 +41,10 @@
 </template>
 
 <script>
+import athenaImage from "../../assets/athena.png";
+import cnkImage from "../../assets/cnk.png";
 import demaImage from "../../assets/dema.png";
+import footballImage from "../../assets/football.png";
 import krajcirstvoImage from "../../assets/krajcirstvo.png";
 import revikImage from "../../assets/revik.png";
 import seugImage from "../../assets/seug.png";
@@ -49,7 +52,10 @@ import slovakdleImage from "../../assets/slovakdle.png";
 import { trackClick } from "../../utils/analytics";
 
 const projectImages = {
+  athena: athenaImage,
+  cnk: cnkImage,
   dema: demaImage,
+  football: footballImage,
   krajcirstvo: krajcirstvoImage,
   revik: revikImage,
   seug: seugImage,
@@ -64,6 +70,33 @@ const projectsCopy = {
     openProjectLabel: "Open project",
     tagsLabel: "Project tags",
     projects: [
+      {
+        name: "WC Predictions",
+        type: "Prediction app",
+        url: "http://167.233.132.16",
+        imageKey: "football",
+        previewAlt: "Preview of the WC Predictions football app",
+        description: "A football prediction app for the FIFA World Cup 2026 with match picks, leaderboards, comparison views, and export tools.",
+        tags: ["Football", "Predictions", "Dashboard"]
+      },
+      {
+        name: "Athena Dashboard",
+        type: "Testing dashboard",
+        url: "https://athena-kappa-one.vercel.app",
+        imageKey: "athena",
+        previewAlt: "Preview of the Athena testing dashboard",
+        description: "Dashboard for reviewing programming test results, student submissions, grouped runs, and task-level feedback in a clear admin interface.",
+        tags: ["Testing", "Education", "Admin UI"]
+      },
+      {
+        name: "Cloud Native Kosice",
+        type: "Community website",
+        url: "https://marek-horvath.github.io/cnk",
+        imageKey: "cnk",
+        previewAlt: "Preview of the Cloud Native Kosice meetup website",
+        description: "Website for Cloud Native Kosice meetups, presenting event information, program details, history, location, and email signup.",
+        tags: ["Community", "Meetups", "Static site"]
+      },
       {
         name: "Revik",
         type: "Business website",
@@ -118,6 +151,33 @@ const projectsCopy = {
     openProjectLabel: "Otvoriť projekt",
     tagsLabel: "Tagy projektu",
     projects: [
+      {
+        name: "WC Predictions",
+        type: "Predikčná aplikácia",
+        url: "http://167.233.132.16",
+        imageKey: "football",
+        previewAlt: "Náhľad futbalovej aplikácie WC Predictions",
+        description: "Aplikácia na tipovanie zápasov FIFA World Cup 2026 s výbermi zápasov, leaderboardom, porovnávaním tipov a exportom.",
+        tags: ["Futbal", "Tipovanie", "Dashboard"]
+      },
+      {
+        name: "Athena Dashboard",
+        type: "Testovací dashboard",
+        url: "https://athena-kappa-one.vercel.app",
+        imageKey: "athena",
+        previewAlt: "Náhľad testovacieho dashboardu Athena",
+        description: "Dashboard na prezeranie výsledkov programátorských testov, študentských riešení, skupinových behov a spätnej väzby po úlohách.",
+        tags: ["Testovanie", "Vzdelávanie", "Admin UI"]
+      },
+      {
+        name: "Cloud Native Kosice",
+        type: "Komunitný web",
+        url: "https://marek-horvath.github.io/cnk",
+        imageKey: "cnk",
+        previewAlt: "Náhľad webu Cloud Native Kosice",
+        description: "Web pre Cloud Native Kosice meetupy s informáciami o akciách, programom, históriou, miestom konania a emailovým prihlásením.",
+        tags: ["Komunita", "Meetupy", "Statický web"]
+      },
       {
         name: "Revik",
         type: "Firemný web",
