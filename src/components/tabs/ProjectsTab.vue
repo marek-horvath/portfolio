@@ -71,6 +71,15 @@ const projectsCopy = {
     tagsLabel: "Project tags",
     projects: [
       {
+        name: "Athena Dashboard",
+        type: "Testing dashboard",
+        url: "https://athena-kappa-one.vercel.app",
+        imageKey: "athena",
+        previewAlt: "Preview of the Athena testing dashboard",
+        description: "Dashboard for reviewing programming test results, student submissions, grouped runs, and task-level feedback in a clear admin interface.",
+        tags: ["Testing", "Education", "Admin UI"]
+      },
+      {
         name: "WC Predictions",
         type: "Prediction app",
         url: "http://167.233.132.16",
@@ -80,13 +89,13 @@ const projectsCopy = {
         tags: ["Football", "Predictions", "Dashboard"]
       },
       {
-        name: "Athena Dashboard",
-        type: "Testing dashboard",
-        url: "https://athena-kappa-one.vercel.app",
-        imageKey: "athena",
-        previewAlt: "Preview of the Athena testing dashboard",
-        description: "Dashboard for reviewing programming test results, student submissions, grouped runs, and task-level feedback in a clear admin interface.",
-        tags: ["Testing", "Education", "Admin UI"]
+        name: "SEUG",
+        type: "Academic website",
+        url: "https://seug.kpi.fei.tuke.sk/",
+        imageKey: "seug",
+        previewAlt: "Preview of the SEUG website",
+        description: "Website for a university group at KPI FEI TUKE, built to present activities, people, and academic context in one place.",
+        tags: ["University", "Group website", "TUKE"]
       },
       {
         name: "Cloud Native Kosice",
@@ -107,15 +116,6 @@ const projectsCopy = {
         tags: ["Services", "Local business", "Contact flow"]
       },
       {
-        name: "SEUG",
-        type: "Academic website",
-        url: "https://seug.kpi.fei.tuke.sk/",
-        imageKey: "seug",
-        previewAlt: "Preview of the SEUG website",
-        description: "Website for a university group at KPI FEI TUKE, built to present activities, people, and academic context in one place.",
-        tags: ["University", "Group website", "TUKE"]
-      },
-      {
         name: "Krajčírstvo July",
         type: "Service website",
         url: "https://krajcirstvo.vercel.app/",
@@ -125,15 +125,6 @@ const projectsCopy = {
         tags: ["Tailoring", "Reservations", "Small business"]
       },
       {
-        name: "Dema: Signal Breach",
-        type: "Interactive project",
-        url: "https://dema-jade.vercel.app/",
-        imageKey: "dema",
-        previewAlt: "Preview of the Dema Signal Breach web project",
-        description: "Interactive web project with a game-like presentation and a more experimental visual direction.",
-        tags: ["Interactive", "Game feel", "Vercel"]
-      },
-      {
         name: "Slovakdle",
         type: "Browser game",
         url: "https://slovakdle.vercel.app/",
@@ -141,6 +132,15 @@ const projectsCopy = {
         previewAlt: "Preview of the Slovakdle browser game",
         description: "A Slovak guessing game inspired by daily puzzle formats, centered around Slovak personalities and simple repeat play.",
         tags: ["Game", "Slovak content", "Daily puzzle"]
+      },
+      {
+        name: "Dema: Signal Breach",
+        type: "Interactive project",
+        url: "https://dema-jade.vercel.app/",
+        imageKey: "dema",
+        previewAlt: "Preview of the Dema Signal Breach web project",
+        description: "Interactive web project with a game-like presentation and a more experimental visual direction.",
+        tags: ["Interactive", "Game feel", "Vercel"]
       }
     ]
   },
@@ -152,6 +152,15 @@ const projectsCopy = {
     tagsLabel: "Tagy projektu",
     projects: [
       {
+        name: "Athena Dashboard",
+        type: "Testovací dashboard",
+        url: "https://athena-kappa-one.vercel.app",
+        imageKey: "athena",
+        previewAlt: "Náhľad testovacieho dashboardu Athena",
+        description: "Dashboard na prezeranie výsledkov programátorských testov, študentských riešení, skupinových behov a spätnej väzby po úlohách.",
+        tags: ["Testovanie", "Vzdelávanie", "Admin UI"]
+      },
+      {
         name: "WC Predictions",
         type: "Predikčná aplikácia",
         url: "http://167.233.132.16",
@@ -161,13 +170,13 @@ const projectsCopy = {
         tags: ["Futbal", "Tipovanie", "Dashboard"]
       },
       {
-        name: "Athena Dashboard",
-        type: "Testovací dashboard",
-        url: "https://athena-kappa-one.vercel.app",
-        imageKey: "athena",
-        previewAlt: "Náhľad testovacieho dashboardu Athena",
-        description: "Dashboard na prezeranie výsledkov programátorských testov, študentských riešení, skupinových behov a spätnej väzby po úlohách.",
-        tags: ["Testovanie", "Vzdelávanie", "Admin UI"]
+        name: "SEUG",
+        type: "Akademický web",
+        url: "https://seug.kpi.fei.tuke.sk/",
+        imageKey: "seug",
+        previewAlt: "Náhľad webu SEUG",
+        description: "Web univerzitnej skupiny na KPI FEI TUKE, ktorý sústreďuje aktivity, ľudí a akademický kontext na jednom mieste.",
+        tags: ["Univerzita", "Skupina", "TUKE"]
       },
       {
         name: "Cloud Native Kosice",
@@ -188,15 +197,6 @@ const projectsCopy = {
         tags: ["Služby", "Lokálny biznis", "Kontakt"]
       },
       {
-        name: "SEUG",
-        type: "Akademický web",
-        url: "https://seug.kpi.fei.tuke.sk/",
-        imageKey: "seug",
-        previewAlt: "Náhľad webu SEUG",
-        description: "Web univerzitnej skupiny na KPI FEI TUKE, ktorý sústreďuje aktivity, ľudí a akademický kontext na jednom mieste.",
-        tags: ["Univerzita", "Skupina", "TUKE"]
-      },
-      {
         name: "Krajčírstvo July",
         type: "Web služieb",
         url: "https://krajcirstvo.vercel.app/",
@@ -206,15 +206,6 @@ const projectsCopy = {
         tags: ["Krajčírstvo", "Rezervácie", "Malý biznis"]
       },
       {
-        name: "Dema: Signal Breach",
-        type: "Interaktívny projekt",
-        url: "https://dema-jade.vercel.app/",
-        imageKey: "dema",
-        previewAlt: "Náhľad projektu Dema Signal Breach",
-        description: "Interaktívny webový projekt s hernou prezentáciou a experimentálnejším vizuálnym smerovaním.",
-        tags: ["Interaktivita", "Herný feeling", "Vercel"]
-      },
-      {
         name: "Slovakdle",
         type: "Browser hra",
         url: "https://slovakdle.vercel.app/",
@@ -222,6 +213,15 @@ const projectsCopy = {
         previewAlt: "Náhľad hry Slovakdle",
         description: "Slovenská hádacia hra inšpirovaná dennými puzzle formátmi, zameraná na slovenské osobnosti a jednoduché opakované hranie.",
         tags: ["Hra", "Slovenský obsah", "Denné puzzle"]
+      },
+      {
+        name: "Dema: Signal Breach",
+        type: "Interaktívny projekt",
+        url: "https://dema-jade.vercel.app/",
+        imageKey: "dema",
+        previewAlt: "Náhľad projektu Dema Signal Breach",
+        description: "Interaktívny webový projekt s hernou prezentáciou a experimentálnejším vizuálnym smerovaním.",
+        tags: ["Interaktivita", "Herný feeling", "Vercel"]
       }
     ]
   }

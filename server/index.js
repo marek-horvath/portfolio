@@ -260,14 +260,14 @@ function getTabCounts(events) {
 
 function getProjectCounts(events) {
   const knownProjects = [
-    "WC Predictions",
     "Athena Dashboard",
+    "WC Predictions",
+    "SEUG",
     "Cloud Native Kosice",
     "Revik",
-    "SEUG",
     "Krajčírstvo July",
-    "Dema: Signal Breach",
-    "Slovakdle"
+    "Slovakdle",
+    "Dema: Signal Breach"
   ];
   const knownCounts = createOrderedCounts(
     knownProjects.map((project) => ({ value: project, label: project })),
