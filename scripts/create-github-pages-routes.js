@@ -43,8 +43,9 @@ if (!fs.existsSync(distDir)) {
 }
 
 writeRoute("admin", `${basePath}?admin=1`);
+writeRoute("blog", `${basePath}?blog=1`);
 shortcutRoutes.forEach((route) => {
   writeRoute(route, `${basePath}?source=${encodeURIComponent(route)}`);
 });
 
-console.log(`Generated ${shortcutRoutes.length + 1} GitHub Pages redirect routes.`);
+console.log(`Generated ${shortcutRoutes.length + 2} GitHub Pages redirect routes.`);

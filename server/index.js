@@ -19,8 +19,189 @@ const analyticsDbPath =
   process.env.ANALYTICS_DB_PATH || path.join(__dirname, "data", "analytics-db.json");
 const analyticsEventLimit = Number(process.env.ANALYTICS_EVENT_LIMIT || 5000);
 const analyticsAdminPassword = process.env.ANALYTICS_ADMIN_PASSWORD || "marecek";
+const blogDbPath = process.env.BLOG_DB_PATH || path.join(__dirname, "data", "blog-db.json");
+const blogUploadDir = process.env.BLOG_UPLOAD_DIR || path.join(__dirname, "data", "blog-uploads");
+const blogFileUploadDir =
+  process.env.BLOG_FILE_UPLOAD_DIR || path.join(__dirname, "data", "blog-files");
+const blogUploadMaxBytes = Number(process.env.BLOG_UPLOAD_MAX_BYTES || 8 * 1024 * 1024);
+const blogFileUploadMaxBytes = Number(process.env.BLOG_FILE_UPLOAD_MAX_BYTES || 24 * 1024 * 1024);
+const allowedBlogImageTypes = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+const allowedBlogFileTypes = new Set([
+  "application/pdf",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/zip"
+]);
 const userAgent =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
+
+const defaultBlogDrafts = [];
+
+const timelineDrafts = [
+  ["iceta-2023", "2023", "ICETA 2023", "Conference"],
+  ["sami-2024", "2024", "SAMI 2024", "Conference"],
+  ["scyr-2024", "2024", "SCYR 2024", "Doctoral event"],
+  ["icpec-2024", "2024", "ICPEC 2024", "Conference"],
+  ["olomouc-mobility-2024", "2024", "Mobility Olomouc", "Mobility"],
+  ["iceta-2024", "2024", "ICETA 2024", "Conference"],
+  ["informatics-2024", "2024", "Informatics 2024", "Conference"],
+  ["sami-2025", "2025", "SAMI 2025", "Conference"],
+  ["minimovka-defense", "2025", "Minimovka defense", "Milestone"],
+  ["scyr-2025", "2025", "SCYR 2025", "Doctoral event"],
+  ["ulysseus-curate-germany", "2025", "Ulysseus Curate Germany", "Mobility"],
+  ["greece-mobility", "2025", "Greece mobility", "Mobility"],
+  ["iceta-2025", "2025", "ICETA 2025", "Conference"],
+  ["sami-2026", "2026", "SAMI 2026", "Conference"],
+  ["slovinsko-mobility", "2026", "Slovinsko mobility", "Mobility"],
+  ["scyr-2026", "2026", "SCYR 2026", "Doctoral event"],
+  ["icpec-2026", "2026", "ICPEC 2026", "Conference"],
+  ["ines-2026", "2026", "INES 2026", "Conference"]
+];
+
+const blogAccents = ["#2b6cb0", "#196147", "#9a5a08", "#8d2f56", "#5d4aa1", "#0f766e"];
+
+function createDefaultTimelineSection([id, date, title, type], index) {
+  const photoLabels = type === "Mobility" ? ["Place", "Work", "Travel"] : ["Venue", "Slides", "Notes"];
+
+  return {
+    id,
+    date,
+    title,
+    type,
+    description: `${type} checkpoint in the PhD timeline, ready for exact dates, photos, and notes.`,
+    details:
+      `Draft detail for ${title}. Add the exact date, place, paper or mobility context, people, travel notes, and one honest reflection about what changed in the PhD work here.\n\nThis popup is meant for the longer version of the story, while the timeline card stays short and scannable.`,
+    notes: ["Add exact date and place.", "Add photos.", "Attach presentation or related file."],
+    caption: `${title} photo placeholders.`,
+    accent: blogAccents[index % blogAccents.length],
+    files: [
+      {
+        label: "Presentation placeholder",
+        url: "",
+        type: "presentation"
+      }
+    ],
+    photos: photoLabels.map((label, photoIndex) => ({
+      label,
+      rotation: ["-7deg", "4deg", "-2deg"][photoIndex],
+      lift: ["10px", "-8px", "18px"][photoIndex],
+      url: ""
+    }))
+  };
+}
+
+const defaultBlogArticle = {
+  id: "phd-timeline",
+  status: "draft",
+  layout: "timeline",
+  eyebrow: "First article draft",
+  title: "PhD Timeline",
+  intro:
+    "A scrollable PhD timeline from first conference checkpoints through mobilities, doctoral events, and later-stage research milestones. The order is drafted from memory and ready for exact dates, photos, presentations, and longer notes.",
+  sections: timelineDrafts.map(createDefaultTimelineSection)
+};
+
+const defaultTravelArticle = {
+  id: "travel-blog",
+  status: "draft",
+  layout: "timeline",
+  eyebrow: "Travel notes",
+  title: "Travel Blog",
+  intro:
+    "A lighter place for trips, festivals, road notes, and photo-heavy stories that do not belong in the academic timeline.",
+  sections: [
+    {
+      id: "colours-of-ostrava",
+      date: "Travel",
+      title: "Colours of Ostrava",
+      type: "Festival",
+      description:
+        "Festival notes from Ostrava: music, city atmosphere, night lights, and small moments worth keeping.",
+      details:
+        "This can become a more visual story with short paragraphs rather than a long formal article. Add the year, favourite concerts, people, places around Ostrava, and a few photos that capture the atmosphere.\n\nGood structure later: arrival, best stage moments, city walk, night photos, and one short reflection after coming back.",
+      notes: ["Add exact year.", "Add favourite concerts.", "Upload festival and city photos."],
+      caption: "Festival, city, and night placeholders.",
+      accent: "#c2410c",
+      files: [],
+      photos: [
+        { label: "Stage", rotation: "-7deg", lift: "10px", url: "" },
+        { label: "Ostrava", rotation: "4deg", lift: "-8px", url: "" },
+        { label: "Night", rotation: "-2deg", lift: "18px", url: "" }
+      ]
+    },
+    {
+      id: "romania-roadtrip",
+      date: "Travel",
+      title: "Romania Roadtrip",
+      type: "Roadtrip",
+      description:
+        "Roadtrip draft for routes, mountain roads, stops, food, photos, and practical notes from Romania.",
+      details:
+        "This section should work like a travel diary. Add the route, number of days, cities or nature stops, what surprised you, and what you would do differently next time.\n\nPhoto-wise this can be one of the strongest parts of the blog: roads, viewpoints, streets, car moments, and small details from the trip.",
+      notes: ["Add route and dates.", "Add road and city photos.", "Write practical notes for future trips."],
+      caption: "Road, mountains, and city placeholders.",
+      accent: "#0f766e",
+      files: [],
+      photos: [
+        { label: "Road", rotation: "5deg", lift: "8px", url: "" },
+        { label: "View", rotation: "-6deg", lift: "-10px", url: "" },
+        { label: "City", rotation: "3deg", lift: "18px", url: "" }
+      ]
+    }
+  ]
+};
+
+const photoGalleryDrafts = [
+  ["conference-lights", "Conference", "Conference Lights", "#2b6cb0"],
+  ["roadtrip-window", "Travel", "Roadtrip Window", "#0f766e"],
+  ["city-after-dark", "City", "City After Dark", "#8d2f56"],
+  ["stage-memory", "Festival", "Stage Memory", "#c2410c"],
+  ["research-desk", "Work", "Research Desk", "#5d4aa1"],
+  ["train-notes", "Travel", "Train Notes", "#196147"],
+  ["mountain-stop", "Roadtrip", "Mountain Stop", "#9a5a08"],
+  ["old-town-walk", "City", "Old Town Walk", "#2f6f73"],
+  ["greek-light", "Mobility", "Greek Light", "#d97706"],
+  ["germany-streets", "Mobility", "Germany Streets", "#334155"],
+  ["quiet-morning", "Everyday", "Quiet Morning", "#7c3aed"],
+  ["after-talk", "Conference", "After Talk", "#be123c"]
+];
+
+function createDefaultGallerySection([id, date, title, accent], index) {
+  return {
+    id,
+    date,
+    title,
+    type: "Photo",
+    description: `${title} placeholder for the personal photo gallery.`,
+    details:
+      `Short draft note for ${title}. Replace this with the real story behind the photo, where it was taken, and why it belongs in the gallery.\n\nThis item is intentionally lightweight: one image can open directly into the slideshow, and more photos can be attached later from the admin.`,
+    notes: [],
+    caption: title,
+    accent,
+    files: [],
+    photos: [
+      {
+        label: title,
+        rotation: ["-3deg", "2deg", "-1deg", "4deg"][index % 4],
+        lift: ["0px", "-4px", "6px", "-2px"][index % 4],
+        url: ""
+      }
+    ]
+  };
+}
+
+const defaultPhotosArticle = {
+  id: "photos-gallery",
+  status: "draft",
+  layout: "gallery",
+  eyebrow: "Personal gallery",
+  title: "Photos",
+  intro:
+    "A visual gallery for favourite photos from conferences, travels, cities, and small everyday moments. Placeholder cards are ready for real uploads.",
+  sections: photoGalleryDrafts.map(createDefaultGallerySection)
+};
 
 const state = {
   metrics: loadFallbackMetrics(),
@@ -90,12 +271,222 @@ function writeAnalyticsDb(db) {
   fs.renameSync(temporaryPath, analyticsDbPath);
 }
 
+const defaultBlogArticles = [defaultBlogArticle, defaultTravelArticle, defaultPhotosArticle];
+
+function createDefaultBlogDbArticle(article) {
+  const now = new Date().toISOString();
+
+  return {
+    ...article,
+    createdAt: now,
+    updatedAt: now
+  };
+}
+
+function withDefaultBlogArticles(db) {
+  const articles = Array.isArray(db.articles) ? [...db.articles] : [];
+
+  defaultBlogArticles.forEach((defaultArticle) => {
+    if (!articles.some((article) => article && article.id === defaultArticle.id)) {
+      articles.push(createDefaultBlogDbArticle(defaultArticle));
+    }
+  });
+
+  return {
+    ...db,
+    articles
+  };
+}
+
+function ensureBlogDb() {
+  const directory = path.dirname(blogDbPath);
+  fs.mkdirSync(directory, { recursive: true });
+  fs.mkdirSync(blogUploadDir, { recursive: true });
+  fs.mkdirSync(blogFileUploadDir, { recursive: true });
+
+  if (!fs.existsSync(blogDbPath)) {
+    writeBlogDb({
+      articles: defaultBlogArticles.map(createDefaultBlogDbArticle),
+      draftBlogs: defaultBlogDrafts
+    });
+    return;
+  }
+
+  try {
+    const db = JSON.parse(fs.readFileSync(blogDbPath, "utf8"));
+    const nextDb = withDefaultBlogArticles(db);
+    if (nextDb.articles.length !== (Array.isArray(db.articles) ? db.articles.length : 0)) {
+      writeBlogDb(nextDb);
+    }
+  } catch {
+    writeBlogDb({
+      articles: defaultBlogArticles.map(createDefaultBlogDbArticle),
+      draftBlogs: defaultBlogDrafts
+    });
+  }
+}
+
+function readBlogDb() {
+  try {
+    ensureBlogDb();
+    const db = JSON.parse(fs.readFileSync(blogDbPath, "utf8"));
+    return {
+      articles: Array.isArray(db.articles) ? db.articles : [],
+      draftBlogs: Array.isArray(db.draftBlogs) ? db.draftBlogs : defaultBlogDrafts,
+      updatedAt: db.updatedAt || ""
+    };
+  } catch (error) {
+    return {
+      articles: defaultBlogArticles.map((article) => ({
+        ...article,
+        createdAt: "",
+        updatedAt: ""
+      })),
+      draftBlogs: defaultBlogDrafts,
+      updatedAt: ""
+    };
+  }
+}
+
+function writeBlogDb(db) {
+  const directory = path.dirname(blogDbPath);
+  fs.mkdirSync(directory, { recursive: true });
+  fs.mkdirSync(blogUploadDir, { recursive: true });
+  fs.mkdirSync(blogFileUploadDir, { recursive: true });
+
+  const payload = {
+    articles: Array.isArray(db.articles) ? db.articles : [],
+    draftBlogs: Array.isArray(db.draftBlogs) ? db.draftBlogs : defaultBlogDrafts,
+    updatedAt: new Date().toISOString()
+  };
+  const temporaryPath = `${blogDbPath}.tmp`;
+
+  fs.writeFileSync(temporaryPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+  fs.renameSync(temporaryPath, blogDbPath);
+}
+
 function sanitizeString(value, maxLength = 160) {
   if (typeof value !== "string") {
     return "";
   }
 
   return value.replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, maxLength);
+}
+
+function sanitizeLongText(value, maxLength = 6000) {
+  if (typeof value !== "string") {
+    return "";
+  }
+
+  return value
+    .replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, "")
+    .trim()
+    .slice(0, maxLength);
+}
+
+function slugify(value, fallback = "item") {
+  const slug = sanitizeString(value, 140)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 90);
+
+  return slug || fallback;
+}
+
+function sanitizeCssOffset(value, fallback) {
+  const cleanValue = sanitizeString(value, 16);
+  return /^-?\d+(\.\d+)?(deg|px)$/.test(cleanValue) ? cleanValue : fallback;
+}
+
+function sanitizeHexColor(value, fallback = "#2b6cb0") {
+  const cleanValue = sanitizeString(value, 16);
+  return /^#[0-9a-fA-F]{6}$/.test(cleanValue) ? cleanValue : fallback;
+}
+
+function sanitizeBlogPhoto(photo, index = 0) {
+  const fallbackRotations = ["-6deg", "4deg", "-2deg"];
+  const fallbackLifts = ["8px", "-6px", "14px"];
+
+  return {
+    label: sanitizeString(photo && photo.label ? photo.label : `Photo ${index + 1}`, 80),
+    url: sanitizeString(photo && photo.url, 1000),
+    rotation: sanitizeCssOffset(
+      photo && photo.rotation,
+      fallbackRotations[index % fallbackRotations.length]
+    ),
+    lift: sanitizeCssOffset(photo && photo.lift, fallbackLifts[index % fallbackLifts.length])
+  };
+}
+
+function sanitizeBlogFile(file, index = 0) {
+  return {
+    label: sanitizeString(file && file.label ? file.label : `File ${index + 1}`, 120),
+    url: sanitizeString(file && file.url, 1000),
+    type: sanitizeString(file && file.type ? file.type : "download", 60),
+    download: sanitizeString(file && file.download, 160)
+  };
+}
+
+function sanitizeBlogSection(section, index = 0) {
+  const title = sanitizeString(section && section.title, 140) || `Section ${index + 1}`;
+  const rawNotes = Array.isArray(section && section.notes)
+    ? section.notes
+    : sanitizeString(section && section.notesText, 4000)
+        .split(/\r?\n/)
+        .map((note) => note.trim());
+  const photos = Array.isArray(section && section.photos) ? section.photos : [];
+  const files = Array.isArray(section && section.files) ? section.files : [];
+
+  return {
+    id: slugify(section && section.id ? section.id : title, `section-${index + 1}`),
+    date: sanitizeString(section && section.date, 40),
+    title,
+    type: sanitizeString(section && section.type, 80),
+    description: sanitizeString(section && section.description, 1600),
+    details: sanitizeLongText(section && section.details, 6000),
+    notes: rawNotes.map((note) => sanitizeString(note, 220)).filter(Boolean).slice(0, 8),
+    caption: sanitizeString(section && section.caption, 220),
+    accent: sanitizeHexColor(section && section.accent),
+    files: files
+      .slice(0, 8)
+      .map((file, fileIndex) => sanitizeBlogFile(file, fileIndex))
+      .filter((file) => file.label || file.url),
+    photos: photos.slice(0, 6).map((photo, photoIndex) => sanitizeBlogPhoto(photo, photoIndex))
+  };
+}
+
+function sanitizeBlogArticle(payload, existingArticle = null) {
+  const title = sanitizeString(payload && payload.title, 180) || "Untitled article";
+  const now = new Date().toISOString();
+  const sections = Array.isArray(payload && payload.sections) ? payload.sections : [];
+  const status = sanitizeString(payload && payload.status, 24);
+  const layout = sanitizeString(payload && payload.layout, 40);
+
+  return {
+    id: slugify(payload && payload.id ? payload.id : title, "article"),
+    status: status === "published" ? "published" : "draft",
+    layout: layout === "gallery" ? "gallery" : "timeline",
+    eyebrow: sanitizeString(payload && payload.eyebrow, 120),
+    title,
+    intro: sanitizeString(payload && payload.intro, 2200),
+    sections: sections.map((section, index) => sanitizeBlogSection(section, index)).slice(0, 20),
+    createdAt: existingArticle && existingArticle.createdAt ? existingArticle.createdAt : now,
+    updatedAt: now
+  };
+}
+
+function getBlogPayload() {
+  const db = readBlogDb();
+
+  return {
+    ok: true,
+    articles: db.articles,
+    draftBlogs: db.draftBlogs,
+    updatedAt: db.updatedAt
+  };
 }
 
 function sanitizeMetadata(metadata) {
@@ -541,6 +932,192 @@ function readJsonBody(request, maxBytes = 32 * 1024) {
   });
 }
 
+function getRequestBaseUrl(request) {
+  const forwardedProto = sanitizeString(request.headers["x-forwarded-proto"], 20);
+  const forwardedHost = sanitizeString(request.headers["x-forwarded-host"], 180);
+  const protocol = forwardedProto || (request.socket.encrypted ? "https" : "http");
+  const requestHost = forwardedHost || sanitizeString(request.headers.host, 180) || `${host}:${port}`;
+
+  return `${protocol}://${requestHost}`;
+}
+
+function extensionForContentType(contentType, filename = "") {
+  const extension = path.extname(filename).toLowerCase();
+  if ([".jpg", ".jpeg", ".png", ".webp", ".gif", ".pdf", ".ppt", ".pptx", ".doc", ".docx", ".zip"].includes(extension)) {
+    return extension === ".jpeg" ? ".jpg" : extension;
+  }
+
+  return {
+    "image/jpeg": ".jpg",
+    "image/png": ".png",
+    "image/webp": ".webp",
+    "image/gif": ".gif",
+    "application/pdf": ".pdf",
+    "application/vnd.ms-powerpoint": ".ppt",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation": ".pptx",
+    "application/msword": ".doc",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": ".docx",
+    "application/zip": ".zip"
+  }[contentType];
+}
+
+function contentTypeForFile(filename) {
+  const extension = path.extname(filename).toLowerCase();
+  return (
+    {
+      ".jpg": "image/jpeg",
+      ".jpeg": "image/jpeg",
+      ".png": "image/png",
+      ".webp": "image/webp",
+      ".gif": "image/gif",
+      ".pdf": "application/pdf",
+      ".ppt": "application/vnd.ms-powerpoint",
+      ".pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      ".doc": "application/msword",
+      ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ".zip": "application/zip"
+    }[extension] || "application/octet-stream"
+  );
+}
+
+function extractUploadData(payload) {
+  let contentType = sanitizeString(payload.contentType || payload.type, 80);
+  let base64 = sanitizeString(payload.data || payload.base64 || payload.dataUrl, blogUploadMaxBytes * 2);
+  const dataUrlMatch = base64.match(/^data:([^;,]+);base64,(.+)$/);
+
+  if (dataUrlMatch) {
+    contentType = sanitizeString(dataUrlMatch[1], 80);
+    base64 = dataUrlMatch[2];
+  }
+
+  return { contentType, base64 };
+}
+
+async function saveBlogUpload(request) {
+  const payload = await readJsonBody(request, blogUploadMaxBytes * 2);
+  const originalName = sanitizeString(payload.filename || payload.name || "blog-photo", 180);
+  const { contentType, base64 } = extractUploadData(payload);
+
+  if (!allowedBlogImageTypes.has(contentType)) {
+    throw new Error("Only JPEG, PNG, WebP, and GIF images are supported.");
+  }
+
+  const buffer = Buffer.from(base64, "base64");
+  if (!buffer.length || buffer.length > blogUploadMaxBytes) {
+    throw new Error("Image is empty or too large.");
+  }
+
+  fs.mkdirSync(blogUploadDir, { recursive: true });
+  const extension = extensionForContentType(contentType, originalName);
+  const safeBaseName = slugify(path.basename(originalName, path.extname(originalName)), "blog-photo");
+  const storedName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safeBaseName}${extension}`;
+  const filePath = path.join(blogUploadDir, storedName);
+
+  fs.writeFileSync(filePath, buffer);
+
+  const publicPath = `/api/blog/uploads/${storedName}`;
+  return {
+    ok: true,
+    filename: storedName,
+    path: publicPath,
+    url: `${getRequestBaseUrl(request)}${publicPath}`
+  };
+}
+
+async function saveBlogFileUpload(request) {
+  const payload = await readJsonBody(request, blogFileUploadMaxBytes * 2);
+  const originalName = sanitizeString(payload.filename || payload.name || "blog-file", 180);
+  const { contentType, base64 } = extractUploadData(payload);
+
+  if (!allowedBlogFileTypes.has(contentType)) {
+    throw new Error("Only PDF, PowerPoint, Word, and ZIP files are supported.");
+  }
+
+  const buffer = Buffer.from(base64, "base64");
+  if (!buffer.length || buffer.length > blogFileUploadMaxBytes) {
+    throw new Error("File is empty or too large.");
+  }
+
+  fs.mkdirSync(blogFileUploadDir, { recursive: true });
+  const extension = extensionForContentType(contentType, originalName);
+  const safeBaseName = slugify(path.basename(originalName, path.extname(originalName)), "blog-file");
+  const storedName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safeBaseName}${extension}`;
+  const filePath = path.join(blogFileUploadDir, storedName);
+
+  fs.writeFileSync(filePath, buffer);
+
+  const publicPath = `/api/blog/files/${storedName}`;
+  return {
+    ok: true,
+    filename: storedName,
+    path: publicPath,
+    url: `${getRequestBaseUrl(request)}${publicPath}`
+  };
+}
+
+function serveBlogUpload(request, response, uploadPathname) {
+  const filename = decodeURIComponent(uploadPathname.replace("/api/blog/uploads/", ""));
+  const safeFilename = path.basename(filename);
+
+  if (!safeFilename || safeFilename !== filename) {
+    sendJson(request, response, 400, { ok: false, error: "Invalid upload path." });
+    return;
+  }
+
+  const filePath = path.join(blogUploadDir, safeFilename);
+  const resolvedFilePath = path.resolve(filePath);
+  const resolvedUploadDir = path.resolve(blogUploadDir);
+
+  if (!resolvedFilePath.startsWith(resolvedUploadDir)) {
+    sendJson(request, response, 400, { ok: false, error: "Invalid upload path." });
+    return;
+  }
+
+  if (!fs.existsSync(resolvedFilePath)) {
+    sendJson(request, response, 404, { ok: false, error: "Upload not found." });
+    return;
+  }
+
+  setCorsHeaders(request, response);
+  response.writeHead(200, {
+    "Content-Type": contentTypeForFile(resolvedFilePath),
+    "Cache-Control": "public, max-age=31536000, immutable"
+  });
+  fs.createReadStream(resolvedFilePath).pipe(response);
+}
+
+function serveBlogFile(request, response, filePathname) {
+  const filename = decodeURIComponent(filePathname.replace("/api/blog/files/", ""));
+  const safeFilename = path.basename(filename);
+
+  if (!safeFilename || safeFilename !== filename) {
+    sendJson(request, response, 400, { ok: false, error: "Invalid file path." });
+    return;
+  }
+
+  const filePath = path.join(blogFileUploadDir, safeFilename);
+  const resolvedFilePath = path.resolve(filePath);
+  const resolvedUploadDir = path.resolve(blogFileUploadDir);
+
+  if (!resolvedFilePath.startsWith(resolvedUploadDir)) {
+    sendJson(request, response, 400, { ok: false, error: "Invalid file path." });
+    return;
+  }
+
+  if (!fs.existsSync(resolvedFilePath)) {
+    sendJson(request, response, 404, { ok: false, error: "File not found." });
+    return;
+  }
+
+  setCorsHeaders(request, response);
+  response.writeHead(200, {
+    "Content-Type": contentTypeForFile(resolvedFilePath),
+    "Content-Disposition": `attachment; filename="${safeFilename.replace(/"/g, "")}"`,
+    "Cache-Control": "public, max-age=31536000, immutable"
+  });
+  fs.createReadStream(resolvedFilePath).pipe(response);
+}
+
 function isAnalyticsAdminAuthorized(request) {
   return request.headers["x-admin-password"] === analyticsAdminPassword;
 }
@@ -554,7 +1131,7 @@ function setCorsHeaders(request, response) {
     response.setHeader("Vary", "Origin");
   }
 
-  response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   response.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Admin-Password");
 }
 
@@ -590,6 +1167,112 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
+  if (request.method === "POST" && url.pathname === "/api/blog/uploads") {
+    if (!isAnalyticsAdminAuthorized(request)) {
+      sendJson(request, response, 401, { ok: false, error: "Invalid admin password." });
+      return;
+    }
+
+    try {
+      const upload = await saveBlogUpload(request);
+      sendJson(request, response, 201, upload);
+    } catch (error) {
+      sendJson(request, response, 400, { ok: false, error: error.message });
+    }
+    return;
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/blog/files") {
+    if (!isAnalyticsAdminAuthorized(request)) {
+      sendJson(request, response, 401, { ok: false, error: "Invalid admin password." });
+      return;
+    }
+
+    try {
+      const upload = await saveBlogFileUpload(request);
+      sendJson(request, response, 201, upload);
+    } catch (error) {
+      sendJson(request, response, 400, { ok: false, error: error.message });
+    }
+    return;
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/blog/articles") {
+    if (!isAnalyticsAdminAuthorized(request)) {
+      sendJson(request, response, 401, { ok: false, error: "Invalid admin password." });
+      return;
+    }
+
+    try {
+      const payload = await readJsonBody(request, 256 * 1024);
+      const db = readBlogDb();
+      const article = sanitizeBlogArticle(payload);
+      const existingIndex = db.articles.findIndex((item) => item.id === article.id);
+
+      if (existingIndex >= 0) {
+        article.createdAt = db.articles[existingIndex].createdAt || article.createdAt;
+        db.articles.splice(existingIndex, 1, article);
+      } else {
+        db.articles.unshift(article);
+      }
+
+      writeBlogDb(db);
+      sendJson(request, response, 201, { ok: true, article, ...getBlogPayload() });
+    } catch (error) {
+      sendJson(request, response, 400, { ok: false, error: error.message });
+    }
+    return;
+  }
+
+  if (request.method === "PUT" && url.pathname.startsWith("/api/blog/articles/")) {
+    if (!isAnalyticsAdminAuthorized(request)) {
+      sendJson(request, response, 401, { ok: false, error: "Invalid admin password." });
+      return;
+    }
+
+    try {
+      const articleId = slugify(decodeURIComponent(url.pathname.replace("/api/blog/articles/", "")));
+      const payload = await readJsonBody(request, 256 * 1024);
+      const db = readBlogDb();
+      const existingIndex = db.articles.findIndex((item) => item.id === articleId);
+      const existingArticle = existingIndex >= 0 ? db.articles[existingIndex] : null;
+      const article = sanitizeBlogArticle(payload, existingArticle);
+      const duplicateIndex = db.articles.findIndex(
+        (item, index) => item.id === article.id && index !== existingIndex
+      );
+
+      if (duplicateIndex >= 0) {
+        throw new Error("Article slug already exists.");
+      }
+
+      if (existingIndex >= 0) {
+        db.articles.splice(existingIndex, 1, article);
+      } else {
+        db.articles.unshift(article);
+      }
+
+      writeBlogDb(db);
+      sendJson(request, response, 200, { ok: true, article, ...getBlogPayload() });
+    } catch (error) {
+      sendJson(request, response, 400, { ok: false, error: error.message });
+    }
+    return;
+  }
+
+  if (request.method === "DELETE" && url.pathname.startsWith("/api/blog/articles/")) {
+    if (!isAnalyticsAdminAuthorized(request)) {
+      sendJson(request, response, 401, { ok: false, error: "Invalid admin password." });
+      return;
+    }
+
+    const articleId = slugify(decodeURIComponent(url.pathname.replace("/api/blog/articles/", "")));
+    const db = readBlogDb();
+    db.articles = db.articles.filter((article) => article.id !== articleId);
+    writeBlogDb(db);
+    sendJson(request, response, 200, { ok: true, ...getBlogPayload() });
+    return;
+  }
+
   if (request.method !== "GET") {
     sendJson(request, response, 405, { ok: false, error: "Method not allowed." });
     return;
@@ -600,8 +1283,24 @@ const server = http.createServer(async (request, response) => {
       ok: true,
       service: "portfolio-api",
       analytics: true,
+      blog: true,
       timestamp: new Date().toISOString()
     });
+    return;
+  }
+
+  if (url.pathname === "/api/blog/articles") {
+    sendJson(request, response, 200, getBlogPayload());
+    return;
+  }
+
+  if (url.pathname.startsWith("/api/blog/uploads/")) {
+    serveBlogUpload(request, response, url.pathname);
+    return;
+  }
+
+  if (url.pathname.startsWith("/api/blog/files/")) {
+    serveBlogFile(request, response, url.pathname);
     return;
   }
 
@@ -634,6 +1333,7 @@ const server = http.createServer(async (request, response) => {
 
 server.listen(port, host, () => {
   ensureAnalyticsDb();
+  ensureBlogDb();
   console.log(`Portfolio API listening on http://${host}:${port}`);
   refreshMetrics().catch((error) => {
     console.warn(`Initial Scholar refresh failed: ${error.message}`);

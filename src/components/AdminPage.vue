@@ -40,7 +40,30 @@
           </button>
         </div>
 
+        <div class="admin-view-tabs" role="tablist" aria-label="Admin sections">
+          <button
+            type="button"
+            :class="{ active: activeAdminView === 'analytics' }"
+            role="tab"
+            :aria-selected="activeAdminView === 'analytics'"
+            @click="activeAdminView = 'analytics'"
+          >
+            Analytics
+          </button>
+          <button
+            type="button"
+            :class="{ active: activeAdminView === 'blog' }"
+            role="tab"
+            :aria-selected="activeAdminView === 'blog'"
+            @click="activeAdminView = 'blog'"
+          >
+            Blog
+          </button>
+        </div>
+
         <p v-if="error" class="error-message" role="alert">{{ error }}</p>
+
+        <div v-if="activeAdminView === 'analytics'" class="analytics-view">
 
         <section v-if="summary" class="stats-grid" aria-label="Analytics summary">
           <article class="stat-card">
@@ -199,6 +222,13 @@
           </div>
           <p v-else class="empty-state">Zatiaľ nie sú uložené žiadne kliky.</p>
         </section>
+        </div>
+
+        <BlogAdminPanel
+          v-else
+          :password="password"
+          :api-base-url="apiBaseUrl"
+        />
       </template>
     </section>
   </main>
@@ -206,11 +236,15 @@
 
 <script>
 import { getAnalyticsApiBaseUrl } from "../utils/analytics";
+import BlogAdminPanel from "./admin/BlogAdminPanel.vue";
 
 const ADMIN_PASSWORD_STORAGE_KEY = "portfolio-admin-password";
 
 export default {
   name: "AdminPage",
+  components: {
+    BlogAdminPanel
+  },
   data() {
     return {
       password: "",
@@ -219,6 +253,7 @@ export default {
       error: "",
       summary: null,
       apiBaseUrl: getAnalyticsApiBaseUrl(),
+      activeAdminView: "analytics",
       chart: {
         width: 680,
         height: 280,
@@ -544,6 +579,39 @@ h2 {
 .admin-toolbar span {
   color: #163a66;
   font-weight: 800;
+}
+
+.admin-view-tabs {
+  display: inline-flex;
+  gap: 6px;
+  margin: 0 0 16px;
+  border: 1px solid rgba(13, 27, 42, 0.08);
+  border-radius: 999px;
+  padding: 5px;
+  background: #f7fbff;
+}
+
+.admin-view-tabs button {
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 14px;
+  background: transparent;
+  color: #31577d;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.admin-view-tabs button.active {
+  background: #163a66;
+  color: #f8fbff;
+  box-shadow: 0 8px 16px rgba(22, 58, 102, 0.16);
+}
+
+.admin-view-tabs button:focus-visible {
+  outline: 3px solid #2b6cb0;
+  outline-offset: 3px;
 }
 
 .stats-grid,

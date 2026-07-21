@@ -1,10 +1,12 @@
 <template>
   <AdminPage v-if="isAdminRoute" />
+  <BlogPage v-else-if="isBlogRoute" />
   <PortfolioPage v-else />
 </template>
 
 <script>
 import AdminPage from "./components/AdminPage.vue";
+import BlogPage from "./components/BlogPage.vue";
 import PortfolioPage from "./components/PortfolioPage.vue";
 import { trackClick } from "./utils/analytics";
 
@@ -29,6 +31,7 @@ export default {
   name: "App",
   components: {
     AdminPage,
+    BlogPage,
     PortfolioPage
   },
   computed: {
@@ -36,10 +39,16 @@ export default {
       const pathname = window.location.pathname.replace(/\/+$/, "");
       const isAdminFallback = new URLSearchParams(window.location.search).get("admin") === "1";
       return isAdminFallback || pathname.endsWith("/portfolio/admin") || pathname.endsWith("/admin");
+    },
+    isBlogRoute() {
+      const pathname = window.location.pathname.replace(/\/+$/, "");
+      const isBlogFallback = new URLSearchParams(window.location.search).get("blog") === "1";
+      return isBlogFallback || pathname.endsWith("/portfolio/blog") || pathname.endsWith("/blog");
     }
   },
   mounted() {
     this.normalizeAdminRoute();
+    this.normalizeBlogRoute();
     this.trackEntrySource();
   },
   methods: {
@@ -49,8 +58,14 @@ export default {
         window.history.replaceState({}, "", `${normalizeBaseUrl()}admin`);
       }
     },
+    normalizeBlogRoute() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("blog") === "1") {
+        window.history.replaceState({}, "", `${normalizeBaseUrl()}blog`);
+      }
+    },
     trackEntrySource() {
-      if (this.isAdminRoute) {
+      if (this.isAdminRoute || this.isBlogRoute) {
         return;
       }
 
