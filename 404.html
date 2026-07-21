@@ -22,6 +22,11 @@
           return;
         }
 
+        if (alias === "blog") {
+          window.location.replace(base + "?blog=1");
+          return;
+        }
+
         if (alias) {
           window.location.replace(base + "?source=" + encodeURIComponent(alias));
           return;
