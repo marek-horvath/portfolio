@@ -11,6 +11,11 @@ server/.env
 server/VPS_*.md
 server/*.pdf
 server/data/
+src/assets/Photos/*.DNG
+src/assets/Photos/*.HEIC
+src/assets/Photos/*.JPG
+src/assets/Photos/*.jpg
+src/assets/Photos/webp/
 
 # Log files
 npm-debug.log*

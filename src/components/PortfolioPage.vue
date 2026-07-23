@@ -118,6 +118,13 @@
           >
             {{ tab.label }}
           </button>
+          <a
+            class="tab-item tab-link"
+            :href="blogUrl"
+            @click="trackAction('nav_blog', copy.blogLabel, blogUrl)"
+          >
+            {{ copy.blogLabel }}
+          </a>
         </div>
 
         <!-- HAMBURGER (mobile only, right side) -->
@@ -148,6 +155,13 @@
             >
               {{ tab.label }}
             </button>
+            <a
+              class="tab-item tab-link"
+              :href="blogUrl"
+              @click="trackAction('nav_blog_mobile', copy.blogLabel, blogUrl)"
+            >
+              {{ copy.blogLabel }}
+            </a>
           </div>
         </div>
       </nav>
@@ -273,8 +287,9 @@ const pageCopy = {
     copyFailed: "Copy failed",
     tabsLabel: "Portfolio sections",
     menuLabel: "Open section menu",
+    blogLabel: "Blog",
     lastUpdatedLabel: "Last updated:",
-    lastUpdated: "July 7, 2026",
+    lastUpdated: "July 23, 2026",
     footerLinksLabel: "Footer links",
     emailLabel: "Email",
     emailLinkLabel: "Send email",
@@ -313,8 +328,9 @@ const pageCopy = {
     copyFailed: "Error",
     tabsLabel: "Sekcie portfólia",
     menuLabel: "Otvoriť menu sekcií",
+    blogLabel: "Blog",
     lastUpdatedLabel: "Posledná aktualizácia:",
-    lastUpdated: "7. júla 2026",
+    lastUpdated: "23. júla 2026",
     footerLinksLabel: "Odkazy v pätičke",
     emailLabel: "Email",
     emailLinkLabel: "Poslať email",
@@ -395,6 +411,9 @@ export default {
     },
     cvUrl() {
       return `${process.env.BASE_URL || "/"}CV-short-en.pdf`;
+    },
+    blogUrl() {
+      return `${process.env.BASE_URL || "/"}blog`;
     },
     tabItems() {
       return tabOrder.map((id) => ({
@@ -921,6 +940,13 @@ export default {
   position: relative;
   isolation: isolate;
 }
+
+.tab-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
 .tab-item.active {
   background: linear-gradient(130deg, #163a66, #2b6cb0);
   color: #f7fbff;
@@ -949,10 +975,16 @@ export default {
 
 /* Scrollable content within tabs */
 .tab-content :deep(.scrollable-content) {
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
+  margin-bottom: 10px;
+}
+
+.tab-content :deep(.publications-tab .scrollable-content) {
   max-height: 360px;
   overflow-y: auto;
   padding-right: 10px;
-  margin-bottom: 10px;
 }
 
 /* Content blocks */
@@ -1351,6 +1383,11 @@ export default {
     max-height: none;
     overflow: visible;
     padding-right: 0;
+  }
+  .tab-content :deep(.publications-tab .scrollable-content) {
+    max-height: min(60vh, 520px);
+    overflow-y: auto;
+    padding-right: 8px;
   }
   .tab-content :deep(.pub-block),
   .tab-content :deep(.work-block),

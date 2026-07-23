@@ -46,6 +46,7 @@ import cnkImage from "../../assets/cnk.png";
 import demaImage from "../../assets/dema.png";
 import footballImage from "../../assets/football.png";
 import krajcirstvoImage from "../../assets/krajcirstvo.png";
+import neurologiaImage from "../../assets/neurologia.png";
 import revikImage from "../../assets/revik.png";
 import seugImage from "../../assets/seug.png";
 import slovakdleImage from "../../assets/slovakdle.png";
@@ -57,6 +58,7 @@ const projectImages = {
   dema: demaImage,
   football: footballImage,
   krajcirstvo: krajcirstvoImage,
+  neurologia: neurologiaImage,
   revik: revikImage,
   seug: seugImage,
   slovakdle: slovakdleImage
@@ -78,6 +80,15 @@ const projectsCopy = {
         previewAlt: "Preview of the Athena testing dashboard",
         description: "Dashboard for reviewing programming test results, student submissions, grouped runs, and task-level feedback in a clear admin interface.",
         tags: ["Testing", "Education", "Admin UI"]
+      },
+      {
+        name: "Neurologia",
+        type: "Medical reservation system",
+        url: "https://neurologia-vert.vercel.app/",
+        imageKey: "neurologia",
+        previewAlt: "Preview of the Neurologia reservation system",
+        description: "Reservation system for a neurology practice with patient booking, admin management, and automatic email notifications.",
+        tags: ["Healthcare", "Reservations", "Email"]
       },
       {
         name: "WC Predictions",
@@ -159,6 +170,15 @@ const projectsCopy = {
         previewAlt: "Náhľad testovacieho dashboardu Athena",
         description: "Dashboard na prezeranie výsledkov programátorských testov, študentských riešení, skupinových behov a spätnej väzby po úlohách.",
         tags: ["Testovanie", "Vzdelávanie", "Admin UI"]
+      },
+      {
+        name: "Neurologia",
+        type: "Rezervačný systém",
+        url: "https://neurologia-vert.vercel.app/",
+        imageKey: "neurologia",
+        previewAlt: "Náhľad rezervačného systému Neurologia",
+        description: "Rezervačný systém pre neurologickú ambulanciu s objednávaním pacientov, admin správou a automatickými emailovými notifikáciami.",
+        tags: ["Zdravotníctvo", "Rezervácie", "Email"]
       },
       {
         name: "WC Predictions",

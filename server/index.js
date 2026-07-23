@@ -44,17 +44,19 @@ const timelineDrafts = [
   ["sami-2024", "2024", "SAMI 2024", "Conference"],
   ["scyr-2024", "2024", "SCYR 2024", "Doctoral event"],
   ["icpec-2024", "2024", "ICPEC 2024", "Conference"],
-  ["olomouc-mobility-2024", "2024", "Mobility Olomouc", "Mobility"],
+  ["olomouc-mobility-2024", "2024", "Olomouc CZ", "Mobility"],
   ["iceta-2024", "2024", "ICETA 2024", "Conference"],
   ["informatics-2024", "2024", "Informatics 2024", "Conference"],
   ["sami-2025", "2025", "SAMI 2025", "Conference"],
-  ["minimovka-defense", "2025", "Minimovka defense", "Milestone"],
+  ["minimovka-defense", "2025", "Minimovka", "Milestone"],
   ["scyr-2025", "2025", "SCYR 2025", "Doctoral event"],
-  ["ulysseus-curate-germany", "2025", "Ulysseus Curate Germany", "Mobility"],
-  ["greece-mobility", "2025", "Greece mobility", "Mobility"],
+  ["brno-summer-school", "2025", "Brno CZ", "Summer school"],
+  ["ulysseus-curate-germany", "2025", "Münster DE", "Mobility"],
+  ["greece-mobility", "2025", "Athens GR", "Mobility"],
   ["iceta-2025", "2025", "ICETA 2025", "Conference"],
+  ["eger-hungary", "2025", "Eger HU", "Travel / academic stop"],
   ["sami-2026", "2026", "SAMI 2026", "Conference"],
-  ["slovinsko-mobility", "2026", "Slovinsko mobility", "Mobility"],
+  ["slovinsko-mobility", "2026", "Maribor SI", "Mobility"],
   ["scyr-2026", "2026", "SCYR 2026", "Doctoral event"],
   ["icpec-2026", "2026", "ICPEC 2026", "Conference"],
   ["ines-2026", "2026", "INES 2026", "Conference"]
@@ -63,32 +65,19 @@ const timelineDrafts = [
 const blogAccents = ["#2b6cb0", "#196147", "#9a5a08", "#8d2f56", "#5d4aa1", "#0f766e"];
 
 function createDefaultTimelineSection([id, date, title, type], index) {
-  const photoLabels = type === "Mobility" ? ["Place", "Work", "Travel"] : ["Venue", "Slides", "Notes"];
-
   return {
     id,
     date,
     title,
     type,
-    description: `${type} checkpoint in the PhD timeline, ready for exact dates, photos, and notes.`,
+    description: `${type} checkpoint in the PhD timeline.`,
     details:
-      `Draft detail for ${title}. Add the exact date, place, paper or mobility context, people, travel notes, and one honest reflection about what changed in the PhD work here.\n\nThis popup is meant for the longer version of the story, while the timeline card stays short and scannable.`,
-    notes: ["Add exact date and place.", "Add photos.", "Attach presentation or related file."],
-    caption: `${title} photo placeholders.`,
+      `${title} is part of the longer PhD timeline. This entry keeps the date, event type, and room for a fuller story about research context, travel, people, and what changed in the PhD work around this point.\n\nThe public blog frontend enriches these entries with local photos and more specific copy.`,
+    notes: ["PhD timeline checkpoint.", "Research and travel context.", "Longer story available in the blog view."],
+    caption: "",
     accent: blogAccents[index % blogAccents.length],
-    files: [
-      {
-        label: "Presentation placeholder",
-        url: "",
-        type: "presentation"
-      }
-    ],
-    photos: photoLabels.map((label, photoIndex) => ({
-      label,
-      rotation: ["-7deg", "4deg", "-2deg"][photoIndex],
-      lift: ["10px", "-8px", "18px"][photoIndex],
-      url: ""
-    }))
+    files: [],
+    photos: []
   };
 }
 
@@ -96,10 +85,10 @@ const defaultBlogArticle = {
   id: "phd-timeline",
   status: "draft",
   layout: "timeline",
-  eyebrow: "First article draft",
+  eyebrow: "Research timeline",
   title: "PhD Timeline",
   intro:
-    "A scrollable PhD timeline from first conference checkpoints through mobilities, doctoral events, and later-stage research milestones. The order is drafted from memory and ready for exact dates, photos, presentations, and longer notes.",
+    "A scrollable PhD timeline from first conference checkpoints through mobilities, doctoral events, and later-stage research milestones.",
   sections: timelineDrafts.map(createDefaultTimelineSection)
 };
 
@@ -122,7 +111,7 @@ const defaultTravelArticle = {
       details:
         "This can become a more visual story with short paragraphs rather than a long formal article. Add the year, favourite concerts, people, places around Ostrava, and a few photos that capture the atmosphere.\n\nGood structure later: arrival, best stage moments, city walk, night photos, and one short reflection after coming back.",
       notes: ["Add exact year.", "Add favourite concerts.", "Upload festival and city photos."],
-      caption: "Festival, city, and night placeholders.",
+      caption: "Festival, city, and night notes.",
       accent: "#c2410c",
       files: [],
       photos: [
@@ -137,11 +126,11 @@ const defaultTravelArticle = {
       title: "Romania Roadtrip",
       type: "Roadtrip",
       description:
-        "Roadtrip draft for routes, mountain roads, stops, food, photos, and practical notes from Romania.",
+        "Roadtrip notes for routes, mountain roads, stops, food, photos, and practical memories from Romania.",
       details:
         "This section should work like a travel diary. Add the route, number of days, cities or nature stops, what surprised you, and what you would do differently next time.\n\nPhoto-wise this can be one of the strongest parts of the blog: roads, viewpoints, streets, car moments, and small details from the trip.",
       notes: ["Add route and dates.", "Add road and city photos.", "Write practical notes for future trips."],
-      caption: "Road, mountains, and city placeholders.",
+      caption: "Road, mountains, and city notes.",
       accent: "#0f766e",
       files: [],
       photos: [
@@ -174,9 +163,9 @@ function createDefaultGallerySection([id, date, title, accent], index) {
     date,
     title,
     type: "Photo",
-    description: `${title} placeholder for the personal photo gallery.`,
+    description: `${title} photo from the personal gallery.`,
     details:
-      `Short draft note for ${title}. Replace this with the real story behind the photo, where it was taken, and why it belongs in the gallery.\n\nThis item is intentionally lightweight: one image can open directly into the slideshow, and more photos can be attached later from the admin.`,
+      `Short note for ${title}. This item is intentionally lightweight: one image can open directly into the slideshow, and more photos can be attached later from the admin.`,
     notes: [],
     caption: title,
     accent,
@@ -199,7 +188,7 @@ const defaultPhotosArticle = {
   eyebrow: "Personal gallery",
   title: "Photos",
   intro:
-    "A visual gallery for favourite photos from conferences, travels, cities, and small everyday moments. Placeholder cards are ready for real uploads.",
+    "A visual gallery for favourite photos from conferences, travels, cities, and small everyday moments.",
   sections: photoGalleryDrafts.map(createDefaultGallerySection)
 };
 

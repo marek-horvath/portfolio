@@ -43,7 +43,13 @@ export default {
     isBlogRoute() {
       const pathname = window.location.pathname.replace(/\/+$/, "");
       const isBlogFallback = new URLSearchParams(window.location.search).get("blog") === "1";
-      return isBlogFallback || pathname.endsWith("/portfolio/blog") || pathname.endsWith("/blog");
+      return (
+        isBlogFallback ||
+        pathname.endsWith("/portfolio/blog") ||
+        pathname.includes("/portfolio/blog/") ||
+        pathname.endsWith("/blog") ||
+        pathname.includes("/blog/")
+      );
     }
   },
   mounted() {
