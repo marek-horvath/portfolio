@@ -67,7 +67,7 @@ const projectImages = {
 const projectsCopy = {
   en: {
     title: "Web Projects",
-    intro: "Selected websites and small web products I build outside of research and teaching, mostly for real people, small teams, and public-facing ideas.",
+    intro: "Selected websites, dashboards, games, and small web products I build outside research and teaching. Most of them include a small custom admin or analytics layer for clicks, redirects, and real usage signals.",
     openLabel: "Open",
     openProjectLabel: "Open project",
     tagsLabel: "Project tags",
@@ -78,17 +78,17 @@ const projectsCopy = {
         url: "https://athena-kappa-one.vercel.app",
         imageKey: "athena",
         previewAlt: "Preview of the Athena testing dashboard",
-        description: "Dashboard for reviewing programming test results, student submissions, grouped runs, and task-level feedback in a clear admin interface.",
-        tags: ["Testing", "Education", "Admin UI"]
+        description: "Complex system for testing student programming assignments: it downloads submissions from GitLab, runs them safely in isolated Docker containers, and stores structured results for review.",
+        tags: ["Autograding", "GitLab", "Docker"]
       },
       {
-        name: "Neurologia",
+        name: "Doctor Booking System",
         type: "Medical reservation system",
         url: "https://neurologia-vert.vercel.app/",
         imageKey: "neurologia",
-        previewAlt: "Preview of the Neurologia reservation system",
-        description: "Reservation system for a neurology practice with patient booking, admin management, and automatic email notifications.",
-        tags: ["Healthcare", "Reservations", "Email"]
+        previewAlt: "Preview of the medical reservation system",
+        description: "Booking system for a medical practice with patient reservations, an admin interface for managing appointments, and automatic email reminders sent to patients.",
+        tags: ["Healthcare", "Bookings", "Email reminders"]
       },
       {
         name: "WC Predictions",
@@ -96,8 +96,8 @@ const projectsCopy = {
         url: "http://167.233.132.16",
         imageKey: "football",
         previewAlt: "Preview of the WC Predictions football app",
-        description: "A football prediction app for the FIFA World Cup 2026 with match picks, leaderboards, comparison views, and export tools.",
-        tags: ["Football", "Predictions", "Dashboard"]
+        description: "Hobby app for predicting football results with friends. It automatically scraped final scores from Flashscore, evaluated picks, and kept leaderboards up to date.",
+        tags: ["Football", "Scraping", "Leaderboards"]
       },
       {
         name: "SEUG",
@@ -105,8 +105,8 @@ const projectsCopy = {
         url: "https://seug.kpi.fei.tuke.sk/",
         imageKey: "seug",
         previewAlt: "Preview of the SEUG website",
-        description: "Website for a university group at KPI FEI TUKE, built to present activities, people, and academic context in one place.",
-        tags: ["University", "Group website", "TUKE"]
+        description: "Website for a research group at KPI FEI TUKE with people, activities, and automatic extraction of new publications for all group members.",
+        tags: ["Research group", "Publications", "Automation"]
       },
       {
         name: "Cloud Native Kosice",
@@ -114,8 +114,8 @@ const projectsCopy = {
         url: "https://marek-horvath.github.io/cnk",
         imageKey: "cnk",
         previewAlt: "Preview of the Cloud Native Kosice meetup website",
-        description: "Website for Cloud Native Kosice meetups, presenting event information, program details, history, location, and email signup.",
-        tags: ["Community", "Meetups", "Static site"]
+        description: "Community website for Cloud Native Kosice meetups with event information, program details, history, location, email signup, and lightweight custom analytics.",
+        tags: ["Community", "Meetups", "Analytics"]
       },
       {
         name: "Revik",
@@ -123,8 +123,8 @@ const projectsCopy = {
         url: "https://www.revik.sk/",
         imageKey: "revik",
         previewAlt: "Preview of the Revik website",
-        description: "Presentation website for a local cleaning service, focused on a clear service offer, trust, and fast contact from visitors.",
-        tags: ["Services", "Local business", "Contact flow"]
+        description: "Presentation website for a local cleaning service, focused on a clear offer, fast contact, and a small admin/analytics layer for tracking real visitor actions.",
+        tags: ["Services", "Local business", "Analytics"]
       },
       {
         name: "Krajčírstvo July",
@@ -132,8 +132,8 @@ const projectsCopy = {
         url: "https://krajcirstvo.vercel.app/",
         imageKey: "krajcirstvo",
         previewAlt: "Preview of the Krajčírstvo July website",
-        description: "Public website for a tailoring service with a practical service overview and a reservation-oriented workflow.",
-        tags: ["Tailoring", "Reservations", "Small business"]
+        description: "Public website for a tailoring service with a practical service overview, contact-oriented flow, and custom analytics for understanding visitor clicks.",
+        tags: ["Tailoring", "Small business", "Analytics"]
       },
       {
         name: "Slovakdle",
@@ -141,8 +141,8 @@ const projectsCopy = {
         url: "https://slovakdle.vercel.app/",
         imageKey: "slovakdle",
         previewAlt: "Preview of the Slovakdle browser game",
-        description: "A Slovak guessing game inspired by daily puzzle formats, centered around Slovak personalities and simple repeat play.",
-        tags: ["Game", "Slovak content", "Daily puzzle"]
+        description: "My first Wordle-inspired browser game adapted for Slovakia, built around Slovak-themed guessing and simple repeat play.",
+        tags: ["Game", "Slovakia", "Wordle inspired"]
       },
       {
         name: "Dema: Signal Breach",
@@ -150,14 +150,14 @@ const projectsCopy = {
         url: "https://dema-jade.vercel.app/",
         imageKey: "dema",
         previewAlt: "Preview of the Dema Signal Breach web project",
-        description: "Interactive web project with a game-like presentation and a more experimental visual direction.",
-        tags: ["Interactive", "Game feel", "Vercel"]
+        description: "Twenty One Pilots-inspired branching story game in the style of a Telltale narrative, with minigames and roughly 100 custom illustrations.",
+        tags: ["Branching story", "Minigames", "Illustrations"]
       }
     ]
   },
   sk: {
     title: "Weby",
-    intro: "Výber webov a menších webových produktov, ktoré robím mimo výskumu a výučby pre ľudí, malé tímy a verejné nápady.",
+    intro: "Výber webov, dashboardov, hier a menších webových produktov, ktoré robím mimo výskumu a výučby. Väčšina z nich má aj malé vlastné admin alebo analytics rozhranie na kliknutia, presmerovania a reálne používanie.",
     openLabel: "Otvoriť",
     openProjectLabel: "Otvoriť projekt",
     tagsLabel: "Tagy projektu",
@@ -168,26 +168,26 @@ const projectsCopy = {
         url: "https://athena-kappa-one.vercel.app",
         imageKey: "athena",
         previewAlt: "Náhľad testovacieho dashboardu Athena",
-        description: "Dashboard na prezeranie výsledkov programátorských testov, študentských riešení, skupinových behov a spätnej väzby po úlohách.",
-        tags: ["Testovanie", "Vzdelávanie", "Admin UI"]
+        description: "Komplexný systém na testovanie študentských programátorských zadaní: automaticky sťahuje riešenia z GitLabu, spúšťa ich bezpečne v oddelených Docker kontajneroch a zapisuje štruktúrované výsledky.",
+        tags: ["Autograding", "GitLab", "Docker"]
       },
       {
-        name: "Neurologia",
-        type: "Rezervačný systém",
+        name: "Rezervačný systém pre ambulanciu",
+        type: "Doktorský rezervačný systém",
         url: "https://neurologia-vert.vercel.app/",
         imageKey: "neurologia",
-        previewAlt: "Náhľad rezervačného systému Neurologia",
-        description: "Rezervačný systém pre neurologickú ambulanciu s objednávaním pacientov, admin správou a automatickými emailovými notifikáciami.",
-        tags: ["Zdravotníctvo", "Rezervácie", "Email"]
+        previewAlt: "Náhľad rezervačného systému pre ambulanciu",
+        description: "Rezervačný systém pre ambulanciu s objednávaním pacientov, admin rozhraním na správu termínov a automatickým posielaním emailových pripomienok pacientom.",
+        tags: ["Ambulancia", "Rezervácie", "Email reminders"]
       },
       {
         name: "WC Predictions",
-        type: "Predikčná aplikácia",
+        type: "Tipovacia aplikácia",
         url: "http://167.233.132.16",
         imageKey: "football",
         previewAlt: "Náhľad futbalovej aplikácie WC Predictions",
-        description: "Aplikácia na tipovanie zápasov FIFA World Cup 2026 s výbermi zápasov, leaderboardom, porovnávaním tipov a exportom.",
-        tags: ["Futbal", "Tipovanie", "Dashboard"]
+        description: "Hobby projekt na tipovanie futbalových výsledkov s kamarátmi. Automaticky scrapoval finálne výsledky z Flashscore, vyhodnocoval tipy a udržiaval leaderboard.",
+        tags: ["Futbal", "Scraping", "Leaderboard"]
       },
       {
         name: "SEUG",
@@ -195,8 +195,8 @@ const projectsCopy = {
         url: "https://seug.kpi.fei.tuke.sk/",
         imageKey: "seug",
         previewAlt: "Náhľad webu SEUG",
-        description: "Web univerzitnej skupiny na KPI FEI TUKE, ktorý sústreďuje aktivity, ľudí a akademický kontext na jednom mieste.",
-        tags: ["Univerzita", "Skupina", "TUKE"]
+        description: "Web výskumnej skupiny na KPI FEI TUKE s ľuďmi, aktivitami a automatickou extrakciou nových článkov pre všetkých členov skupiny.",
+        tags: ["Výskumná skupina", "Publikácie", "Automatizácia"]
       },
       {
         name: "Cloud Native Kosice",
@@ -204,8 +204,8 @@ const projectsCopy = {
         url: "https://marek-horvath.github.io/cnk",
         imageKey: "cnk",
         previewAlt: "Náhľad webu Cloud Native Kosice",
-        description: "Web pre Cloud Native Kosice meetupy s informáciami o akciách, programom, históriou, miestom konania a emailovým prihlásením.",
-        tags: ["Komunita", "Meetupy", "Statický web"]
+        description: "Komunitný web pre Cloud Native Kosice meetupy s informáciami o eventoch, programom, históriou, miestom konania, emailovým prihlasovaním a vlastnou lightweight analytics vrstvou.",
+        tags: ["Komunita", "Meetupy", "Analytics"]
       },
       {
         name: "Revik",
@@ -213,8 +213,8 @@ const projectsCopy = {
         url: "https://www.revik.sk/",
         imageKey: "revik",
         previewAlt: "Náhľad webu Revik",
-        description: "Prezentačný web pre lokálnu čistiacu službu so zameraním na jasnú ponuku služieb, dôveryhodnosť a rýchly kontakt.",
-        tags: ["Služby", "Lokálny biznis", "Kontakt"]
+        description: "Prezentačný web pre lokálnu čistiacu službu so zameraním na jasnú ponuku, rýchly kontakt a malé admin/analytics rozhranie na sledovanie reálnych kliknutí.",
+        tags: ["Služby", "Lokálny biznis", "Analytics"]
       },
       {
         name: "Krajčírstvo July",
@@ -222,8 +222,8 @@ const projectsCopy = {
         url: "https://krajcirstvo.vercel.app/",
         imageKey: "krajcirstvo",
         previewAlt: "Náhľad webu Krajčírstvo July",
-        description: "Verejný web pre krajčírstvo s praktickým prehľadom služieb a workflow orientovaným na rezervácie.",
-        tags: ["Krajčírstvo", "Rezervácie", "Malý biznis"]
+        description: "Verejný web pre krajčírstvo s praktickým prehľadom služieb, kontaktne orientovaným flow a vlastnou analytics vrstvou na pochopenie kliknutí návštevníkov.",
+        tags: ["Krajčírstvo", "Malý biznis", "Analytics"]
       },
       {
         name: "Slovakdle",
@@ -231,8 +231,8 @@ const projectsCopy = {
         url: "https://slovakdle.vercel.app/",
         imageKey: "slovakdle",
         previewAlt: "Náhľad hry Slovakdle",
-        description: "Slovenská hádacia hra inšpirovaná dennými puzzle formátmi, zameraná na slovenské osobnosti a jednoduché opakované hranie.",
-        tags: ["Hra", "Slovenský obsah", "Denné puzzle"]
+        description: "Moja prvá Wordle-inšpirovaná browser hra upravená na Slovensko, postavená okolo slovenských tém a jednoduchého opakovaného hrania.",
+        tags: ["Hra", "Slovensko", "Wordle inspired"]
       },
       {
         name: "Dema: Signal Breach",
@@ -240,8 +240,8 @@ const projectsCopy = {
         url: "https://dema-jade.vercel.app/",
         imageKey: "dema",
         previewAlt: "Náhľad projektu Dema Signal Breach",
-        description: "Interaktívny webový projekt s hernou prezentáciou a experimentálnejším vizuálnym smerovaním.",
-        tags: ["Interaktivita", "Herný feeling", "Vercel"]
+        description: "Twenty One Pilots inšpirovaná branching story hra v štýle Telltale príbehu, s minihrami a približne 100 vlastnými ilustráciami.",
+        tags: ["Branching story", "Minihry", "Ilustrácie"]
       }
     ]
   }

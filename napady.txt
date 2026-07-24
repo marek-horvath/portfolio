@@ -1,0 +1,32 @@
+Podľa toho, čo už robíš, by som išiel skôr do vecí, ktoré spájajú tvoje silné stránky: weby pre ľudí, výskum, edukácia, hackathony, automatizácia.
+Mini SaaS pre malé ambulancie / služby
+Už máš neurologický rezervačný systém. Vedel by si z toho spraviť univerzálny produkt: rezervácie, email notifikácie, admin, export, jednoduché štatistiky.
+
+Portfólio šablóny pre doktorandov / akademikov
+Niečo ako “academic portfolio builder”: publikácie, Google Scholar, teaching, projekty, CV, blog, konferenčná timeline. Presne vec, ktorú si si už postavil.
+
+Nástroj na vizualizáciu PhD progresu
+Timeline konferencií, článkov, míľnikov, mobilít, súborov, fotiek. Mohlo by to byť pekné aj pre iných PhD študentov.
+
+Code similarity / plagiarism visualizer
+Keďže to súvisí s tvojím výskumom: upload dvoch kódov, farebné zvýraznenie podobných blokov, jednoduché vysvetlenie podobnosti.
+
+Programming assignment feedback tool
+Študent uploadne C/Python/Java riešenie a dostane spätnú väzbu: štýl, duplicity, zložitosť, možné problémy. Mohlo by to byť veľmi silné pre teaching.
+
+Hackathon archive / brag board
+Pekná stránka pre tvoje hackathony: výsledky, fotky, Devpost, role, technológie, čo ste stihli za 24/48h. Toto by ti dobre predávalo praktickú stránku.
+
+Client website package
+Z toho, čo už robíš pre ľudí, spraviť jasný balík: web + SEO + analytics + kontaktný formulár + jednoduchý admin. Ideálne pre doktorky, krajčírstva, malé firmy, kluby.
+
+Slovak developer/IT mini hry
+Keď máš Slovakdle, môžeš spraviť ďalšie malé veci: IT term guessing, TUKE-themed trivia, code puzzle daily challenge.
+
+Personal analytics dashboard ako produkt
+To, čo si si dal do adminu: tracking klikov, zdrojov, skratiek /li, /cv, /ig. Z toho by bol pekný lightweight analytics nástroj bez Google Analytics.
+
+Conference photo/blog engine
+Blog, ktorý má timeline, popupy, galériu, súbory, anchor linky. Toto je dosť originálne. Vedel by si z toho spraviť reusable template.
+
+Najsilnejšie by som asi tlačil tieto tri: academic portfolio builder, rezervačný systém pre malé služby, a programming feedback/code similarity tool. Tie najviac vychádzajú z toho, čo už máš a zároveň pôsobia ako reálne produkty, nie iba ďalší bočný projekt.

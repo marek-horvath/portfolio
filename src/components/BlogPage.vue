@@ -222,8 +222,8 @@
                 :style="{ '--accent': item.accent }"
               >
                 <button
-                  v-for="photo in item.photos"
-                  :key="photo.label"
+                  v-for="photo in previewPhotosForSection(item)"
+                  :key="photo.url || photo.label"
                   type="button"
                   class="polaroid"
                   :style="{ '--rotation': photo.rotation, '--lift': photo.lift }"
@@ -296,6 +296,26 @@
                 <strong>{{ activeSection.title }}</strong>
                 <span>{{ activePhotoIndex + 1 }} / {{ activeSection.photos.length }}</span>
               </figcaption>
+              <div
+                v-if="activeSection.photos.length > 1"
+                class="slide-thumbnails"
+                :aria-label="copy.photoThumbnails"
+              >
+                <button
+                  v-for="(photo, index) in activeSection.photos"
+                  :key="`${photo.url || photo.label}-${index}`"
+                  type="button"
+                  :class="{ active: index === activePhotoIndex }"
+                  :aria-label="`${copy.openGalleryPhoto} ${index + 1}`"
+                  @click="selectPhoto(index)"
+                >
+                  <span
+                    v-if="photo.url"
+                    :style="{ backgroundImage: `url(${photo.url})` }"
+                  ></span>
+                  <small v-else>{{ index + 1 }}</small>
+                </button>
+              </div>
             </figure>
             <button type="button" class="slide-control" :aria-label="copy.nextPhoto" @click="showNextPhoto">
               {{ copy.next }}
@@ -376,7 +396,7 @@ function photosForHackathon(sectionId, labelPrefix) {
     HACKATHON_PHOTO_FOLDER,
     labelPrefix,
     hackathonPhotoPrefixes[sectionId] || [],
-    4
+    200
   );
 }
 
@@ -408,7 +428,8 @@ const blogCopy = {
     previous: "Prev",
     next: "Next",
     previousPhoto: "Previous photo",
-    nextPhoto: "Next photo"
+    nextPhoto: "Next photo",
+    photoThumbnails: "Photo thumbnails"
   },
   sk: {
     navigationLabel: "Navigacia blogu",
@@ -429,7 +450,8 @@ const blogCopy = {
     previous: "Spat",
     next: "Dalej",
     previousPhoto: "Predchadzajuca fotka",
-    nextPhoto: "Dalsia fotka"
+    nextPhoto: "Dalsia fotka",
+    photoThumbnails: "Nahlady fotiek"
   }
 };
 
@@ -734,7 +756,7 @@ const sectionPhotoFolders = {
   "ines-2026": { folder: "phd/ines-2026", label: "INES 2026" }
 };
 
-function photosForSection(sectionId, fallbackLabels, limit = 3) {
+function photosForSection(sectionId, fallbackLabels, limit = 200) {
   const config = sectionPhotoFolders[sectionId];
   if (!config) {
     return [];
@@ -746,7 +768,7 @@ function photosForSection(sectionId, fallbackLabels, limit = 3) {
 
 function createTimelineSection(item, index) {
   const photoLabels = item.type === "Mobility" ? ["Place", "Work", "Travel"] : ["Venue", "Slides", "Notes"];
-  const photos = photosForSection(item.id, photoLabels);
+  const photos = photosForSection(item.id, photoLabels, 200);
 
   return {
     ...item,
@@ -1654,7 +1676,9 @@ export default {
       activeModal: "",
       modalMode: "detail",
       activeSection: null,
-      activePhotoIndex: 0
+      activePhotoIndex: 0,
+      previewPhotoTick: 0,
+      previewPhotoTimer: null
     };
   },
   computed: {
@@ -1719,14 +1743,36 @@ export default {
   mounted() {
     this.loadBlogContent();
     this.applyHashRoute(false);
+    this.startPreviewPhotoRotation();
     window.addEventListener("keydown", this.handleKeydown);
     window.addEventListener("hashchange", this.handleHashChange);
   },
   beforeUnmount() {
+    this.stopPreviewPhotoRotation();
     window.removeEventListener("keydown", this.handleKeydown);
     window.removeEventListener("hashchange", this.handleHashChange);
   },
   methods: {
+    startPreviewPhotoRotation() {
+      this.stopPreviewPhotoRotation();
+      this.previewPhotoTimer = window.setInterval(() => {
+        this.previewPhotoTick += 1;
+      }, 5000);
+    },
+    stopPreviewPhotoRotation() {
+      if (this.previewPhotoTimer) {
+        window.clearInterval(this.previewPhotoTimer);
+        this.previewPhotoTimer = null;
+      }
+    },
+    previewPhotosForSection(section) {
+      if (!section || !section.photos || section.photos.length <= 3) {
+        return section && section.photos ? section.photos : [];
+      }
+
+      const start = this.previewPhotoTick % section.photos.length;
+      return [0, 1, 2].map((offset) => section.photos[(start + offset) % section.photos.length]);
+    },
     setLanguage(language) {
       if (!languageOptions.includes(language)) {
         return;
@@ -1856,6 +1902,14 @@ export default {
       if (updateHash && this.selectedArticleId) {
         this.replaceHash(`blog=${encodeURIComponent(this.selectedArticleId)}`);
       }
+    },
+    selectPhoto(photoIndex) {
+      if (!this.activeSection || !this.activeSection.photos.length) {
+        return;
+      }
+
+      this.activePhotoIndex = this.clampPhotoIndex(this.activeSection, photoIndex);
+      this.updateModalHash("gallery", this.activeSection, this.activePhotoIndex);
     },
     showPreviousPhoto() {
       if (!this.activeSection || !this.activeSection.photos.length) {
@@ -3046,6 +3100,58 @@ export default {
   margin-top: 14px;
   color: #31577d;
   font-size: 13px;
+}
+
+.slide-thumbnails {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  overflow-x: auto;
+  padding: 2px 2px 8px;
+  scrollbar-width: thin;
+}
+
+.slide-thumbnails button {
+  flex: 0 0 58px;
+  height: 44px;
+  overflow: hidden;
+  border: 2px solid rgba(18, 53, 95, 0.08);
+  border-radius: 8px;
+  padding: 2px;
+  background: rgba(255, 255, 255, 0.78);
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.slide-thumbnails button:hover,
+.slide-thumbnails button:focus-visible {
+  border-color: rgba(18, 53, 95, 0.32);
+  box-shadow: 0 10px 22px rgba(18, 53, 95, 0.14);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.slide-thumbnails button.active {
+  border-color: #163a66;
+  box-shadow: 0 0 0 3px rgba(22, 58, 102, 0.13);
+}
+
+.slide-thumbnails span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  background-position: center;
+  background-size: cover;
+}
+
+.slide-thumbnails small {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  color: #163a66;
+  font-size: 12px;
+  font-weight: 900;
 }
 
 @keyframes networkDash {
