@@ -26,7 +26,7 @@
     </div>
 
     <nav class="blog-menu" :aria-label="copy.navigationLabel">
-      <a class="blog-mark" href="#top" :aria-label="copy.topLabel">MH</a>
+      <a class="blog-mark" :href="portfolioUrl" :aria-label="copy.portfolioLabel">MH</a>
       <div class="menu-links">
         <a
           v-for="articleItem in localizedArticles"
@@ -210,9 +210,16 @@
                   <li v-for="note in item.notes" :key="note">{{ note }}</li>
                 </ul>
                 <div v-if="item.files.length" class="file-preview">
-                  <span v-for="file in item.files" :key="file.url || file.label">
+                  <a
+                    v-for="file in item.files"
+                    :key="file.url || file.label"
+                    :href="file.url || '#'"
+                    :download="file.download || null"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     {{ file.label }}
-                  </span>
+                  </a>
                 </div>
               </div>
 
@@ -412,6 +419,7 @@ const blogCopy = {
   en: {
     navigationLabel: "Blog navigation",
     topLabel: "Blog top",
+    portfolioLabel: "Back to portfolio",
     languageLabel: "Blog language",
     heroEyebrow: "Notes and photos",
     heroTitle: "Marek Blog",
@@ -434,6 +442,7 @@ const blogCopy = {
   sk: {
     navigationLabel: "Navigacia blogu",
     topLabel: "Zaciatok blogu",
+    portfolioLabel: "Spat na portfolio",
     languageLabel: "Jazyk blogu",
     heroEyebrow: "Poznamky a fotky",
     heroTitle: "Marek Blog",
@@ -745,6 +754,7 @@ const sectionPhotoFolders = {
   "icpec-2024": { folder: "phd/icpec-2024", label: "ICPEC 2024" },
   "iceta-2024": { folder: "phd/iceta-2024", label: "ICETA 2024" },
   "informatics-2024": { folder: "phd/informatics-2024", label: "Informatics" },
+  "sami-2025": { folder: "phd/sami-2025", label: "SAMI 2025" },
   "brno-summer-school": { folder: "travel/brno", label: "Brno CZ" },
   "ulysseus-curate-germany": { folder: "phd/ulysseus-curate-germany", label: "Münster DE" },
   "greece-mobility": { folder: "travel/greece", label: "Athens GR" },
@@ -938,7 +948,7 @@ function createHackathonSection(item, index) {
     type: "Hackathon",
     description: item.description,
     details: item.details,
-    notes: ["Add team/project details.", "Add final result.", "Keep this short and visual."],
+    notes: ["Team and project context.", "Result and takeaway.", "Kept short and visual."],
     caption: "",
     accent: accents[index % accents.length],
     files,
@@ -973,6 +983,7 @@ const galleryPhotoGroups = [
   { id: "ines-2026", folder: "phd/ines-2026", date: "Conference", title: "INES 2026", accent: "#5d4aa1" },
   { id: "posters", folder: "phd/posters", date: "Research", title: "Posters", accent: "#8d2f56" },
   { id: "sami-2024", folder: "phd/sami-2024", date: "Conference", title: "SAMI 2024", accent: "#9a5a08" },
+  { id: "sami-2025", folder: "phd/sami-2025", date: "Conference", title: "SAMI 2025", accent: "#0f766e" },
   { id: "sami-2026", folder: "phd/sami-2026", date: "Conference", title: "SAMI 2026", accent: "#334155" },
   { id: "iceta-2025", folder: "phd/iceta-2025", date: "Conference", title: "ICETA 2025", accent: "#2b6cb0" },
   { id: "iceta-2024", folder: "phd/iceta-2024", date: "Conference", title: "ICETA 2024", accent: "#0f766e" },
@@ -1475,6 +1486,408 @@ Object.keys(refinedSectionCopy).forEach((language) => {
   };
 });
 
+const personalTimelineCopy = {
+  en: {
+    "iceta-2023": {
+      description: "My first conference, roughly one month after starting the PhD, at Grandhotel Stary Smokovec.",
+      details:
+        "ICETA 2023 was my first conference after starting doctoral study. It took place at Grandhotel Stary Smokovec in the High Tatras, so the whole event became a clear first marker in the PhD timeline.\n\nThe photo also captures something personal: classmates from the same year standing at the beginning of the same academic path. At that point the conference world was still new, and the research direction was only starting to take shape.",
+      notes: ["First conference after starting the PhD.", "Grandhotel Stary Smokovec.", "Classmates from the same doctoral year."]
+    },
+    "sami-2024": {
+      description: "Second High Tatras conference, this time in Stara Lesna, where I presented results from my diploma thesis.",
+      details:
+        "SAMI 2024 took place in Stara Lesna in the High Tatras. I presented results from my diploma thesis, so it felt like a transition point between the master's work and the beginning of the PhD research.\n\nBecause it was only our second conference, we still did not fully know how the logistics worked. We missed the chance to book accommodation in the conference hotel, almost everything nearby was full, and we finally found Hotel Lesna. That turned out to be even better than the conference hotel, so in later years we started going there directly.",
+      notes: ["Presented diploma thesis results.", "Stara Lesna, High Tatras.", "Hotel Lesna became the better accommodation choice."]
+    },
+    "scyr-2024": {
+      description: "Doctoral conference in Kosice at TUKE, useful as a local research checkpoint.",
+      details:
+        "SCYR is a doctoral conference held in Kosice at TUKE. Compared with the larger international conferences, it is more direct and closer to the everyday PhD environment.\n\nFor the timeline it works as a local checkpoint: a place to explain the current state of the work, hear questions from other doctoral students, and keep the dissertation story moving.",
+      notes: ["Doctoral conference.", "Kosice, TUKE.", "Local PhD checkpoint."]
+    },
+    "icpec-2024": {
+      description: "My first foreign conference, in Lisbon, with two programming-education papers and a memorable trip.",
+      details:
+        "ICPEC 2024 was my first foreign conference. It took place in Lisbon, Portugal, and I had two papers focused on programming education. The conference itself was hosted at a university and, interestingly, the sessions were in normal classrooms rather than a hotel-style conference venue.\n\nThe trip was memorable before we even arrived. We spent a long time closed inside the airplane at the airport because there was no landing slot available. It was extremely hot, we did not get water, and by the end we felt pretty bad. During the conference the weather was also not ideal, with frequent rain, so we did not see as much of Lisbon as we wanted.\n\nStill, it became a strong first international experience. We met new friends there, including two people both named Afonso, and the whole trip made the conference feel much more real than just presenting papers.",
+      notes: ["First foreign conference.", "Two programming-education papers.", "Lisbon, classroom sessions, and the two Afonsos."]
+    },
+    "olomouc-mobility-2024": {
+      description: "One-month CEEPUS mobility focused on writing the minimovka work, with floods, city routines, and a lot of Olomouc.",
+      details:
+        "Olomouc was a one-month CEEPUS mobility focused mainly on writing the minimovka work. Accommodation was difficult because finding a place for exactly one month is not simple, so we ended up staying at the edge of the city for a relatively high price.\n\nWhen we arrived, it rained for almost two straight weeks and large floods hit parts of the Czech Republic. Even with that start, the month turned into a very full stay. We went through the city properly, tried local places, went swimming and playing squash, and visited local landmarks, castles, and places around Olomouc.\n\nIt was less about one single output and more about getting concentrated time away from the normal routine.",
+      notes: ["CEEPUS mobility.", "Minimovka writing month.", "Floods, local routines, swimming, squash, and nearby castles."]
+    },
+    "iceta-2024": {
+      description: "A quieter ICETA entry, mostly another steady conference checkpoint in the Tatras.",
+      details:
+        "ICETA 2024 does not have one dramatic story attached to it, but it still belongs in the timeline as another steady checkpoint. Returning to ICETA after the first year made the conference feel less unknown and more like part of the regular PhD rhythm.\n\nFor now I keep this entry short and mostly visual, ready for a more specific memory or paper note later.",
+      notes: ["Return to ICETA.", "Conference rhythm in the Tatras.", "Short visual entry for now."]
+    },
+    "informatics-2024": {
+      description: "Poprad conference with a strong atmosphere, good organization, and a cultural trip during the program.",
+      details:
+        "Informatics 2024 took place in Poprad. Since the conference is held only every two years, this was the only edition I managed to attend during the PhD period.\n\nThe hotel was more modest, but the organization and atmosphere were very good. I especially liked that the program included a cultural part: for half of one day everyone went by bus to an open-air museum and a historical railway. That made the event feel more shared and less like only sessions and presentations.",
+      notes: ["Conference in Poprad.", "Runs only every two years.", "Cultural trip to an open-air museum and historical railway."]
+    },
+    "sami-2025": {
+      description: "A dense SAMI year with four papers, many of them prepared during the Olomouc mobility.",
+      details:
+        "SAMI 2025 was one of the busiest conference stops for me. I had four papers there, partly because during the Olomouc mobility we worked on several topics that were later submitted to this conference.\n\nThis entry is a good place to show the moment when the PhD work became wider: more collaborations, more parallel topics, and a stronger connection between AI, programming education, code reuse, and practical teaching tools.",
+      notes: ["Four papers at one conference.", "Several topics prepared during Olomouc mobility.", "Broader collaboration year."]
+    },
+    "minimovka-defense": {
+      title: "Minimovka",
+      description: "Internal PhD milestone for checking whether the dissertation direction holds together.",
+      details:
+        "Minimovka is more of an internal milestone than a public event, so I keep this entry short. Its main role in the timeline is simple: it forced the research direction to be explained as one coherent dissertation story.\n\nIt is the kind of checkpoint that is not visually exciting, but it matters because it separates scattered papers from a clearer PhD plan.",
+      notes: ["Internal PhD checkpoint.", "Dissertation direction review.", "Short milestone entry."]
+    },
+    "scyr-2025": {
+      description: "Another TUKE doctoral conference checkpoint, kept short until more specific notes are added.",
+      details:
+        "SCYR 2025 continues the local doctoral-conference line in Kosice. It is useful as a progress marker after the dissertation topic became easier to formulate.\n\nFor now this stays as a compact entry, ready for a poster, presentation note, or one concrete takeaway later.",
+      notes: ["Doctoral conference.", "Kosice, TUKE.", "Compact progress marker."]
+    },
+    "brno-summer-school": {
+      title: "Brno CZ",
+      description: "Statistics summer school at VUT with intensive Minitab training and a useful mix of academic and industry people.",
+      details:
+        "Brno was a summer school focused on statistical methods. It took place at VUT, we stayed in a dormitory, and every day had around eight hours of intensive training in Minitab.\n\nI liked it a lot because it was practical and genuinely useful for research. We were among the youngest participants, and many people came from practice, including for example the director of the Focus survey agency. That made the experience valuable beyond normal academic training.\n\nThe city itself also surprised me positively. Even at the end of summer holidays, Brno felt active and alive.",
+      notes: ["VUT summer school.", "Eight-hour daily Minitab training.", "Useful mix of academia and practice."]
+    },
+    "ulysseus-curate-germany": {
+      title: "Münster DE",
+      description: "Final presentation of a Ulysseus/CURATE project where I managed the GymBeam team work.",
+      details:
+        "This entry belongs to the Ulysseus/CURATE project. Universities from Sevilla, Nice, Kosice, Innsbruck, Haaga-Helia, and Münster were involved. Each university sent roughly ten students, two local companies joined from each country, and the students were split into international teams working on company projects.\n\nI worked on a GymBeam system. In my team I took the product owner, scrum master, and manager role: organizing work, preparing documents, joining calls with the company and universities, and keeping the team aligned. I took these roles mainly because I already had real development experience, while several teammates were younger and had less practical background.\n\nWe worked on the project for about half a year, and the final presentation was in Münster, where only two of us from the team travelled. I did not know the city before, but it reminded me of the Netherlands: many bicycles, brick houses, and a smaller historic-city feeling near Düsseldorf and Cologne.",
+      notes: ["Ulysseus/CURATE international project.", "GymBeam team product owner and scrum master.", "Final presentation in Münster."]
+    },
+    "greece-mobility": {
+      title: "Athens GR",
+      description: "SAIA research mobility at AUEB/BALab with Diomidis Spinellis and a research group that became much more than a host lab.",
+      details:
+        "Athens was a foreign research mobility through the SAIA program. SAIA later wrote a blog post about the stay, and the link is attached directly in this timeline entry.\n\nThe preparation was demanding because the program requires many documents, especially an invitation letter from a host university. I first found a research group in Delft connected to a professor working on topics close to mine. He replied quickly and explained that he was only a visiting professor there, but that he was based in Greece and I could come there instead. I accepted.\n\nThat professor was Diomidis Spinellis, a very respected researcher with around 16k Google Scholar citations. I also became part of their research group, which was excellent not only professionally but also personally. I met Irfan, Thodoris, Konstantina, Nikos, George, Chris, and others. They included me in the group life: a barbecue at a cottage, internet cafe gaming, karaoke, sightseeing, and regular workdays where everyone could still switch into serious focus.\n\nOverall it was one of the most meaningful PhD experiences, because it combined strong research, good people, and a very different daily environment.",
+      notes: ["SAIA mobility.", "AUEB/BALab and Diomidis Spinellis.", "Research group, work focus, and Athens life."],
+      files: [
+        {
+          label: "SAIA blog",
+          url: "https://www.saia.sk/sk/main/studium-a-vyskum/blog/za-vyskumom-do-aten-ked-je-dolezitejsi-tim-nez-destinacia",
+          type: "link"
+        }
+      ]
+    },
+    "iceta-2025": {
+      description: "ICETA return where I also brought my student Martin Cupalka.",
+      details:
+        "ICETA 2025 was another return to a familiar conference environment. The personal part of this entry is that I brought my student Martin Cupalka, so the event was not only about presenting my own work but also about involving a student in the academic conference routine.\n\nIt fits the timeline as a later-stage ICETA point, when the PhD topic was already much more settled than during the first 2023 visit.",
+      notes: ["Return to ICETA.", "Student Martin Cupalka joined.", "Later-stage PhD conference point."]
+    },
+    "eger-hungary": {
+      title: "Eger HU",
+      description: "Short APVV project stay with colleagues at the partner university in a quiet historic city before Christmas.",
+      details:
+        "Eger was connected to an APVV project with the local university. It was roughly a four-day stay with colleagues, so it felt more like a focused working trip than a full conference.\n\nThe city itself was calm and historic. We were there shortly before Christmas, just as the markets were being built, so the atmosphere was pleasant even during a short stay.",
+      notes: ["APVV project stay.", "Partner university in Eger.", "Quiet pre-Christmas atmosphere."]
+    },
+    "sami-2026": {
+      description: "Another SAMI checkpoint, kept as a short conference entry for now.",
+      details:
+        "SAMI 2026 stays short for now. It continues the recurring SAMI line in the PhD timeline and can later be expanded with the exact paper, photos, or one stronger memory from the event.",
+      notes: ["Recurring SAMI conference.", "Short entry for now.", "Ready for a paper-specific note later."]
+    },
+    "slovinsko-mobility": {
+      title: "Maribor SI",
+      description: "CEEPUS mobility in Maribor focused on finishing the dissertation, with student dorms, boni meals, swimming, and city walks.",
+      details:
+        "Maribor was another CEEPUS mobility, this time focused on finishing the dissertation work. I went there with my colleague Jaroslav Marko. Even though Maribor is the second largest city in Slovenia, it still felt relatively small and easy to get around.\n\nWe received free accommodation in a student dormitory, which was its own interesting experience. Slovenia also had a very good student food system called boni: something like meal vouchers that work in many restaurants, often with little or no extra payment. We received access to it as well, so eating during the stay was surprisingly practical.\n\nOutside the research work I often went swimming, and we walked through a lot of the city and nearby places.",
+      notes: ["CEEPUS mobility.", "Dissertation finishing period.", "Dormitory, boni meals, swimming, and walks."]
+    },
+    "scyr-2026": {
+      description: "Late doctoral conference checkpoint in Kosice, close to the final dissertation phase.",
+      details:
+        "SCYR 2026 stays as a compact late-stage doctoral checkpoint. It belongs near the end of the timeline because by then the dissertation direction should be much clearer and closer to its final shape.\n\nIf I add more later, this should probably be about final feedback and what still needed polishing before finishing the PhD.",
+      notes: ["Late PhD checkpoint.", "Kosice, TUKE.", "Final-stage feedback."]
+    },
+    "icpec-2026": {
+      description: "Second ICPEC participation, this time in Guimaraes, with a strong conference atmosphere and a surprisingly beautiful Porto side trip.",
+      details:
+        "ICPEC 2026 was my second time at this conference. Since ICPEC changes city every year, this edition took place in Guimaraes. I did not know the city before, but I learned that it is closely tied to the origin of Portugal. The historical centre had a strong medieval feeling, almost like Witcher vibes, and I personally liked it a lot.\n\nThe conference itself was good and very international. We met many people and spent time with David from England, as well as participants from Germany, Ukraine, Portugal, and other countries.\n\nWe also managed to visit Porto. At first it did not fully click with us, but after the boat trip and a few other places, we really started to like it. It turned into one of those cities I would definitely recommend.",
+      notes: ["Second ICPEC participation.", "Guimaraes historical atmosphere.", "International group and Porto side trip."]
+    },
+    "ines-2026": {
+      description: "Final PhD-period conference with four papers, held in Budapest in an aquapark setting.",
+      details:
+        "INES 2026 was the last conference during my PhD period, so I submitted what I had collected from research with students. In the end I had four papers again.\n\nThe conference changes location every year, and this edition was in Budapest. What made it memorable was the venue: it was held in an aquapark. That made the whole event feel different from a normal conference hotel and turned it into a very good final conference experience.",
+      notes: ["Last conference during PhD study.", "Four papers with student research outputs.", "Budapest aquapark venue."]
+    }
+  },
+  sk: {
+    "iceta-2023": {
+      description: "Moja prvá konferencia, asi mesiac po nástupe na doktorandské štúdium, v Grandhoteli Starý Smokovec.",
+      details:
+        "ICETA 2023 bola moja prvá konferencia po nástupe na doktorandské štúdium. Konala sa v Grandhoteli Starý Smokovec vo Vysokých Tatrách, takže v timeline pôsobí ako jasný začiatok celej PhD časti.\n\nNa fotke je aj osobnejší moment: spolužiaci z jedného ročníka, ktorí stáli na začiatku podobnej akademickej cesty. Vtedy bol konferenčný svet ešte nový a výskumný smer sa len začínal skladať.",
+      notes: ["Prvá konferencia po nástupe na PhD.", "Grandhotel Starý Smokovec.", "Spolužiaci z jedného ročníka."]
+    },
+    "sami-2024": {
+      description: "Druhá tatranská konferencia, tentokrát v Starej Lesnej, kde som prezentoval výsledky diplomovej práce.",
+      details:
+        "SAMI 2024 sa konalo v Starej Lesnej vo Vysokých Tatrách. Prezentoval som tam výsledky svojej diplomovej práce, takže to bol prechod medzi diplomovkou a začiatkom PhD výskumu.\n\nKeďže to bola iba naša druhá konferencia, ešte sme úplne nevedeli, ako funguje logistika. Nestihli sme si booknuť ubytovanie v hoteli, kde sa konala konferencia, skoro všetko v okolí bolo obsadené, a nakoniec sme našli Hotel Lesná. Zistili sme, že je dokonca lepší než konferenčný hotel, takže ďalšie roky sme už chodili rovno tam.",
+      notes: ["Výsledky diplomovej práce.", "Stará Lesná vo Vysokých Tatrách.", "Hotel Lesná sa ukázal ako lepšia voľba."]
+    },
+    "scyr-2024": {
+      description: "Doktorandská konferencia v Košiciach na TUKE, užitočná ako lokálny výskumný checkpoint.",
+      details:
+        "SCYR je doktorandská konferencia, ktorá sa konala v Košiciach na TUKE. Oproti veľkým zahraničným konferenciám je priamejšia a bližšia bežnému doktorandskému prostrediu.\n\nV timeline funguje ako lokálny checkpoint: miesto, kde sa dá vysvetliť aktuálny stav práce, dostať otázky od iných doktorandov a posunúť dizertačný príbeh ďalej.",
+      notes: ["Doktorandská konferencia.", "Košice, TUKE.", "Lokálny PhD checkpoint."]
+    },
+    "icpec-2024": {
+      description: "Prvá zahraničná konferencia v Lisabone, s dvomi článkami o programming education a dosť zapamätateľnou cestou.",
+      details:
+        "ICPEC 2024 bola moja prvá zahraničná konferencia. Konala sa v Lisabone v Portugalsku a mal som tam dva články zamerané na programming education. Samotná konferencia bola na univerzite a bolo zaujímavé, že prebiehala v normálnych triedach, nie v typickom konferenčnom hoteli.\n\nCesta bola zvláštna ešte pred pristátím. Dlho sme sedeli zatvorení v lietadle na letisku, lebo nebol voľný slot na pristátie. Bolo extrémne horúco, nedali nám ani vodu a ku koncu nám bolo dosť zle. Počas konferencie nám navyše veľmi nevyšlo počasie, často pršalo, takže sme z Lisabonu nevideli toľko, koľko sme chceli.\n\nAj tak to bola silná prvá zahraničná skúsenosť. Našli sme si tam kamarátov, zhodou okolností sa obaja volali Afonso, a celá cesta spravila z konferencie niečo oveľa reálnejšie než iba odprezentovanie článkov.",
+      notes: ["Prvá zahraničná konferencia.", "Dva programming-education články.", "Lisabon, triedy na univerzite a dvaja Afonsovia."]
+    },
+    "olomouc-mobility-2024": {
+      description: "Mesačná CEEPUS mobilita zameraná na písanie minimovkovej práce, s dažďom, povodňami a veľa Olomoucom.",
+      details:
+        "Olomouc bola mesačná mobilita cez program CEEPUS, konkrétne zameraná hlavne na písanie minimovkovej práce. Zo začiatku bol problém s ubytovaním, keďže zohnať miesto presne na mesiac je dosť náročné, takže sme bývali na kraji mesta za pomerne vysokú cenu.\n\nKeď sme prišli, akurát dva týždne vkuse pršalo a v Česku boli veľké povodne. Napriek tomu sa z toho stal veľmi plný mesiac. Prešli sme veľa z mesta, vyskúšali lokálne podniky, chodili plávať, na squash, pozreli sme pamiatky, hrady a miesta v okolí.\n\nNebolo to o jednom konkrétnom článku, skôr o sústredenom čase mimo bežnej rutiny.",
+      notes: ["CEEPUS mobilita.", "Písanie minimovky.", "Povodne, podniky, plávanie, squash a hrady v okolí."]
+    },
+    "iceta-2024": {
+      description: "Tichšia ICETA položka, skôr ďalší stabilný konferenčný checkpoint v Tatrách.",
+      details:
+        "K ICETA 2024 zatiaľ nemám jednu výraznú historku, ale do timeline patrí ako ďalší stabilný konferenčný checkpoint. Návrat na ICETA po prvom roku už pôsobil menej neznámo a viac ako súčasť pravidelného PhD rytmu.\n\nZatiaľ túto položku nechávam kratšiu a viac vizuálnu, pripravenú na konkrétnejšiu spomienku alebo poznámku k článku neskôr.",
+      notes: ["Návrat na ICETA.", "Konferenčný rytmus v Tatrách.", "Krátka vizuálna položka."]
+    },
+    "informatics-2024": {
+      description: "Konferencia v Poprade s dobrou organizáciou, atmosférou a kultúrnym výletom v programe.",
+      details:
+        "Informatics 2024 sa konala v Poprade. Keďže táto konferencia je iba raz za dva roky, počas doktorandského štúdia som ju stihol iba raz.\n\nHotel bol skromnejší, ale organizácia a atmosféra boli veľmi dobré. Páčilo sa mi hlavne to, že súčasťou bol aj kultúrny program: polovicu jedného dňa sme išli všetci autobusom do skanzenu a na historickú železnicu. Vďaka tomu konferencia nepôsobila iba ako séria prezentácií, ale viac ako spoločný zážitok.",
+      notes: ["Konferencia v Poprade.", "Koná sa raz za dva roky.", "Výlet do skanzenu a na historickú železnicu."]
+    },
+    "sami-2025": {
+      description: "Silný SAMI rok so štyrmi článkami, z ktorých viaceré vznikali počas mobility v Olomouci.",
+      details:
+        "SAMI 2025 bolo jedno z najhustejších konferenčných miest v timeline. Mal som tam až štyri články, čiastočne preto, že počas mobility v Olomouci sme pracovali na viacerých témach, ktoré sme potom poslali práve sem.\n\nTáto položka dobre ukazuje moment, keď sa PhD práca rozšírila: viac spoluprác, viac paralelných tém a silnejšie prepojenie medzi AI, programming education, code reuse a praktickými nástrojmi pre výučbu.",
+      notes: ["Štyri články na jednej konferencii.", "Viaceré témy pripravené počas Olomouca.", "Silný rok spoluprác."]
+    },
+    "minimovka-defense": {
+      title: "Minimovka",
+      description: "Interný PhD míľnik, kde sa kontrolovalo, či smer dizertácie drží pokope.",
+      details:
+        "Minimovka je skôr interný míľnik než verejný event, takže túto položku nechávam kratšiu. V timeline má jednoduchú rolu: prinútila vysvetliť výskumný smer ako jeden zrozumiteľný dizertačný príbeh.\n\nNie je to vizuálne najzaujímavejší bod, ale je dôležitý, lebo oddeľuje samostatné články od jasnejšieho PhD plánu.",
+      notes: ["Interný PhD checkpoint.", "Kontrola smeru dizertácie.", "Krátka míľniková položka."]
+    },
+    "scyr-2025": {
+      description: "Ďalší doktorandský checkpoint na TUKE, zatiaľ ponechaný ako kratšia položka.",
+      details:
+        "SCYR 2025 pokračuje v lokálnej doktorandskej línii v Košiciach. Je užitočný ako bod progresu po tom, čo sa téma dizertácie dala formulovať jasnejšie.\n\nZatiaľ túto položku nechávam kompaktnejšiu, pripravenú na poster, poznámku k prezentácii alebo jednu konkrétnu spätnú väzbu neskôr.",
+      notes: ["Doktorandská konferencia.", "Košice, TUKE.", "Kompaktný bod progresu."]
+    },
+    "brno-summer-school": {
+      title: "Brno CZ",
+      description: "Letná škola štatistiky na VUT s intenzívnym Minitab školením a užitočným mixom akademických aj praktických ľudí.",
+      details:
+        "Brno bola letná škola zameraná na štatistické metódy. Bolo to na VUT, bývali sme na internáte a každý deň sme mali približne osem hodín intenzívneho školenia v softvéri Minitab.\n\nVeľmi sa mi to páčilo, lebo to bolo praktické a reálne užitočné pre výskum. Boli sme tam medzi najmladšími účastníkmi a veľa ľudí bolo aj z praxe, napríklad riaditeľ prieskumnej agentúry Focus. Práve preto boli tieto skúsenosti cenné aj mimo bežnej akademickej výučby.\n\nAj samotné Brno sa mi veľmi páčilo. Hoci bol koniec prázdnin, mesto pôsobilo dosť živo.",
+      notes: ["Letná škola na VUT.", "Osem hodín Minitabu denne.", "Mix akademického prostredia a praxe."]
+    },
+    "ulysseus-curate-germany": {
+      title: "Münster DE",
+      description: "Finálna prezentácia Ulysseus/CURATE projektu, kde som manažoval GymBeam tím.",
+      details:
+        "Táto položka patrí k projektu Ulysseus/CURATE. Zapojené boli univerzity zo Sevilly, Nice, Košíc, Innsbrucku, Haaga-Helia a Münsteru. Z každej univerzity bolo približne desať študentov, z každej krajiny sa zapojili dve lokálne firmy a študenti sa rozdelili do medzinárodných tímov, ktoré pracovali na projektoch týchto firiem.\n\nJa som pracoval na systéme pre GymBeam. V tíme som mal rolu product ownera, scrum mastera a v podstate aj manažéra: organizoval som prácu, vytváral dokumenty, zúčastňoval som sa hovorov s firmou aj univerzitou a držal tím pokope. Tieto úlohy som vzal hlavne preto, že som už mal skúsenosti z reálnej development praxe, zatiaľ čo viacerí členovia tímu boli mladší a podobné skúsenosti ešte nemali.\n\nNa projekte sme pracovali približne pol roka a finálna prezentácia bola v Münsteri, kam sme z nášho tímu išli iba dvaja. Mesto som predtým nepoznal, ale pripomínalo mi Holandsko: veľa bicyklov, tehlové domy a menšie historické mesto v blízkosti Düsseldorfu a Kolína.",
+      notes: ["Ulysseus/CURATE medzinárodný projekt.", "GymBeam tím, product owner a scrum master.", "Finálna prezentácia v Münsteri."]
+    },
+    "greece-mobility": {
+      title: "Athens GR",
+      description: "SAIA výskumná mobilita na AUEB/BALab s Diomidisom Spinellisom a skupinou, ktorá bola oveľa viac než len hostiteľské pracovisko.",
+      details:
+        "Athens bola zahraničná výskumná mobilita cez program SAIA. SAIA o nej neskôr napísala aj blogový článok, ktorý je pripojený priamo pri tejto položke timeline.\n\nPríprava bola náročná, lebo program vyžaduje veľa dokumentov a najdôležitejší je pozývací list z hostiteľskej univerzity. Najprv som si našiel výskumnú skupinu v Delfte s profesorom, ktorý sa venoval témam blízkym môjmu výskumu. Odpísal rýchlo, ale vysvetlil, že je tam iba hosťujúci profesor a pôsobí hlavne v Grécku, takže by som mohol ísť tam. Akceptoval som to.\n\nTým profesorom bol Diomidis Spinellis, veľmi renomovaný výskumník s približne 16k citáciami na Google Scholar. Zároveň som sa stal súčasťou ich výskumnej skupiny, ktorá bola výborná nielen pracovne, ale aj ľudsky. Spoznal som Irfana, Thodorisa, Konstantinu, Nikosa, Georgea, Chrisa a ďalších. Prijali ma medzi seba: bol som s nimi na chate na grilovačke, chodili sme do internet cafe hrať hry, bol som na karaoke, prešli sme spolu pamiatky a zároveň počas dňa vedeli byť veľmi sústredení a profesionálni.\n\nCelkovo to bola jedna z najsilnejších PhD skúseností, lebo spojila výborný výskum, dobrých ľudí a úplne iné každodenné prostredie.",
+      notes: ["SAIA mobilita.", "AUEB/BALab a Diomidis Spinellis.", "Výskumná skupina, sústredená práca a Athens život."],
+      files: [
+        {
+          label: "SAIA článok",
+          url: "https://www.saia.sk/sk/main/studium-a-vyskum/blog/za-vyskumom-do-aten-ked-je-dolezitejsi-tim-nez-destinacia",
+          type: "link"
+        }
+      ]
+    },
+    "iceta-2025": {
+      description: "Návrat na ICETA, kde som zobral aj svojho študenta Martina Cupalku.",
+      details:
+        "ICETA 2025 bola ďalším návratom do známeho konferenčného prostredia. Osobnejšia časť tejto položky je, že som zobral svojho študenta Martina Cupalku, takže event nebol iba o prezentovaní vlastnej práce, ale aj o zapojení študenta do akademickej konferenčnej rutiny.\n\nDo timeline to patrí ako neskorší ICETA bod, keď už bola PhD téma oveľa ustálenejšia než pri prvej účasti v roku 2023.",
+      notes: ["Návrat na ICETA.", "Študent Martin Cupalka.", "Neskoršia PhD konferenčná etapa."]
+    },
+    "eger-hungary": {
+      title: "Eger HU",
+      description: "Krátky APVV projektový pobyt s kolegami na partnerskej univerzite v pokojnom historickom meste pred Vianocami.",
+      details:
+        "Eger súvisel s APVV projektom, ktorý máme s ich univerzitou. Bol to približne štvordňový pobyt spolu s ďalšími kolegami, takže išlo skôr o sústredenú pracovnú cestu než o klasickú konferenciu.\n\nMesto sa mi páčilo, bolo pokojné a zároveň historické. Boli sme tam krátko pred Vianocami, práve stavali trhy, takže tam bola príjemná atmosféra aj počas krátkeho pobytu.",
+      notes: ["APVV projektový pobyt.", "Partnerská univerzita v Egeri.", "Pokojná predvianočná atmosféra."]
+    },
+    "sami-2026": {
+      description: "Ďalší SAMI checkpoint, zatiaľ ponechaný ako krátka konferenčná položka.",
+      details:
+        "SAMI 2026 zatiaľ nechávam kratšie. Pokračuje v opakovanej SAMI línii v PhD timeline a neskôr sa dá doplniť o konkrétny článok, fotky alebo jednu výraznejšiu spomienku z eventu.",
+      notes: ["Opakujúca sa SAMI konferencia.", "Krátka položka zatiaľ.", "Pripravené na konkrétnejšiu poznámku."]
+    },
+    "slovinsko-mobility": {
+      title: "Maribor SI",
+      description: "CEEPUS mobilita v Maribore zameraná na dokončovanie dizertácie, s internátom, bonmi, plavárňou a prechádzkami.",
+      details:
+        "Maribor bola ďalšia mobilita cez CEEPUS, tentokrát zameraná na dokončovanie dizertačnej práce. Bol som tam s kolegom Jaroslavom Markom. Hoci je Maribor druhé najväčšie mesto v Slovinsku, stále pôsobil skôr ako menšie a prehľadné mesto.\n\nDostali sme zdarma ubytovanie na internáte, čo bol samo o sebe zaujímavý zážitok. V Slovinsku majú veľmi dobre vyriešené stravovanie pre študentov cez systém boni: niečo ako stravné lístky, ktoré platia vo väčšine reštaurácií a často sa dá najesť bez doplatku. Dostali sme to aj my, takže jedlo počas mobility bolo veľmi praktické.\n\nMimo výskumnej práce som často chodil na plaváreň a veľa sme toho pochodili v meste aj okolí.",
+      notes: ["CEEPUS mobilita.", "Dokončovanie dizertácie.", "Internát, boni, plaváreň a prechádzky."]
+    },
+    "scyr-2026": {
+      description: "Neskorý doktorandský checkpoint v Košiciach, blízko finálnej fázy dizertácie.",
+      details:
+        "SCYR 2026 zatiaľ nechávam ako kompaktný neskorý doktorandský checkpoint. Do timeline patrí ku koncu, lebo v tomto bode by už mal byť smer dizertácie oveľa jasnejší a bližšie k finálnemu tvaru.\n\nAk sa sem neskôr niečo doplní, najviac by dávala zmysel spätná väzba a to, čo ešte bolo treba doladiť pred dokončením PhD.",
+      notes: ["Neskorý PhD checkpoint.", "Košice, TUKE.", "Miesto na finálnu spätnú väzbu."]
+    },
+    "icpec-2026": {
+      description: "Druhá účasť na ICPEC, tentokrát v Guimaraes, s dobrou konferenciou a veľmi príjemným Portom.",
+      details:
+        "ICPEC 2026 bola moja druhá účasť na tejto konferencii. Keďže ICPEC je každý rok v inom meste, tentokrát bola v Guimaraes. Predtým som mesto nepoznal, ale zistil som, že je úzko spojené so vznikom Portugalska. Historické centrum malo silnú stredovekú atmosféru, až také Witcher vibes, a mne osobne sa veľmi páčilo.\n\nSamotná konferencia bola dobrá a dosť medzinárodná. Našli sme si tam veľa kamarátov, trávili sme čas s Davidom z Anglicka a ďalšími ľuďmi z Nemecka, Ukrajiny, Portugalska a iných krajín.\n\nStihli sme aj Porto. Zo začiatku sa nám až tak nepozdávalo, ale po výlete loďou a ďalších miestach sme si ho veľmi obľúbili. Je to pekné mesto a určite by som ho odporučil.",
+      notes: ["Druhá účasť na ICPEC.", "Historický Guimaraes.", "Medzinárodná partia a Porto."]
+    },
+    "ines-2026": {
+      description: "Posledná konferencia počas PhD obdobia, so štyrmi článkami a netradičným aquaparkovým miestom v Budapešti.",
+      details:
+        "INES 2026 bola posledná konferencia počas môjho PhD štúdia, takže som poslal výskumy, ktoré som mal nazbierané aj so študentmi. Nakoniec som tam mal znovu štyri články.\n\nKonferencia je každý rok v inom meste a tentokrát bola v Budapešti. Najviac nás zaujalo, že sa konala v aquaparku. Bol to super zážitok a dobrý záver konferenčnej časti doktorátu.",
+      notes: ["Posledná konferencia počas PhD.", "Štyri články so študentskými výstupmi.", "Budapešť a aquapark."]
+    }
+  }
+};
+
+Object.keys(personalTimelineCopy).forEach((language) => {
+  sectionCopy[language] = {
+    ...(sectionCopy[language] || {}),
+    ...personalTimelineCopy[language]
+  };
+});
+
+const personalHackathonCopy = {
+  en: {
+    "hack-kosice-2022": {
+      description: "My first hackathon experience: a Visma challenge, a first serious React attempt, and a top 3 finish.",
+      details:
+        "Hack Kosice 2022 was my first real hackathon. It was still before the GenAI wave, so the whole event was much more about figuring things out manually, building quickly, and learning how a 24-hour prototype even works.\n\nWe chose the Visma challenge and built a presentation-style milestone website. We used React even though nobody in the team had real experience with it before, so part of the hackathon was simply learning the stack while building the product.\n\nSomehow it worked well enough to place in the top 3. More importantly, it made hackathons feel worth doing again.",
+      notes: ["First hackathon experience.", "Visma milestone website in React.", "Top 3 result and motivation for more events."]
+    },
+    "citython-kosice-2022": {
+      description: "A three-day civic-ideas event that felt very different from a normal 24-hour coding hackathon.",
+      details:
+        "RIS Citython was a bit disappointing for us, mostly because the team fell apart right before the event. We were supposed to be five, but two people could not come because of illness and joined only online.\n\nThe format was also different from classic hackathons. It lasted three days, people went home to sleep, and it was not only about programming. Previous editions had even been won by non-software ideas, so the event was more about civic concepts than building under pressure.\n\nBecause of that, three days felt long for the amount of actual implementation we could do. It is still part of the timeline because it showed me that not every hackathon format fits the same kind of team or energy.",
+      notes: ["Team partly online because of illness.", "Three-day civic-ideas format.", "Useful lesson about hackathon formats."]
+    },
+    "actinspace-hackathon": {
+      description: "A space-themed hackathon where the team looked strong on paper, but most of the build work ended up with two of us.",
+      details:
+        "For ActInSpace, I went with one friend because the rest of our group did not register in time and there was no free space left. We joined a team with senior people from management and space-research backgrounds, which initially felt like a huge advantage.\n\nThe challenges were quite complex, so at first we were nervous. Then our energy went up when we saw how experienced the team looked. The funny part came later: in practice, almost all technical work was done by the two of us, while the rest of the team spent the full 24 hours on a small presentation part.\n\nThe result was not great, but the experience was memorable. It taught me that team composition on paper and actual delivery during a hackathon can be two very different things.",
+      notes: ["Space-tech challenge.", "Two-person technical delivery inside a larger team.", "Interesting but rough team experience."]
+    },
+    "telekom-hackathon-2022": {
+      description: "A strong classmate team, several challenges, two finalist entries, and a lesson in how opaque hackathon judging can be.",
+      details:
+        "Telekom Hackathon was always an interesting experience. In 2022 we had a very strong team built from some of the best classmates, and we worked across several challenges, if I remember correctly around four different tasks.\n\nTwo of our entries reached the final, but ironically they were not the ones we considered our best. The two stronger ones were later filtered out because of a large commit that was interpreted negatively, even though the work was done honestly. The process was not very transparent, and we would probably not have found out the reason if we did not ask.\n\nIt was a useful lesson: hackathons are not only about the code. Presentation, perception, story, and judging dynamics can matter as much as the actual prototype.",
+      notes: ["Strong classmate team.", "Multiple Telekom challenges.", "Lesson about transparency and judging."]
+    },
+    "hack-kosice-2023": {
+      description: "A return to Hack Kosice with more experience and an award for best GitHub usage.",
+      details:
+        "Hack Kosice 2023 felt more natural than the first year. We understood the rhythm better: choose the challenge, keep the scope realistic, build something demoable, and prepare the final pitch earlier.\n\nWe won the award for best use of GitHub, together with puzzles and GitHub merch. It was a small but very satisfying result, because it matched the way we liked to work: visible progress, clean collaboration, and a project history that made sense.",
+      notes: ["Best use of GitHub award.", "GitHub merch and puzzles.", "Better hackathon workflow than in 2022."]
+    },
+    "erste-digital-hackathon-2023": {
+      description: "A well-organized first hackathon by Erste Digital in Kosice, more product-oriented than chaotic.",
+      details:
+        "Erste Digital organized this hackathon in Kosice for the first time, and from my point of view it was handled well. The event felt organized, the setup was clear, and it had a more product-oriented feeling than some other hackathons.\n\nWe did not win, but I liked the environment and the way the event was run. Not every useful hackathon memory has to end with a prize; sometimes it is enough that the format is fair and the work feels focused.",
+      notes: ["First Erste Digital hackathon in Kosice.", "Good organization.", "Product-focused atmosphere."]
+    },
+    "hack-kosice-2024": {
+      description: "A larger Hack Kosice team that split into two groups, won a best-domain award, and even went voting during the event.",
+      details:
+        "For Hack Kosice 2024 we originally had a large group, so in the end we split into two teams. That made the event different from previous years because it was not only about building, but also about deciding how to organize people and ideas before the clock really started.\n\nWe won the award for best domain and some small merch. I also remember that the presidential election was happening during the hackathon, so we went voting together in the middle of the event. That detail stuck with me more than the exact technical parts.",
+      notes: ["Team split into two groups.", "Best domain award.", "Presidential election during the hackathon."]
+    },
+    "telekom-hackathon-2024": {
+      description: "Another Telekom hackathon entry, kept shorter because I do not have one strong memory attached to it yet.",
+      details:
+        "Telekom Hackathon 2024 stays as a short entry for now. I do not remember one specific story from it that would be worth stretching into a long section, so I prefer keeping it honest and compact.\n\nIt still belongs in the archive because repeated events show the routine: better planning, faster decisions, and a clearer sense of what is realistic to build under a deadline.",
+      notes: ["Short Telekom entry.", "Repeated hackathon routine.", "Kept concise."]
+    },
+    "hack-kosice-2026": {
+      description: "The most experienced Hack Kosice team so far, a top 6 final, and new friends from Denmark, Spain, and Cuba.",
+      details:
+        "Hack Kosice 2026 was probably our most experienced team. By then we knew the event rhythm well and had a much better sense of how to choose scope, divide work, and prepare for the final presentation.\n\nWe reached the top 6 final, but did not win. Since only the first place was announced, there was no second or third place to compare against. Even without a prize, it felt like a strong final run.\n\nOne of the best parts was meeting people from other countries. We made friends with participants from Denmark, Spain, and Cuba, which is exactly the kind of side effect that makes hackathons worth remembering.",
+      notes: ["Most experienced team.", "Top 6 finalist.", "Friends from Denmark, Spain, and Cuba."]
+    }
+  },
+  sk: {
+    "hack-kosice-2022": {
+      description: "Moja prvá hackathonová skúsenosť: Visma challenge, prvý väčší pokus v Reacte a top 3 výsledok.",
+      details:
+        "Hack Kosice 2022 bol môj prvý reálny hackathon. Bolo to ešte pred GenAI vlnou, takže celý event bol viac o ručnom vymýšľaní, rýchlom skladaní prototypu a zisťovaní, ako vlastne funguje 24-hodinový hackathon.\n\nVybrali sme si challenge pre Vismu a robili sme prezentačný web s míľnikmi. Použili sme React, hoci s ním nikto z nás predtým nemal poriadnu skúsenosť, takže časť hackathonu bola aj učenie stacku počas vývoja.\n\nNakoniec sa nám podarilo skončiť v top 3. Ešte dôležitejšie ale bolo, že nás to nadchlo pre ďalšie hackathony.",
+      notes: ["Prvý hackathon.", "Visma milestone web v Reacte.", "Top 3 a motivácia pokračovať."]
+    },
+    "citython-kosice-2022": {
+      description: "Trojdňový civic-tech event, ktorý bol skôr o nápadoch než o klasickom 24-hodinovom programovaní.",
+      details:
+        "RIS Citython bol pre nás trochu sklamanie, hlavne preto, že sa tím tesne pred eventom rozpadol. Mali sme byť piati, ale dvaja kvôli chorobe nemohli prísť a pripájali sa iba online.\n\nFormát bol tiež iný než pri klasických hackathonoch. Trval tri dni, medzitým sa chodilo spať domov a nebol čisto o programovaní. Predošlé ročníky vedeli vyhrať aj nesoftvérové nápady, takže to bolo viac o civic konceptoch než o buildení pod tlakom.\n\nPre nás boli tri dni dosť dlhé na množstvo reálnej implementácie, ktorú sme vedeli robiť. Do timeline to ale patrí, lebo som si tam uvedomil, že nie každý hackathonový formát sedí rovnakej energii a rovnakému tímu.",
+      notes: ["Časť tímu bola online kvôli chorobe.", "Trojdňový civic-tech formát.", "Poučná skúsenosť s iným typom hackathonu."]
+    },
+    "actinspace-hackathon": {
+      description: "Space-themed hackathon, kde tím vyzeral silno na papieri, ale väčšina technickej práce ostala na nás dvoch.",
+      details:
+        "Na ActInSpace som išiel iba s kamarátom, lebo zvyšok skupiny sa nestihol zaregistrovať a už nebolo miesto. Pridali sme sa do tímu so seniornými ľuďmi z manažmentu a výskumu vesmíru, čo na začiatku pôsobilo ako veľká výhoda.\n\nTémy boli dosť komplexné, takže sme sa ich najprv báli. Potom nám stúpla energia, keď sme videli, do akého skúseného tímu sme sa dostali. Vtipná časť prišla neskôr: technicky sme takmer všetko robili my dvaja, zatiaľ čo zvyšok tímu riešil celých 24 hodín menšiu časť prezentácie.\n\nVýsledok nebol veľmi dobrý, ale zážitok bol zaujímavý. Naučilo ma to, že zloženie tímu na papieri a reálne doručovanie počas hackathonu môžu byť dve úplne iné veci.",
+      notes: ["Space-tech challenge.", "Technické doručovanie hlavne v dvojici.", "Zaujímavá, ale náročná tímová skúsenosť."]
+    },
+    "telekom-hackathon-2022": {
+      description: "Silný tím zo spolužiakov, viacero challengov, dve finálové riešenia a lekcia z netransparentného hodnotenia.",
+      details:
+        "Telekom Hackathon bol vždy zaujímavý zážitok. V roku 2022 sme mali veľmi dobrý tím vyskladaný z najlepších spolužiakov a pracovali sme na viacerých challengoch, myslím že približne na štyroch rôznych úlohách.\n\nS dvomi riešeniami sme sa dostali do finále, ale paradoxne to neboli tie, ktoré sme považovali za naše najlepšie. Tie dve silnejšie boli neskôr odfiltrované kvôli veľkému commitu, ktorý si vysvetlili negatívne, aj keď sme robili poctivo. Celé to nebolo veľmi transparentné a pravdepodobne by sme sa dôvod ani nedozvedeli, keby sme sa nepýtali.\n\nBola to dobrá lekcia: hackathony nie sú iba o kóde. Prezentácia, vnímanie, príbeh a dynamika hodnotenia vedia zavážiť rovnako ako samotný prototyp.",
+      notes: ["Silný tím zo spolužiakov.", "Viac Telekom challengov.", "Lekcia z transparentnosti a hodnotenia."]
+    },
+    "hack-kosice-2023": {
+      description: "Návrat na Hack Kosice s väčšími skúsenosťami a cenou za najlepšie využitie GitHubu.",
+      details:
+        "Hack Kosice 2023 pôsobil prirodzenejšie než prvý ročník. Už sme lepšie poznali rytmus: vybrať challenge, držať rozumný scope, postaviť niečo demoable a pripraviť finálny pitch skôr.\n\nVyhrali sme cenu za najlepšie využitie GitHubu, spolu s puzzle a GitHub merchom. Bola to menšia, ale veľmi príjemná výhra, lebo sedela na spôsob, akým radi robíme: viditeľný progres, čistá spolupráca a história projektu, ktorá dáva zmysel.",
+      notes: ["Cena za najlepšie využitie GitHubu.", "GitHub merch a puzzle.", "Lepší workflow než v roku 2022."]
+    },
+    "erste-digital-hackathon-2023": {
+      description: "Prvý hackathon od Erste Digital v Košiciach, dobre zorganizovaný a viac produktovo ladený.",
+      details:
+        "Erste Digital organizovalo tento hackathon v Košiciach prvýkrát a podľa mňa bol spravený na dobrej úrovni. Organizácia bola jasná, prostredie fungovalo a celé to pôsobilo viac produktovo než chaoticky.\n\nSíce sme nevyhrali, ale páčilo sa mi tam. Nie každý dobrý hackathonový zážitok musí skončiť cenou; niekedy stačí, že formát pôsobí férovo a práca má sústredený priebeh.",
+      notes: ["Prvý Erste Digital hackathon v Košiciach.", "Dobrá organizácia.", "Produktovejšia atmosféra."]
+    },
+    "hack-kosice-2024": {
+      description: "Väčší tím na Hack Kosice, rozdelenie do dvoch skupín, cena za najlepšiu doménu a voľby uprostred eventu.",
+      details:
+        "Na Hack Kosice 2024 nás bolo veľa, takže sme sa nakoniec rozdelili do dvoch tímov. Oproti predošlým rokom to bolo iné aj tým, že sme neriešili iba samotný nápad, ale aj organizáciu ľudí a rozdelenie práce ešte pred tým, než sa to celé rozbehlo.\n\nVyhrali sme cenu za najlepšiu doménu a menší merch. Pamätám si aj to, že počas hackathonu boli prezidentské voľby, takže sme išli spolu voliť priamo počas eventu. Táto drobnosť mi ostala v pamäti viac než presné technické detaily.",
+      notes: ["Tím sa rozdelil na dve skupiny.", "Cena za najlepšiu doménu.", "Prezidentské voľby počas hackathonu."]
+    },
+    "telekom-hackathon-2024": {
+      description: "Ďalší Telekom hackathon, zatiaľ ponechaný kratšie, lebo k nemu nemám jednu výraznú spomienku.",
+      details:
+        "Telekom Hackathon 2024 zatiaľ nechávam ako kratšiu položku. Nepamätám si k nemu jednu konkrétnu historku, ktorú by dávalo zmysel nasilu rozpisovať.\n\nDo archívu ale patrí, lebo opakované eventy ukazujú rutinu: lepšie plánovanie, rýchlejšie rozhodnutia a jasnejší odhad toho, čo sa dá pod deadlineom reálne postaviť.",
+      notes: ["Kratšia Telekom položka.", "Opakovaná hackathonová rutina.", "Bez nasilu dopísanej historky."]
+    },
+    "hack-kosice-2026": {
+      description: "Najskúsenejší Hack Kosice tím doteraz, top 6 finále a noví kamaráti z Dánska, Španielska a Kuby.",
+      details:
+        "Hack Kosice 2026 bol asi náš najskúsenejší tím. V tomto bode sme už lepšie poznali rytmus eventu a vedeli sme rozumnejšie vybrať scope, rozdeliť prácu a pripraviť sa na finálnu prezentáciu.\n\nDostali sme sa do finále medzi top 6, ale nevyhrali sme. Keďže vyhlásili iba prvé miesto a druhé ani tretie sa neriešilo, nebolo sa veľmi s čím porovnať. Aj bez ceny to ale pôsobilo ako silný finálny run.\n\nNajlepšia časť bola, že sme spoznali ľudí z iných krajín. Našli sme si kamarátov z Dánska, Španielska a Kuby, čo je presne ten typ vedľajšieho efektu, kvôli ktorému si hackathony človek pamätá.",
+      notes: ["Najskúsenejší tím.", "Top 6 finalista.", "Kamaráti z Dánska, Španielska a Kuby."]
+    }
+  }
+};
+
+Object.keys(personalHackathonCopy).forEach((language) => {
+  sectionCopy[language] = {
+    ...(sectionCopy[language] || {}),
+    ...personalHackathonCopy[language]
+  };
+});
+
 const ambientLines = [
   { className: "line-one" },
   { className: "line-two" },
@@ -1684,6 +2097,9 @@ export default {
   computed: {
     copy() {
       return getBlogCopy(this.language);
+    },
+    portfolioUrl() {
+      return process.env.BASE_URL || "/";
     },
     localizedArticles() {
       return this.articles.map((article) => localizeArticle(article, this.language));
@@ -2812,13 +3228,23 @@ export default {
   margin-top: 16px;
 }
 
-.file-preview span {
+.file-preview a {
   border-radius: 999px;
   padding: 7px 10px;
   background: #e5f1ff;
   color: #163a66;
   font-size: 12px;
   font-weight: 900;
+  text-decoration: none;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.file-preview a:hover,
+.file-preview a:focus-visible {
+  background: #ffffff;
+  box-shadow: 0 10px 22px rgba(18, 53, 95, 0.14);
+  outline: none;
+  transform: translateY(-1px);
 }
 
 .photo-cluster {

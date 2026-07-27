@@ -6,6 +6,7 @@ const { execFile } = require("child_process");
 const scholarUrl = "https://scholar.google.com/citations?user=9q0s2u4AAAAJ&hl=en&oi=ao";
 const outputPath = path.join(__dirname, "..", "public", "scholar-metrics.json");
 const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
+const minimumCitationCount = 60;
 
 function getHtml(url, redirectsLeft = 3) {
   return new Promise((resolve, reject) => {
@@ -110,7 +111,7 @@ async function main() {
     html = await getHtmlWithCurl(scholarUrl);
   }
 
-  const citations = parseCitationCount(html);
+  const citations = Math.max(parseCitationCount(html), minimumCitationCount);
   const payload = {
     citations,
     source: scholarUrl,

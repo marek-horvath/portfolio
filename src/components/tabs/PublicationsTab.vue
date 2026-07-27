@@ -365,6 +365,7 @@ const publicationsCopy = {
 
 const productionScholarApiUrl =
   "https://portfolio-scholar-api.167.233.132.16.sslip.io/api/scholar-metrics";
+const minimumScholarCitations = 60;
 
 export default {
   name: "PublicationsTab",
@@ -384,7 +385,7 @@ export default {
           ? "http://127.0.0.1:3002/api/scholar-metrics"
           : productionScholarApiUrl),
       scholarMetrics: {
-        citations: 44,
+        citations: minimumScholarCitations,
         updatedAt: ""
       }
     };
@@ -406,7 +407,7 @@ export default {
     scholarCitationsLabel() {
       const citations = Number.isFinite(this.scholarMetrics.citations)
         ? this.scholarMetrics.citations
-        : 44;
+        : minimumScholarCitations;
       return citations.toLocaleString(this.copy.locale);
     },
     scholarMetricsTitle() {
@@ -446,7 +447,7 @@ export default {
           }
 
           this.scholarMetrics = {
-            citations,
+            citations: Math.max(citations, minimumScholarCitations),
             updatedAt: metrics.updatedAt || ""
           };
 

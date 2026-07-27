@@ -10,6 +10,10 @@ const scholarUrl =
   "https://scholar.google.com/citations?user=9q0s2u4AAAAJ&hl=en&oi=ao";
 const refreshIntervalMs = Number(process.env.REFRESH_INTERVAL_MS || 6 * 60 * 60 * 1000);
 const requestTimeoutMs = Number(process.env.REQUEST_TIMEOUT_MS || 20000);
+const configuredMinimumCitationCount = Number(process.env.MINIMUM_CITATION_COUNT || 60);
+const minimumCitationCount = Number.isFinite(configuredMinimumCitationCount)
+  ? configuredMinimumCitationCount
+  : 60;
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || "*")
   .split(",")
   .map((origin) => origin.trim())
@@ -212,7 +216,7 @@ function loadFallbackMetrics() {
     }
 
     return {
-      citations,
+      citations: Math.max(citations, minimumCitationCount),
       source: metrics.source || scholarUrl,
       updatedAt: metrics.updatedAt || ""
     };
@@ -845,7 +849,7 @@ async function refreshMetrics() {
 
   state.refreshing = (async () => {
     const html = await fetchScholarHtml();
-    const citations = parseCitationCount(html);
+    const citations = Math.max(parseCitationCount(html), minimumCitationCount);
     const now = new Date();
 
     state.metrics = {
