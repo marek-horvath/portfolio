@@ -1,0 +1,287 @@
+LinkedIn publikacie - odporucane poradie
+Aktualizovane: 27. august 2026
+
+Poznamka:
+- Poradie je od najsilnejsich/relevantnych publikacii po doplnkove.
+- Do pola "Adresa URL publikace" pouzi DOI, ak existuje. Ak DOI este nie je, pouzi URL alebo nechaj prazdne a dopln neskor.
+- Texty su pisane tak, aby nezneli prilis AI. Kludne ich este skrat podla miesta na LinkedIne.
+
+01
+Nazev*: Personalized Learning Analytics Through Static Code Analysis in Computer Science Education
+Vydani / Vydavatel: Acta Informatica Pragensia
+Datum vydani: 2026
+Autori: Marek Horvath, Emilia Pietrikova, Filip Gurbal
+Adresa URL publikace: http://dx.doi.org/10.18267/j.aip.283
+Popis: Journal article on using static code analysis to support personalized learning analytics in computer science education. The work connects code metrics, student programming behavior, and feedback that can help teachers better understand student progress.
+
+02
+Nazev*: Bridging Behavioral Biometrics and Source Code Stylometry: A Survey of Programmer Attribution Research
+Vydani / Vydavatel: arXiv / in review
+Datum vydani: 2026
+Autori: Marek Horvath, Diomidis Spinellis, Emilia Pietrikova
+Adresa URL publikace: https://doi.org/10.48550/arXiv.2603.11150
+Popis: Survey paper on programmer attribution, connecting behavioral biometrics with source code stylometry. The article summarizes how programming behavior and coding style can be used to study author identification in software development.
+
+03
+Nazev*: Benchmarking AI Models for Grading Computer Science Assignments Across Multiple Domains
+Vydani / Vydavatel: Acta Polytechnica Hungarica
+Datum vydani: 2026
+Autori: Marek Horvath, Lukas Tomascik, Nikola Geciova, Norbert Adam, Emilia Pietrikova
+Adresa URL publikace:
+Popis: Journal article focused on evaluating AI models for grading computer science assignments across different programming domains. The work looks at practical reliability, consistency, and limitations of automated assessment with large language models.
+
+04
+Nazev*: Detection of Programming Style Consistency and Plagiarism through Code Similarity Metrics
+Vydani / Vydavatel: SAMI 2026, IEEE World Symposium on Applied Machine Intelligence and Informatics
+Datum vydani: 2026
+Autori: Marek Horvath, Matus Motyka, Emilia Pietrikova
+Adresa URL publikace: https://doi.org/10.1109/SAMI68106.2026.11420357
+Popis: Conference paper on detecting programming style consistency and potential plagiarism using code similarity metrics. The topic connects code similarity, student submissions, and programmer style analysis.
+
+05
+Nazev*: Detecting Programmer Identity from Source Code with Machine Learning Methods
+Vydani / Vydavatel: ICETA 2025, International Conference on Emerging eLearning Technologies and Applications
+Datum vydani: 2025
+Autori: Marek Horvath, Martin Cupalka, Emilia Pietrikova
+Adresa URL publikace: https://doi.org/10.1109/ICETA67772.2025.11280212
+Popis: Conference paper focused on identifying programmers from source code using machine learning methods. This is one of the core outputs connected to programmer identification and source code stylometry.
+
+06
+Nazev*: An Experimental Comparison of Three Code Similarity Tools on Over 1,000 Student Projects
+Vydani / Vydavatel: SAMI 2024, IEEE 22nd World Symposium on Applied Machine Intelligence and Informatics
+Datum vydani: 2024
+Autori: Marek Horvath, Emilia Pietrikova
+Adresa URL publikace: http://dx.doi.org/10.1109/sami60510.2024.10432863
+Popis: Experimental comparison of three code similarity tools on more than 1,000 student programming projects. The paper evaluates how similarity tools behave on real educational code, not only on artificial examples.
+
+07
+Nazev*: From Repositories to Practice: LLM-Based Personalization in Programming Education
+Vydani / Vydavatel: ICPEC 2026, International Computer Programming Education Conference
+Datum vydani: 2026
+Autori: Marek Horvath, Michaela Durkovicova, Lenka Bubenkova, Emilia Pietrikova
+Adresa URL publikace:
+Popis: Conference paper on using large language models for personalized programming education. The work connects repository data, student progress, and practical feedback in programming courses.
+
+08
+Nazev*: Exploring GPT-Generated Variations in C Programming Assignments
+Vydani / Vydavatel: SAMI 2025, IEEE 23rd World Symposium on Applied Machine Intelligence and Informatics
+Datum vydani: 2025
+Autori: Marek Horvath, Lenka Bubenkova, Emilia Pietrikova
+Adresa URL publikace: https://doi.org/10.1109/sami63904.2025.10883288
+Popis: Conference paper on generating variations of C programming assignments with GPT models. The work explores how AI-generated task variants can support programming education while keeping assignments meaningful.
+
+09
+Nazev*: Adaptation of Automated Assessment System for Large Programming Courses
+Vydani / Vydavatel: ICPEC 2024, International Computer Programming Education Conference
+Datum vydani: 2024
+Autori: Marek Horvath, Tomas Kormanik, Jaroslav Poruban
+Adresa URL publikace: https://doi.org/10.4230/OASIcs.ICPEC.2024.4
+Popis: Conference paper on adapting an automated assessment system for large programming courses. The work focuses on practical problems around many submissions, feedback, and scalable course support.
+
+10
+Nazev*: Code Reuse and Good Clones in Programming Education
+Vydani / Vydavatel: SAMI 2025, IEEE 23rd World Symposium on Applied Machine Intelligence and Informatics
+Datum vydani: 2025
+Autori: Lenka Bubenkova, Emilia Pietrikova, Marek Horvath
+Adresa URL publikace: https://doi.org/10.1109/sami63904.2025.10883291
+Popis: Conference paper on code reuse and beneficial clones in programming education. It looks at the difference between harmful copying and meaningful reuse in student programming work.
+
+11
+Nazev*: Detecting AI-Generated Source Code in Student Assignments Using Steganographic Watermarks
+Vydani / Vydavatel: ICETA 2025, International Conference on Emerging eLearning Technologies and Applications
+Datum vydani: 2025
+Autori: Lenka Bubenkova, Marek Horvath, Emilia Pietrikova, Matej Corba
+Adresa URL publikace: https://doi.org/10.1109/ICETA67772.2025.11280274
+Popis: Conference paper on detecting AI-generated source code in student assignments using steganographic watermarks. The work is connected to academic integrity and the changing role of AI in programming courses.
+
+12
+Nazev*: Green Computing through Evaluation of Source Code Energy Consumption Using Static and Dynamic Methods
+Vydani / Vydavatel: INES 2026, 30th Jubilee International Conference on Intelligent Engineering Systems
+Datum vydani: 2026
+Autori: Marek Horvath, Matej Dzamba, Emilia Pietrikova
+Adresa URL publikace:
+Popis: Conference paper on evaluating source code energy consumption using static and dynamic methods. The work connects programming practice with green computing and software sustainability.
+
+13
+Nazev*: Commit Classification for Developer Style Profiling Using Transformer Models and Quantitative Change Metrics
+Vydani / Vydavatel: INES 2026, 30th Jubilee International Conference on Intelligent Engineering Systems
+Datum vydani: 2026
+Autori: Daniel Olsavsky, Marek Horvath, Emilia Pietrikova
+Adresa URL publikace:
+Popis: Conference paper on classifying commits for developer style profiling using transformer models and quantitative change metrics. The work studies repository history as a source of behavioral information about developers.
+
+14
+Nazev*: AST-Based Source Code Similarity Visualization Using Clustering and Anomaly Detection
+Vydani / Vydavatel: INES 2026, 30th Jubilee International Conference on Intelligent Engineering Systems
+Datum vydani: 2026
+Autori: Peter Svoboda, Marek Horvath, Emilia Pietrikova
+Adresa URL publikace:
+Popis: Conference paper on visualizing source code similarity through AST-based analysis, clustering, and anomaly detection. The work supports a more interpretable view of similarity in programming assignments.
+
+15
+Nazev*: Identifying Student Programming Styles Using Static Code and Behavioral Repository Data
+Vydani / Vydavatel: INES 2026, 30th Jubilee International Conference on Intelligent Engineering Systems
+Datum vydani: 2026
+Autori: Kristina Maslankova, Marek Horvath, Emilia Pietrikova
+Adresa URL publikace:
+Popis: Conference paper on identifying student programming styles by combining static code features with behavioral repository data. The topic connects education data, source code analysis, and developer behavior.
+
+16
+Nazev*: Improving Software Education with Technical Debt Analysis Tool
+Vydani / Vydavatel: ICETA 2024, International Conference on Emerging eLearning Technologies and Applications
+Datum vydani: 2024
+Autori: Marek Horvath, Emilia Pietrikova, Jakub Sasak
+Adresa URL publikace: https://doi.org/10.1109/iceta63795.2024.10850816
+Popis: Conference paper on using technical debt analysis to improve software education. The work focuses on helping students understand code quality beyond whether their program passes tests.
+
+17
+Nazev*: Puzzle-Driven Learning: Developing and Assessing IT Challenges for Varied Experience Levels
+Vydani / Vydavatel: ICETA 2023, International Conference on Emerging eLearning Technologies and Applications
+Datum vydani: 2023
+Autori: Marek Horvath, Emilia Pietrikova
+Adresa URL publikace: http://dx.doi.org/10.1109/iceta61311.2023.10344036
+Popis: Conference paper on designing and assessing IT challenges for learners with different levels of experience. It was one of the early PhD-period outputs connected to programming education and motivation.
+
+18
+Nazev*: Profiling Programmer Proficiency Using Static Analysis
+Vydani / Vydavatel: PeerJ Computer Science
+Datum vydani: 2026
+Autori: Emilia Pietrikova, Marek Horvath, Anton Balaz
+Adresa URL publikace:
+Popis: Journal article on using static analysis for profiling programmer proficiency. The work is connected to measuring programming skills and interpreting code quality indicators in educational contexts.
+
+19
+Nazev*: Code Clones: A Novel Approach to Detecting Plagiarism in Binary Decomposition of C Programs
+Vydani / Vydavatel: Acta Electrotechnica et Informatica
+Datum vydani: 2024
+Autori: Marek Horvath, Filip Gurbal
+Adresa URL publikace: http://dx.doi.org/10.2478/aei-2024-0006
+Popis: Journal article on detecting plagiarism in binary decomposition of C programs through code clone analysis. The work is connected to source code similarity and academic integrity in programming education.
+
+20
+Nazev*: Large Language Models for Automated Assessment and Feedback in Computer Science and Engineering Education
+Vydani / Vydavatel: Acta Electrotechnica et Informatica / in review
+Datum vydani: 2026
+Autori: Nikola Tomascikova, Marek Horvath, Lukas Tomascik, Lenka Bubenkova
+Adresa URL publikace:
+Popis: Journal article on large language models for automated assessment and feedback in computer science and engineering education. The work focuses on practical use, opportunities, and limits of AI-based feedback.
+
+21
+Nazev*: Limitations and Failures of Large Language Model Based Code Grading System
+Vydani / Vydavatel: Acta Electrotechnica et Informatica
+Datum vydani: 2026
+Autori: Lukas Tomascik, Nikola Tomascikova, Marek Horvath, Norbert Adam
+Adresa URL publikace:
+Popis: Journal article focused on where LLM-based code grading systems fail. The paper is useful for showing that AI assessment needs careful validation and cannot be treated as automatically reliable.
+
+22
+Nazev*: Simplifying Education of Reactive Programming Concepts Using Comparative Application
+Vydani / Vydavatel: SAMI 2025, IEEE 23rd World Symposium on Applied Machine Intelligence and Informatics
+Datum vydani: 2025
+Autori: Tomas Kormanik, Marek Horvath, Lenka Bubenkova
+Adresa URL publikace: https://doi.org/10.1109/SAMI63904.2025.10883129
+Popis: Conference paper on teaching reactive programming concepts through a comparative application. The work focuses on making abstract programming concepts easier to understand through practical examples.
+
+23
+Nazev*: Development of a MATLAB Application for Simulating the SEIQRD Pandemic Spread Model
+Vydani / Vydavatel: SAMI 2025, IEEE 23rd World Symposium on Applied Machine Intelligence and Informatics
+Datum vydani: 2025
+Autori: Nikola Geciova, Lukas Tomascik, Marek Horvath
+Adresa URL publikace: https://doi.org/10.1109/sami63904.2025.10883239
+Popis: Conference paper describing a MATLAB application for simulating the SEIQRD pandemic spread model. The work is an applied software and modeling contribution.
+
+24
+Nazev*: Comparison of Scalability and Performance in Microservices and Monolithic Architectures
+Vydani / Vydavatel: Informatics 2024, IEEE 17th International Scientific Conference on Informatics
+Datum vydani: 2024
+Autori: Marek Horvath, Vladyslav Sakhnenko, Filip Gurbal
+Adresa URL publikace: https://doi.org/10.1109/Informatics62280.2024.10900892
+Popis: Conference paper comparing scalability and performance in microservice and monolithic architectures. The work is closer to software engineering practice and system evaluation.
+
+25
+Nazev*: Using ChatGPT During Implementation of Programs in Education
+Vydani / Vydavatel: ICPEC 2024, International Computer Programming Education Conference
+Datum vydani: 2024
+Autori: Norbert Balaz, Jaroslav Poruban, Marek Horvath, Tomas Kormanik
+Adresa URL publikace: https://doi.org/10.4230/OASIcs.ICPEC.2024.18
+Popis: Conference paper on how ChatGPT is used during programming assignments in education. The work is connected to AI-assisted programming and how it changes student work.
+
+26
+Nazev*: Bridging Game Development and Virtual Reality Education through Blender-Based Tutorials
+Vydani / Vydavatel: ICPEC 2026, International Computer Programming Education Conference
+Datum vydani: 2026
+Autori: Lenka Bubenkova, Lubomir Urbancik, Emilia Pietrikova, Marek Horvath
+Adresa URL publikace:
+Popis: Conference paper on connecting game development and virtual reality education using Blender-based tutorials. The work focuses on making 3D and VR-related learning more accessible through practical tutorial material.
+
+27
+Nazev*: Introducing TAIPO, an AI-Based Product Owner Assistant for Vibe Coding
+Vydani / Vydavatel: ICAI 2026
+Datum vydani: 2026
+Autori: Gabor Kusper, Judit Szabo, Mark Szabo, Adam Kovacs, Tibor Tajti, Csaba Szabo, Jan Perhac, Marek Horvath, Branislav Sobota
+Adresa URL publikace: https://icai.uni-eszterhazy.hu/2026/abstracts/ICAI_2026_abstract_44.pdf
+Popis: Conference contribution introducing TAIPO, an AI-based assistant for product owner work in vibe coding workflows. The work connects software engineering, AI assistance, and product-oriented development.
+
+28
+Nazev*: Decomposing the Programmer Attribution Problem in Educational Source Code
+Vydani / Vydavatel: SCYR 2026, Scientific Conference of Young Researchers
+Datum vydani: 2026
+Autori: Marek Horvath
+Adresa URL publikace: https://scyr.fei.tuke.sk/index.php/proceedings/
+Popis: Doctoral conference paper breaking the programmer attribution problem into clearer subproblems in educational source code. The work is directly connected to the final shape of the dissertation.
+
+29
+Nazev*: Programmer Identification Based on Source Code Stylometric Analysis and Behavioral Biometrics
+Vydani / Vydavatel: SCYR 2025, Scientific Conference of Young Researchers
+Datum vydani: 2025
+Autori: Marek Horvath
+Adresa URL publikace: https://scyr.fei.tuke.sk/index.php/proceedings/
+Popis: Doctoral conference paper on identifying programmers through source code stylometry and behavioral biometrics. It captures the main research direction in a compact form.
+
+30
+Nazev*: Stylistic Patterns in Source Code as Behavioral Biometric Markers for Programmer Identification
+Vydani / Vydavatel: SCYR 2024, Scientific Conference of Young Researchers
+Datum vydani: 2024
+Autori: Marek Horvath
+Adresa URL publikace: https://scyr.fei.tuke.sk/index.php/proceedings/
+Popis: Doctoral conference paper on source code style as a behavioral biometric marker for programmer identification. This was an early formulation of the dissertation direction.
+
+31
+Nazev*: Towards Reliable Programmer Attribution in Educational Source Code
+Vydani / Vydavatel: 30th International Student Scientific Conference Poster 2026
+Datum vydani: 2026
+Autori: Marek Horvath
+Adresa URL publikace: https://poster2026.sciencesconf.org/data/pages/Proceedings_Poster2026.pdf
+Popis: Poster contribution on reliable programmer attribution in educational source code. The topic summarizes the dissertation direction for a broader student research audience.
+
+32
+Nazev*: Capturing Typing Patterns in Web Applications for Author Identification Research
+Vydani / Vydavatel: Electrical Engineering and Informatics
+Datum vydani: 2025
+Autori: Eduard Michalek, Marek Horvath
+Adresa URL publikace: https://eei.fei.tuke.sk/wp-content/uploads/2025/07/EEI_16.pdf
+Popis: Article on capturing typing patterns in web applications for author identification research. The topic connects behavioral data collection with programmer or user identification.
+
+33
+Nazev*: Mental Health Support Application Designed for Local Data Processing and User Autonomy
+Vydani / Vydavatel: Electrical Engineering and Informatics
+Datum vydani: 2025
+Autori: Simona Michalikova, Marek Horvath
+Adresa URL publikace: https://eei.fei.tuke.sk/wp-content/uploads/2025/07/EEI_16.pdf
+Popis: Article on a mental health support application designed around local data processing and user autonomy. The work is an applied software project with a privacy-aware design angle.
+
+34
+Nazev*: Digital System for Psychodiagnostics
+Vydani / Vydavatel: Electrical Engineering and Informatics
+Datum vydani: 2025
+Autori: Lukas Proner, Marek Horvath
+Adresa URL publikace: https://eei.fei.tuke.sk/wp-content/uploads/2025/07/EEI_16.pdf
+Popis: Article on a digital system for psychodiagnostics. The work is an applied software project focused on digitizing and supporting a specific assessment workflow.
+
+35
+Nazev*: Environment for Simulation, Generation and Aggregation of Large Heterogeneous Video Conference Data Streams with Optimized Data Collection, Network Analysis and Visualization
+Vydani / Vydavatel: ICETA 2021, International Conference on Emerging eLearning Technologies and Applications
+Datum vydani: 2021
+Autori: F. Jakab, R. Vapenik, D. Cymbalak, M. Korenek, M. Cabin, M. Horvath, P. Jagac, J. Kovacova, P. Hrcka
+Adresa URL publikace: http://dx.doi.org/10.1109/ICETA54173.2021.9726608
+Popis: Conference paper on simulation, generation, aggregation, and visualization of heterogeneous video conference data streams. It is an older collaborative publication connected to network data and visualization.

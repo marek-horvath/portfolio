@@ -34,13 +34,17 @@ const educationCopy = {
     title: "Education & Qualifications",
     items: [
       {
-        title: "PhD Candidate in Informatics",
-        period: "SEP 2023 - Present",
+        title: "PhD in Informatics",
+        period: "SEP 2023 - AUG 2026",
         organization: "Technical University of Košice",
         lines: [
           {
             label: "Thesis topic",
             text: "identifying programmers through source code style analysis and behavioral biometrics."
+          },
+          {
+            label: "Defended",
+            text: "August 2026."
           }
         ]
       },
@@ -50,7 +54,7 @@ const educationCopy = {
         organization: "University of Maribor, Maribor, Slovenia",
         lines: [
           {
-            text: "Planned research stay focused on completing the dissertation. The collaboration will address methodological and applied aspects of source code analysis and programmer authorship identification."
+            text: "Research stay focused on completing the dissertation. The collaboration addressed methodological and applied aspects of source code analysis and programmer authorship identification."
           },
           {
             label: "Collaboration",
@@ -140,13 +144,17 @@ const educationCopy = {
     title: "Vzdelanie a kvalifikácia",
     items: [
       {
-        title: "Doktorand informatiky",
-        period: "SEP 2023 - súčasnosť",
+        title: "PhD v odbore informatika",
+        period: "SEP 2023 - AUG 2026",
         organization: "Technická univerzita v Košiciach",
         lines: [
           {
             label: "Téma dizertačnej práce",
             text: "identifikácia programátorov prostredníctvom analýzy štýlu zdrojového kódu a behaviorálnych biometrík."
+          },
+          {
+            label: "Obhajoba",
+            text: "august 2026."
           }
         ]
       },
@@ -156,7 +164,7 @@ const educationCopy = {
         organization: "Univerzita v Maribore, Maribor, Slovinsko",
         lines: [
           {
-            text: "Plánovaný výskumný pobyt zameraný na dokončenie dizertačnej práce. Spolupráca sa venuje metodickým aj aplikačným aspektom analýzy zdrojového kódu a identifikácie autorstva programátorov."
+            text: "Výskumný pobyt zameraný na dokončenie dizertačnej práce. Spolupráca sa venovala metodickým aj aplikačným aspektom analýzy zdrojového kódu a identifikácie autorstva programátorov."
           },
           {
             label: "Spolupráca",

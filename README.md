@@ -28,14 +28,15 @@ Default local URLs:
 - Admin: `http://127.0.0.1:8081/portfolio/admin`
 - Hidden blog: `http://127.0.0.1:8081/portfolio/blog`
 
-## Hidden blog route
+## Blog route
 
-The blog is intentionally not linked from the main portfolio UI. It is still routable directly through `/portfolio/blog`, with GitHub Pages fallback files generated during build so manual navigation works on the deployed static site.
+The blog is available through `/portfolio/blog`, with GitHub Pages fallback files generated during build so direct navigation works on the deployed static site.
 
 Current blog sections:
 
 - PhD
 - Travel
+- Hackathons
 - Photos
 
 ## Checks and build

@@ -271,10 +271,10 @@ const LANGUAGE_STORAGE_KEY = "portfolio-language-v3";
 const pageCopy = {
   en: {
     languageLabel: "Language",
-    name: "Marek Horváth",
+    name: "Marek Horváth, PhD",
     currentLocation: "Košice, Slovakia",
-    occupation: "PhD Student (Informatics) & Software Engineer",
-    intro: "Identifying programmers through style analysis of source code and behavioral biometrics, while also exploring code similarity detection. In my free time, I engage in web development projects and actively participate in hackathons to refine my skills and collaborate with like-minded individuals.",
+    occupation: "Assistant Professor at TUKE & Software Engineer",
+    intro: "I defended my PhD in Informatics in August 2026. My work focuses on source code analysis, programmer identification, code similarity, and programming education. I also build web applications, research tools, and practical software projects for real users.",
     profileAlt: "Portrait photo of Marek Horváth",
     downloadCv: "Download CV",
     openLinkedIn: "Open LinkedIn profile",
@@ -289,7 +289,7 @@ const pageCopy = {
     menuLabel: "Open section menu",
     blogLabel: "Blog",
     lastUpdatedLabel: "Last updated:",
-    lastUpdated: "July 23, 2026",
+    lastUpdated: "August 27, 2026",
     footerLinksLabel: "Footer links",
     emailLabel: "Email",
     emailLinkLabel: "Send email",
@@ -297,7 +297,7 @@ const pageCopy = {
       "Static Analysis",
       "Code Similarity",
       "Programmer Identification",
-      "UI/UX",
+      "Teaching",
       "Vue"
     ],
     tabs: {
@@ -312,10 +312,10 @@ const pageCopy = {
   },
   sk: {
     languageLabel: "Jazyk",
-    name: "Marek Horváth",
+    name: "Marek Horváth, PhD",
     currentLocation: "Košice, Slovensko",
-    occupation: "Doktorand informatiky a softvérový inžinier",
-    intro: "Venujem sa identifikácii programátorov cez analýzu štýlu zdrojového kódu a behaviorálne biometrie a zároveň skúmam detekciu podobnosti kódu. Vo voľnom čase pracujem na webových projektoch a pravidelne sa zapájam do hackathonov.",
+    occupation: "Odborný asistent na TUKE a softvérový inžinier",
+    intro: "V auguste 2026 som obhájil PhD v odbore informatika. Venujem sa analýze zdrojového kódu, identifikácii programátorov, podobnosti kódu a programátorskému vzdelávaniu. Popri tom tvorím webové aplikácie, výskumné nástroje a praktické softvérové projekty.",
     profileAlt: "Portrét Mareka Horvátha",
     downloadCv: "Stiahnuť životopis",
     openLinkedIn: "Otvoriť LinkedIn profil",
@@ -330,7 +330,7 @@ const pageCopy = {
     menuLabel: "Otvoriť menu sekcií",
     blogLabel: "Blog",
     lastUpdatedLabel: "Posledná aktualizácia:",
-    lastUpdated: "23. júla 2026",
+    lastUpdated: "27. augusta 2026",
     footerLinksLabel: "Odkazy v pätičke",
     emailLabel: "Email",
     emailLinkLabel: "Poslať email",
@@ -338,7 +338,7 @@ const pageCopy = {
       "Statická analýza",
       "Podobnosť kódu",
       "Identifikácia programátorov",
-      "UI/UX",
+      "Výučba",
       "Vue"
     ],
     tabs: {

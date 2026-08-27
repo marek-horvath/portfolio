@@ -23,6 +23,12 @@ const workCopy = {
     title: "Professional Experience",
     items: [
       {
+        role: "Assistant Professor",
+        period: "AUG 2026 - Present",
+        organization: "Technical University of Košice",
+        description: "Teaching and mentoring students while continuing research in source code analysis, programmer identification, code similarity, and software engineering education."
+      },
+      {
         role: "UX Designer",
         period: "OCT 2023 - SEP 2024",
         organization: "Technical University of Košice",
@@ -45,6 +51,12 @@ const workCopy = {
   sk: {
     title: "Profesionálne skúsenosti",
     items: [
+      {
+        role: "Odborný asistent",
+        period: "AUG 2026 - súčasnosť",
+        organization: "Technická univerzita v Košiciach",
+        description: "Vediem výučbu a mentorujem študentov, popri tom pokračujem vo výskume analýzy zdrojového kódu, identifikácie programátorov, podobnosti kódu a softvérového vzdelávania."
+      },
       {
         role: "UX dizajnér",
         period: "OKT 2023 - SEP 2024",
