@@ -5,15 +5,17 @@
 
     <div class="scrollable-content">
       <div class="projects-grid">
-        <a
+        <component
+          :is="project.url ? 'a' : 'article'"
           v-for="project in copy.projects"
-          :key="project.url"
+          :key="project.name"
           class="project-card"
-          :href="project.url"
-          target="_blank"
-          rel="noopener"
-          :aria-label="`${copy.openProjectLabel} ${project.name}`"
-          @click="trackProject(project)"
+          :class="{ 'project-card-link': project.url }"
+          :href="project.url || undefined"
+          :target="project.url ? '_blank' : undefined"
+          :rel="project.url ? 'noopener noreferrer' : undefined"
+          :aria-label="project.url ? `${copy.openProjectLabel} ${project.name}` : undefined"
+          @click="project.url && trackProject(project)"
         >
           <div class="project-preview">
             <img
@@ -25,7 +27,7 @@
 
           <div class="project-card-top">
             <span class="project-type">{{ project.type }}</span>
-            <span class="project-open">{{ copy.openLabel }}</span>
+            <span v-if="project.url" class="project-open">{{ copy.openLabel }}</span>
           </div>
 
           <h3>{{ project.name }}</h3>
@@ -34,7 +36,7 @@
           <ul class="project-tags" :aria-label="copy.tagsLabel">
             <li v-for="tag in project.tags" :key="tag">{{ tag }}</li>
           </ul>
-        </a>
+        </component>
       </div>
     </div>
   </div>
@@ -45,8 +47,11 @@ import athenaImage from "../../assets/athena.png";
 import cnkImage from "../../assets/cnk.png";
 import demaImage from "../../assets/dema.png";
 import footballImage from "../../assets/football.png";
+import gameImage from "../../assets/hra.png";
+import guessImage from "../../assets/guess.png";
 import krajcirstvoImage from "../../assets/krajcirstvo.png";
 import neurologiaImage from "../../assets/neurologia.png";
+import pythonImage from "../../assets/pythonn.png";
 import revikImage from "../../assets/revik.png";
 import seugImage from "../../assets/seug.png";
 import slovakdleImage from "../../assets/slovakdle.png";
@@ -57,8 +62,11 @@ const projectImages = {
   cnk: cnkImage,
   dema: demaImage,
   football: footballImage,
+  game: gameImage,
+  guess: guessImage,
   krajcirstvo: krajcirstvoImage,
   neurologia: neurologiaImage,
+  python: pythonImage,
   revik: revikImage,
   seug: seugImage,
   slovakdle: slovakdleImage
@@ -66,8 +74,8 @@ const projectImages = {
 
 const projectsCopy = {
   en: {
-    title: "Web Projects",
-    intro: "Selected websites, dashboards, games, and small web products I build outside research and teaching. Most of them include a small custom admin or analytics layer for clicks, redirects, and real usage signals.",
+    title: "Personal Projects",
+    intro: "Selected applications, websites, and games I have built for clients, teaching, and my own ideas. Some also include a custom admin or analytics layer for clicks and real usage signals.",
     openLabel: "Open",
     openProjectLabel: "Open project",
     tagsLabel: "Project tags",
@@ -75,7 +83,7 @@ const projectsCopy = {
       {
         name: "Athena Dashboard",
         type: "Testing dashboard",
-        url: "https://athena-kappa-one.vercel.app",
+        url: "https://athena.kpi.fei.tuke.sk",
         imageKey: "athena",
         previewAlt: "Preview of the Athena testing dashboard",
         description: "Complex system for testing student programming assignments: it downloads submissions from GitLab, runs them safely in isolated Docker containers, and stores structured results for review.",
@@ -91,13 +99,39 @@ const projectsCopy = {
         tags: ["Healthcare", "Bookings", "Email reminders"]
       },
       {
-        name: "WC Predictions",
+        name: "World Cup",
         type: "Prediction app",
         url: "http://167.233.132.16",
         imageKey: "football",
-        previewAlt: "Preview of the WC Predictions football app",
+        previewAlt: "Preview of the World Cup football prediction app",
         description: "Hobby app for predicting football results with friends. It automatically scraped final scores from Flashscore, evaluated picks, and kept leaderboards up to date.",
         tags: ["Football", "Scraping", "Leaderboards"]
+      },
+      {
+        name: "Programmer's Day",
+        type: "Desktop game",
+        imageKey: "game",
+        previewAlt: "Screenshot of the Programmer's Day retro office game",
+        description: "A 2D retro office game built in Godot. Its playable demo runs for ten days, combining email, chat, meetings, project work, thirteen minigame types, bills, career reviews, and upgrades.",
+        tags: ["Godot", "Puzzle management", "Desktop"]
+      },
+      {
+        name: "Python Learning Materials",
+        type: "Teaching website",
+        url: "https://marek-horvath.github.io/python/",
+        imageKey: "python",
+        previewAlt: "Preview of the Python learning materials website",
+        description: "Python lessons and learning materials I use when teaching students, organized as an accessible website they can return to while practicing.",
+        tags: ["Python", "Teaching", "Learning materials"]
+      },
+      {
+        name: "Guess Who",
+        type: "Browser game",
+        url: "https://guesswho-rosy.vercel.app/",
+        imageKey: "guess",
+        previewAlt: "Preview of the Guess Who browser game",
+        description: "A browser-based take on Guess Who, built around narrowing down characters through questions and deduction.",
+        tags: ["Game", "Deduction", "Browser"]
       },
       {
         name: "SEUG",
@@ -156,8 +190,8 @@ const projectsCopy = {
     ]
   },
   sk: {
-    title: "Weby",
-    intro: "Výber webov, dashboardov, hier a menších webových produktov, ktoré robím mimo výskumu a výučby. Väčšina z nich má aj malé vlastné admin alebo analytics rozhranie na kliknutia, presmerovania a reálne používanie.",
+    title: "Osobné projekty",
+    intro: "Výber aplikácií, webov a hier, ktoré som vytvoril pre klientov, výučbu aj vlastné nápady. Niektoré majú aj vlastné admin alebo analytické rozhranie na sledovanie používania.",
     openLabel: "Otvoriť",
     openProjectLabel: "Otvoriť projekt",
     tagsLabel: "Tagy projektu",
@@ -165,7 +199,7 @@ const projectsCopy = {
       {
         name: "Athena Dashboard",
         type: "Testovací dashboard",
-        url: "https://athena-kappa-one.vercel.app",
+        url: "https://athena.kpi.fei.tuke.sk",
         imageKey: "athena",
         previewAlt: "Náhľad testovacieho dashboardu Athena",
         description: "Komplexný systém na testovanie študentských programátorských zadaní: automaticky sťahuje riešenia z GitLabu, spúšťa ich bezpečne v oddelených Docker kontajneroch a zapisuje štruktúrované výsledky.",
@@ -181,13 +215,39 @@ const projectsCopy = {
         tags: ["Ambulancia", "Rezervácie", "Email reminders"]
       },
       {
-        name: "WC Predictions",
+        name: "World Cup",
         type: "Tipovacia aplikácia",
         url: "http://167.233.132.16",
         imageKey: "football",
-        previewAlt: "Náhľad futbalovej aplikácie WC Predictions",
+        previewAlt: "Náhľad tipovacej aplikácie World Cup",
         description: "Hobby projekt na tipovanie futbalových výsledkov s kamarátmi. Automaticky scrapoval finálne výsledky z Flashscore, vyhodnocoval tipy a udržiaval leaderboard.",
         tags: ["Futbal", "Scraping", "Leaderboard"]
+      },
+      {
+        name: "Programmer's Day",
+        type: "Desktopová hra",
+        imageKey: "game",
+        previewAlt: "Ukážka retro kancelárskej hry Programmer's Day",
+        description: "2D retro kancelárska hra v Godote. Hrateľné demo trvá desať dní a kombinuje emaily, chat, porady, projektové úlohy, trinásť typov minihier, účty, hodnotenie kariéry a vylepšenia.",
+        tags: ["Godot", "Puzzle management", "Desktop"]
+      },
+      {
+        name: "Materiály na výučbu Pythonu",
+        type: "Vzdelávací web",
+        url: "https://marek-horvath.github.io/python/",
+        imageKey: "python",
+        previewAlt: "Náhľad webu s materiálmi na výučbu Pythonu",
+        description: "Lekcie a učebné materiály k Pythonu, ktoré používam pri výučbe študentov. Sú prehľadne na webe, aby sa k nim mohli vracať pri precvičovaní.",
+        tags: ["Python", "Výučba", "Materiály"]
+      },
+      {
+        name: "Guess Who",
+        type: "Hra v prehliadači",
+        url: "https://guesswho-rosy.vercel.app/",
+        imageKey: "guess",
+        previewAlt: "Náhľad hry Guess Who",
+        description: "Hra Guess Who v prehliadači, v ktorej pomocou otázok a vylučovania možností hádaš postavu.",
+        tags: ["Hra", "Hádanie", "Prehliadač"]
       },
       {
         name: "SEUG",
@@ -310,13 +370,13 @@ export default {
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
-.project-card:hover {
+.project-card-link:hover {
   transform: translateY(-2px);
   border-color: rgba(43, 108, 176, 0.26);
   box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
 }
 
-.project-card:focus-visible {
+.project-card-link:focus-visible {
   border-color: rgba(43, 108, 176, 0.58);
   box-shadow: 0 0 0 4px rgba(43, 108, 176, 0.18), 0 12px 24px rgba(15, 23, 42, 0.08);
   outline: none;
@@ -339,7 +399,7 @@ export default {
   transition: transform 0.24s ease;
 }
 
-.project-card:hover .project-preview img {
+.project-card-link:hover .project-preview img {
   transform: scale(1.025);
 }
 

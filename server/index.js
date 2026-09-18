@@ -628,7 +628,7 @@ function getTabCounts(events) {
   const tabs = [
     { value: "publications", label: "Publications" },
     { value: "work", label: "Work" },
-    { value: "projects", label: "Web Projects" },
+    { value: "projects", label: "Personal Projects" },
     { value: "education", label: "Education" },
     { value: "hobbies", label: "Hobbies" },
     { value: "teaching", label: "Teaching" },
@@ -645,7 +645,10 @@ function getTabCounts(events) {
 function getProjectCounts(events) {
   const knownProjects = [
     "Athena Dashboard",
-    "WC Predictions",
+    "World Cup",
+    "Python Learning Materials",
+    "Materiály na výučbu Pythonu",
+    "Guess Who",
     "SEUG",
     "Cloud Native Kosice",
     "Revik",
@@ -656,9 +659,9 @@ function getProjectCounts(events) {
   const knownCounts = createOrderedCounts(
     knownProjects.map((project) => ({ value: project, label: project })),
     events,
-    (event, project) => event.eventName === "project_open" && event.label === project.value
+    (event, project) => event.eventName === "project_open" && (event.label === project.value || (project.value === "World Cup" && event.label === "WC Predictions"))
   );
-  const knownProjectSet = new Set(knownProjects);
+  const knownProjectSet = new Set([...knownProjects, "WC Predictions"]);
   const extraCounts = summarizeMatching(
     events,
     (event) => event.eventName === "project_open" && !knownProjectSet.has(event.label),
