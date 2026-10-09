@@ -48,6 +48,7 @@ const otherActivitiesCopy = {
         title: "Reviewer",
         items: [
           { text: "Acta Polytechnica Hungarica" },
+          { text: "PeerJ Computer Science" },
           { text: "SAMI 2026" },
           { text: "Proceedings EEI" },
           { text: "INES 2026" }
@@ -92,8 +93,12 @@ const otherActivitiesCopy = {
         text: "Volunteer mentoring at the Technical University of Košice, helping junior students adapt to university life and navigate academic processes."
       },
       {
-        title: "Slovak-Hungarian Project (TeT)",
-        text: "Long-term research collaboration with Eszterházy Károly Catholic University (Eger, Hungary) on TAIPO, an AI assistant supporting product owner workflows. Includes ongoing coordination and joint working meetings in Hungary."
+        title: "Research Project Team Member",
+        items: [
+          { text: "VEGA 1/0630/22 — Lowering Programmers' Cognitive Load Using Context-Dependent Dialogs" },
+          { text: "KEGA 061TUKE-4/2025 — Building Bridges between University and High School ICT Education" },
+          { text: "Slovak-Hungarian TéT 2024-1.2.5-TÉT-2024-00072 / APVV SK-HU-24-0037 — Realistic Project Simulation and Intelligent Product Owner Assistant for Improving Software Engineering Education" }
+        ]
       }
     ]
   },
@@ -104,6 +109,7 @@ const otherActivitiesCopy = {
         title: "Recenzent",
         items: [
           { text: "Acta Polytechnica Hungarica" },
+          { text: "PeerJ Computer Science" },
           { text: "SAMI 2026" },
           { text: "Proceedings EEI" },
           { text: "INES 2026" }
@@ -148,8 +154,12 @@ const otherActivitiesCopy = {
         text: "Dobrovoľnícke mentorovanie na Technickej univerzite v Košiciach, pomoc mladším študentom pri adaptácii na univerzitný život a orientácii v akademických procesoch."
       },
       {
-        title: "Slovensko-maďarský projekt (TeT)",
-        text: "Dlhodobá výskumná spolupráca s Eszterházy Károly Catholic University (Eger, Maďarsko) na projekte TAIPO, AI asistentovi pre workflow produktového vlastníka. Zahŕňa priebežnú koordináciu a spoločné pracovné stretnutia v Maďarsku."
+        title: "Riešiteľ výskumných projektov",
+        items: [
+          { text: "VEGA 1/0630/22 — Znižovanie kognitívneho zaťaženia programátorov pomocou kontextovo závislých dialógov" },
+          { text: "KEGA 061TUKE-4/2025 — Budovanie mostov medzi univerzitným a stredoškolským vzdelávaním v oblasti IKT" },
+          { text: "Slovensko-maďarský TéT 2024-1.2.5-TÉT-2024-00072 / APVV SK-HU-24-0037 — Realistická simulácia projektu a inteligentný asistent produktového vlastníka na zlepšenie vzdelávania v softvérovom inžinierstve" }
+        ]
       }
     ]
   }

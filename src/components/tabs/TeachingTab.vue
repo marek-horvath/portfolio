@@ -4,37 +4,54 @@
     <div class="teaching-columns">
       <section class="teaching-section">
         <h3 class="teaching-section-title">{{ copy.historyTitle }}</h3>
-        <div>
-          <div
+        <div class="accordion-list">
+          <details
             v-for="term in copy.history"
             :key="term.period"
-            class="work-block"
+            class="teaching-accordion"
+            :open="term.current"
           >
-            <h3>{{ term.period }}</h3>
-            <ul class="subject-list">
-              <li v-for="subject in term.subjects" :key="subject">
-                {{ subject }}
-              </li>
-            </ul>
-          </div>
+            <summary>
+              <span>{{ term.period }}</span>
+              <span class="count-badge">{{ term.subjects.length }} {{ copy.courseCountLabel }}</span>
+            </summary>
+            <div class="accordion-content">
+              <ul class="subject-list">
+                <li v-for="subject in term.subjects" :key="subject">
+                  {{ subject }}
+                </li>
+              </ul>
+            </div>
+          </details>
         </div>
       </section>
 
       <section class="teaching-section">
         <h3 class="teaching-section-title">{{ copy.supervisionTitle }}</h3>
-        <div>
-          <div
+        <div class="accordion-list">
+          <details
             v-for="year in copy.supervision"
             :key="year.year"
-            class="work-block"
+            class="teaching-accordion"
+            :open="year.current"
           >
-            <h3>{{ year.year }}</h3>
-            <ul class="hack-list">
-              <li v-for="topic in year.topics" :key="topic">
-                {{ topic }}
-              </li>
-            </ul>
-          </div>
+            <summary>
+              <span>{{ year.year }}</span>
+              <span class="count-badge">
+                {{ year.workCount || year.topics.length }} {{ copy.workCountLabel }}
+                <template v-if="year.workCount && year.workCount !== year.topics.length">
+                  · {{ year.topics.length }} {{ copy.topicCountLabel }}
+                </template>
+              </span>
+            </summary>
+            <div class="accordion-content">
+              <ul class="hack-list">
+                <li v-for="topic in year.topics" :key="topic">
+                  {{ topic }}
+                </li>
+              </ul>
+            </div>
+          </details>
         </div>
       </section>
     </div>
@@ -47,7 +64,21 @@ const teachingCopy = {
     title: "Teaching",
     historyTitle: "Teaching History",
     supervisionTitle: "Thesis Supervision (Topics)",
+    courseCountLabel: "courses",
+    workCountLabel: "works",
+    topicCountLabel: "unique topics",
     history: [
+      {
+        period: "Fall 2026",
+        current: true,
+        subjects: [
+          "Python Programming (lecture & lab)",
+          "User Interfaces & User Experience (SK) (1 lab)",
+          "Current Trends in Informatics (EN) (lecture)",
+          "Fundamentals of Algorithms and Programming (EN) (lecture & lab)",
+          "User Interfaces & User Experience (EN) (lecture & lab)"
+        ]
+      },
       {
         period: "Spring 2026",
         subjects: [
@@ -120,6 +151,37 @@ const teachingCopy = {
     ],
     supervision: [
       {
+        year: "2027",
+        current: true,
+        workCount: 33,
+        topics: [
+          "Design and evaluation of learning materials for Python programming",
+          "Visualizing how small source-code changes affect program behavior",
+          "Comparing RAG and fine-tuning for local language models",
+          "Analysis and automation of network security tasks using Python",
+          "Predicting corporate financial distress from accounting and macroeconomic data",
+          "Predicting electricity consumption using weather data and machine-learning models",
+          "Design and development of materials for a Python course",
+          "Extending an automated programming-assignment assessment system",
+          "Impact of architecture and state management on Flutter application maintainability",
+          "Game scenario design and balancing game mechanics in Godot",
+          "Identifying signs of Alzheimer's disease from acoustic speech features",
+          "Extending Athena with analysis and visualization of programming-assignment results",
+          "Designing a data lakehouse for real-estate listing analysis and price estimation",
+          "Implementing and tuning game mechanics in Godot",
+          "Scenario and game-mechanics design for a web game",
+          "Impact of available tools and feedback on language-agent performance in game tasks",
+          "Security constraints for file uploads in web applications",
+          "Methods for verifying behavior preservation during legacy-code refactoring",
+          "Impact of task wording and context on language-model solutions to programming problems",
+          "Evaluating the relevance of financial news to ETF portfolio composition",
+          "Comparing calendar-planning approaches with user constraints",
+          "Statistical analysis of features for source-code authorship attribution",
+          "Sequential models for source-code authorship attribution",
+          "Source-code authorship attribution using static and behavioral features"
+        ]
+      },
+      {
         year: "2026",
         topics: [
           "TUKE showcase",
@@ -180,7 +242,21 @@ const teachingCopy = {
     title: "Výučba",
     historyTitle: "História výučby",
     supervisionTitle: "Vedenie záverečných prác (témy)",
+    courseCountLabel: "predmetov",
+    workCountLabel: "prác",
+    topicCountLabel: "jedinečných tém",
     history: [
+      {
+        period: "Jeseň 2026",
+        current: true,
+        subjects: [
+          "Programovanie v Pythone (prednáška a cvičenie)",
+          "Používateľské rozhrania a používateľská skúsenosť (SK) (1 cvičenie)",
+          "Aktuálne trendy v informatike (EN) (prednáška)",
+          "Základy algoritmizácie a programovania (EN) (prednáška a cvičenie)",
+          "Používateľské rozhrania a používateľská skúsenosť (EN) (prednáška a cvičenie)"
+        ]
+      },
       {
         period: "Jar 2026",
         subjects: [
@@ -252,6 +328,37 @@ const teachingCopy = {
       }
     ],
     supervision: [
+      {
+        year: "2027",
+        current: true,
+        workCount: 33,
+        topics: [
+          "Návrh a vyhodnotenie učebných materiálov pre programovanie v Pythone",
+          "Vizualizácia vplyvu malých zmien v zdrojovom kóde na správanie programu",
+          "Porovnanie RAG a fine-tuningu lokálnych jazykových modelov",
+          "Analýza a automatizácia úloh sieťovej bezpečnosti pomocou Pythonu",
+          "Predikcia finančného distressu podnikov na základe účtovných a makroekonomických údajov",
+          "Predikcia spotreby elektrickej energie s využitím meteorologických dát a modelov strojového učenia",
+          "Návrh a tvorba materiálov pre kurz programovania v Pythone",
+          "Rozšírenie systému na automatizované hodnotenie programátorských zadaní",
+          "Vplyv architektúry a state managementu na udržateľnosť aplikácií vo Flutteri",
+          "Návrh herného scenára a vyvažovanie herných mechaník v prostredí Godot",
+          "Identifikácia príznakov Alzheimerovej choroby na základe akustických vlastností reči",
+          "Rozšírenie systému Athena o analýzu a vizualizáciu výsledkov programátorských zadaní",
+          "Návrh dátového lakehouse systému na analýzu realitných ponúk a odhad cien nehnuteľností",
+          "Implementácia a ladenie herných mechaník v prostredí Godot",
+          "Návrh scenára a herných mechaník webovej hry",
+          "Vplyv dostupných nástrojov a spätnej väzby na výkon jazykových agentov v herných úlohách",
+          "Analýza bezpečnostných obmedzení pri nahrávaní súborov do webových aplikácií",
+          "Metódy overovania zachovania správania pri refaktoringu legacy kódu",
+          "Vplyv formulácie zadania a poskytnutého kontextu na riešenie programátorských úloh jazykovými modelmi",
+          "Hodnotenie relevantnosti finančných správ vzhľadom na zloženie portfólia ETF",
+          "Porovnanie prístupov k plánovaniu kalendára pri zohľadnení používateľských obmedzení",
+          "Štatistická analýza čŕt pri identifikácii autorstva zdrojového kódu",
+          "Sekvenčné modely pre identifikáciu autorstva zdrojového kódu",
+          "Atribúcia autorstva zdrojového kódu pomocou statických a behaviorálnych čŕt"
+        ]
+      },
       {
         year: "2026",
         topics: [
@@ -340,6 +447,63 @@ export default {
   color: #163a66;
   margin-bottom: 10px;
   text-align: center;
+}
+
+.accordion-list {
+  display: grid;
+  gap: 8px;
+}
+
+.teaching-accordion {
+  border-bottom: 1px solid rgba(22, 58, 102, 0.14);
+}
+
+.teaching-accordion summary {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 2px;
+  color: #163a66;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  list-style: none;
+}
+
+.teaching-accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.teaching-accordion summary::before {
+  content: "+";
+  width: 18px;
+  flex: 0 0 18px;
+  color: #56718d;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+}
+
+.teaching-accordion[open] summary::before {
+  content: "−";
+}
+
+.teaching-accordion summary > span:first-child {
+  margin-right: auto;
+}
+
+.count-badge {
+  flex: 0 0 auto;
+  color: #607891;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.accordion-content {
+  padding: 0 4px 8px 22px;
 }
 
 @media (max-width: 900px) {
