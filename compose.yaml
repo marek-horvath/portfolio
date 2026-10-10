@@ -1,0 +1,67 @@
+name: portfolio-local
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    init: true
+    command: npm run serve -- --host 0.0.0.0 --port 8080
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+      VUE_APP_ANALYTICS_API_URL: http://127.0.0.1:${API_PORT:-3002}
+      VUE_APP_SCHOLAR_API_URL: http://127.0.0.1:${API_PORT:-3002}/api/scholar-metrics
+    ports:
+      - "${FRONTEND_PORT:-8081}:8080"
+    volumes:
+      - .:/app
+      - frontend_node_modules:/app/node_modules
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--spider", "http://127.0.0.1:8080/portfolio/"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 20s
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    init: true
+    command: node --watch server/index.js
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3002
+      SCHOLAR_URL: ${SCHOLAR_URL:-https://scholar.google.com/citations?user=9q0s2u4AAAAJ&hl=en&oi=ao}
+      REFRESH_INTERVAL_MS: ${REFRESH_INTERVAL_MS:-21600000}
+      REQUEST_TIMEOUT_MS: ${REQUEST_TIMEOUT_MS:-20000}
+      MINIMUM_CITATION_COUNT: ${MINIMUM_CITATION_COUNT:-60}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://127.0.0.1:8081,http://localhost:8081}
+      ANALYTICS_ADMIN_PASSWORD: ${ANALYTICS_ADMIN_PASSWORD:?Set ANALYTICS_ADMIN_PASSWORD in .env}
+      ANALYTICS_DB_PATH: /app/server/data/analytics-db.json
+      ANALYTICS_EVENT_LIMIT: ${ANALYTICS_EVENT_LIMIT:-5000}
+      BLOG_DB_PATH: /app/server/data/blog-db.json
+      BLOG_UPLOAD_DIR: /app/server/data/blog-uploads
+      BLOG_FILE_UPLOAD_DIR: /app/server/data/blog-files
+      BLOG_UPLOAD_MAX_BYTES: ${BLOG_UPLOAD_MAX_BYTES:-8388608}
+      BLOG_FILE_UPLOAD_MAX_BYTES: ${BLOG_FILE_UPLOAD_MAX_BYTES:-25165824}
+    ports:
+      - "${API_PORT:-3002}:3002"
+    volumes:
+      - .:/app
+      - portfolio_data:/app/server/data
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--spider", "http://127.0.0.1:3002/api/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+    restart: unless-stopped
+
+volumes:
+  frontend_node_modules:
+  portfolio_data:
