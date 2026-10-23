@@ -13,6 +13,16 @@
         <span class="citation-count">{{ scholarCitationsLabel }}</span>
         <span>{{ copy.citationsLabel }}</span>
       </a>
+      <a
+        v-for="profile in researchProfiles"
+        :key="profile.name"
+        class="citation-chip"
+        :href="profile.url"
+        target="_blank"
+        rel="noopener"
+      >
+        {{ profile.name }}
+      </a>
     </div>
 
     <div class="pub-sections">
@@ -378,6 +388,20 @@ export default {
   data() {
     return {
       publicationSections,
+      researchProfiles: [
+        {
+          name: "Scopus",
+          url: "https://www.scopus.com/authid/detail.uri?authorId=57544049100"
+        },
+        {
+          name: "Web of Science",
+          url: "https://www.webofscience.com/wos/op/publications/summary"
+        },
+        {
+          name: "ResearchGate",
+          url: "https://www.researchgate.net/profile/Marek-Horvath"
+        }
+      ],
       scholarUrl: "https://scholar.google.com/citations?user=9q0s2u4AAAAJ&hl=sk&oi=ao",
       scholarApiUrl:
         process.env.VUE_APP_SCHOLAR_API_URL ||
@@ -474,6 +498,7 @@ export default {
 <style scoped>
 .publications-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 12px;
