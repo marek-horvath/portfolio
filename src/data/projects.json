@@ -21,7 +21,9 @@
     ],
     "url": null,
     "repository": null,
-    "images": [],
+    "images": [
+      "workspace-manager.webp"
+    ],
     "archived": false,
     "access": "desktop"
   },
@@ -113,7 +115,7 @@
   {
     "id": "python-course",
     "category": "systems",
-    "featured": false,
+    "featured": true,
     "name": {
       "sk": "Programovanie v Pythone",
       "en": "Python Programming"
@@ -160,14 +162,16 @@
     ],
     "url": "https://workweek-theta.vercel.app/",
     "repository": null,
-    "images": [],
+    "images": [
+      "workweek.webp"
+    ],
     "archived": false,
     "access": "protected"
   },
   {
     "id": "neurologia",
     "category": "systems",
-    "featured": true,
+    "featured": false,
     "name": {
       "sk": "Doctor Booking System",
       "en": "Doctor Booking System"
@@ -186,7 +190,9 @@
     ],
     "url": "https://neurologia-vert.vercel.app/",
     "repository": null,
-    "images": [],
+    "images": [
+      "doctor-booking.webp"
+    ],
     "archived": false,
     "access": "public"
   },
@@ -212,14 +218,16 @@
     ],
     "url": null,
     "repository": null,
-    "images": [],
+    "images": [
+      "world-cup.webp"
+    ],
     "archived": false,
     "access": "local"
   },
   {
     "id": "hraj-sk",
     "category": "games",
-    "featured": true,
+    "featured": false,
     "name": {
       "sk": "Hraj.sk – herná platforma",
       "en": "Hraj.sk — Game Platform"
@@ -238,7 +246,9 @@
     ],
     "url": null,
     "repository": null,
-    "images": [],
+    "images": [
+      "hraj-sk.webp"
+    ],
     "archived": false,
     "access": "local"
   },
@@ -300,7 +310,7 @@
   {
     "id": "bandito-signal",
     "category": "games",
-    "featured": false,
+    "featured": true,
     "name": {
       "sk": "The Bandito Signal (Dema)",
       "en": "The Bandito Signal (Dema)"
@@ -401,7 +411,9 @@
     ],
     "url": "https://marek-horvath.github.io/cnk/",
     "repository": "https://github.com/marek-horvath/cnk",
-    "images": [],
+    "images": [
+      "cnk.webp"
+    ],
     "archived": false,
     "access": "public"
   },
@@ -455,7 +467,9 @@
     ],
     "url": "https://www.revik.sk/",
     "repository": "https://github.com/marek-horvath/revik",
-    "images": [],
+    "images": [
+      "revik.webp"
+    ],
     "archived": false,
     "access": "public"
   },
@@ -478,37 +492,10 @@
     ],
     "url": "https://marek-horvath.github.io/algo/",
     "repository": "https://github.com/marek-horvath/algo",
-    "images": [],
+    "images": [
+      "algoritmization.webp"
+    ],
     "archived": false,
     "access": "public"
-  },
-  {
-    "id": "cardiocheck",
-    "category": "websites",
-    "featured": false,
-    "name": {
-      "sk": "CardioCheck – UX prototyp pre VÚSCH",
-      "en": "CardioCheck — UX Prototype for VÚSCH"
-    },
-    "description": {
-      "sk": "Responzívny prototyp zberu kardiovaskulárnych vstupov s podmieneným formulárom, validáciou, témami a ilustračnou správou.",
-      "en": "A responsive cardiovascular-screening UX prototype featuring conditional forms, input validation, themes and an illustrative report."
-    },
-    "technologies": [
-      "Expo SDK 54",
-      "React Native",
-      "React Native Web",
-      "TypeScript",
-      "Expo Router",
-      "React Navigation"
-    ],
-    "url": null,
-    "repository": null,
-    "images": [
-      "vusch-desktop.webp",
-      "vusch-mobile.webp"
-    ],
-    "archived": false,
-    "access": "prototype"
   }
 ]

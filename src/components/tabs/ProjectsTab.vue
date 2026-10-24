@@ -8,8 +8,8 @@
       </button>
     </nav>
     <p class="project-count" role="status">{{ visibleCount }} / {{ projects.length }} {{ copy.count }}</p>
-    <section v-for="group in visibleGroups" :key="group.id" class="project-group" :aria-labelledby="`project-group-${group.id}`">
-      <div class="project-group-heading"><h3 :id="`project-group-${group.id}`">{{ group.label }}</h3><span>{{ group.projects.length }}</span></div>
+    <section v-for="group in visibleGroups" :key="group.id" class="project-group" :aria-label="selectedCategory === 'all' ? copy.all : undefined" :aria-labelledby="selectedCategory === 'all' ? undefined : `project-group-${group.id}`">
+      <div v-if="selectedCategory !== 'all'" class="project-group-heading"><h3 :id="`project-group-${group.id}`">{{ group.label }}</h3><span>{{ group.projects.length }}</span></div>
       <div class="projects-grid">
         <article v-for="project in group.projects" :key="project.id" class="project-card" :class="{ 'project-featured': project.featured }" :data-project="project.id">
           <button type="button" class="project-preview" :aria-label="`${copy.detail}: ${name(project)}`" @click="openProject(project, $event)">
@@ -32,7 +32,7 @@
         </article>
       </div>
     </section>
-    <section class="private-projects"><LockKeyhole :size="19" aria-hidden="true" /><div><h3>{{ copy.privateTitle }}</h3><p>{{ copy.privateText }}</p></div></section>
+    <section class="private-projects"><LockKeyhole :size="19" aria-hidden="true" /><div><h3>{{ copy.privateTitle }}</h3><p>{{ copy.privateText }}</p><ul><li v-for="item in copy.privateItems" :key="item.title"><strong>{{ item.title }}</strong><span>{{ item.description }}</span></li></ul></div></section>
     <Teleport to="body">
       <dialog ref="projectDialog" class="project-dialog" :class="{ 'project-dialog-zoom': zoomed }" aria-labelledby="project-dialog-title" @click="onBackdrop" @cancel.prevent="closeProject" @close="restoreFocus" @keydown="onDialogKeydown">
         <template v-if="activeProject">
@@ -79,7 +79,14 @@ const copy = {
     count: "projects", detail: "Details", selected: "Selected", preview: "application preview", archive: "Archive", archiveDetail: "Archival screenshot from the project; not a new test capture.",
     technologies: "Technologies", open: "Open project", website: "Website · sign-in", close: "Close project details", previous: "Previous image", next: "Next image", photo: "Image", enlarge: "Enlarge image", reduce: "Reduce image",
     problem: "The problem", solution: "The solution", result: "What it delivers", decisions: "Technical decisions",
-    privateTitle: "Private projects", privateText: "Additional web and application projects whose details remain private."
+    privateTitle: "Private projects", privateText: "A few other projects, described without client names or public links.",
+    privateItems: [
+      { title: "E-commerce storefront", description: "WordPress, WooCommerce, PHP and MariaDB; product personalization and order management." },
+      { title: "Event website platform", description: "Next.js, React, TypeScript, Prisma and PostgreSQL; separate event websites, administration and guest responses." },
+      { title: "Brand presentation website", description: "Next.js, TypeScript, Tailwind CSS and Framer Motion; a responsive site with animated content." },
+      { title: "Social browser game", description: "Next.js, React and Tailwind CSS; rounds, custom challenges and score tracking." },
+      { title: "Healthcare form UX prototype", description: "Expo, React Native Web and TypeScript; conditional inputs, validation and an illustrative report. A prototype without a backend or clinical validation." }
+    ]
   },
   sk: {
     title: "Osobné projekty", intro: "Aplikácie, vývojárske nástroje, hry a weby — od univerzitných systémov po vlastné experimenty.",
@@ -87,10 +94,18 @@ const copy = {
     count: "projektov", detail: "Detail", selected: "Výber", preview: "náhľad aplikácie", archive: "Archív", archiveDetail: "Archívny záber z projektu; nejde o nový test aplikácie.",
     technologies: "Technológie", open: "Otvoriť projekt", website: "Web · prihlásenie", close: "Zavrieť detail projektu", previous: "Predchádzajúci obrázok", next: "Nasledujúci obrázok", photo: "Obrázok", enlarge: "Zväčšiť obrázok", reduce: "Zmenšiť obrázok",
     problem: "Problém", solution: "Riešenie", result: "Čo prináša", decisions: "Technické rozhodnutia",
-    privateTitle: "Neverejné realizácie", privateText: "Ďalšie webové a aplikačné realizácie, ktorých detaily nezverejňujem."
+    privateTitle: "Neverejné realizácie", privateText: "Ďalšie projekty stručne, bez názvov klientov a verejných odkazov.",
+    privateItems: [
+      { title: "E-shop", description: "WordPress, WooCommerce, PHP a MariaDB; personalizácia produktov a správa objednávok." },
+      { title: "Platforma pre eventové weby", description: "Next.js, React, TypeScript, Prisma a PostgreSQL; samostatné weby podujatí, administrácia a odpovede hostí." },
+      { title: "Prezentačný web značky", description: "Next.js, TypeScript, Tailwind CSS a Framer Motion; responzívny web s animovaným obsahom." },
+      { title: "Spoločenská hra v prehliadači", description: "Next.js, React a Tailwind CSS; herné kolá, vlastné výzvy a priebežné skóre." },
+      { title: "UX prototyp formulárov pre zdravotníctvo", description: "Expo, React Native Web a TypeScript; podmienené polia, validácia a ilustračná správa. Prototyp bez backendu a klinickej validácie." }
+    ]
   }
 };
 const categoryIds = ["tools", "systems", "games", "websites"];
+const projectOrder = ["athena", "python-course", "workspace-manager", "monitoring", "bandito-signal", "programmers-day", "neurologia", "hraj-sk", "fei-rozvrh", "workweek", "guess-who", "seug", "football-predictions", "slovakdle", "cnk", "krajcirstvo", "revik", "algoritmization"];
 
 export default {
   name: "ProjectsTab",
@@ -100,9 +115,10 @@ export default {
   computed: {
     locale() { return this.language === "sk" ? "sk" : "en"; },
     copy() { return copy[this.locale]; },
-    groups() { return categoryIds.map((id, i) => ({ id, label: this.copy.categories[i], projects: projects.filter(p => p.category === id).sort((a, b) => Number(b.featured) - Number(a.featured)) })); },
+    rankedProjects() { return [...projects].sort((a, b) => projectOrder.indexOf(a.id) - projectOrder.indexOf(b.id)); },
+    groups() { return categoryIds.map((id, i) => ({ id, label: this.copy.categories[i], projects: this.rankedProjects.filter(p => p.category === id) })); },
     filters() { return [{ id: "all", label: this.copy.all, count: projects.length }, ...this.groups.map(g => ({ id: g.id, label: g.label, count: g.projects.length }))]; },
-    visibleGroups() { return this.groups.filter(g => this.selectedCategory === "all" || g.id === this.selectedCategory); },
+    visibleGroups() { return this.selectedCategory === "all" ? [{ id: "all", label: this.copy.title, projects: this.rankedProjects }] : this.groups.filter(g => g.id === this.selectedCategory); },
     visibleCount() { return this.visibleGroups.reduce((sum, group) => sum + group.projects.length, 0); },
     activeDetail() { return this.activeProject ? this.detail(this.activeProject) : {}; },
     detailSections() { return ["problem", "solution", "result", "decisions"].filter(key => this.activeDetail[key]); },
@@ -157,14 +173,14 @@ export default {
 </script>
 
 <style scoped>
-.projects-intro { margin: 0 0 20px; color: #48627c; font-size: 14px; line-height: 1.6; }
-.project-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.projects-intro { margin: 0 0 20px; color: #48627c; font-size: 14px; line-height: 1.6; text-align: center; }
+.project-filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .project-filters button { display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid #cbd8e7; border-radius: 6px; background: #fff; color: #284c70; font: inherit; font-size: 12px; cursor: pointer; text-align: left; }
 .project-filters button[aria-pressed="true"] { background: #163a66; border-color: #163a66; color: #fff; }
 .project-filters span { opacity: .75; font-size: 11px; }
-.project-count { margin: 12px 0 24px; font-size: 12px; color: #526a83; }
+.project-count { margin: 12px 0 24px; font-size: 12px; color: #526a83; text-align: center; }
 .project-group { margin-bottom: 32px; }
-.project-group-heading { display: flex; align-items: baseline; gap: 12px; margin: 0 0 14px; padding-bottom: 9px; border-bottom: 1px solid #d6e1ec; }
+.project-group-heading { display: flex; justify-content: center; align-items: baseline; gap: 12px; margin: 0 0 14px; padding-bottom: 9px; border-bottom: 1px solid #d6e1ec; text-align: center; }
 .project-group-heading h3 { margin: 0; color: #193f65; font-size: 17px; line-height: 1.4; }
 .project-group-heading > span { color: #526a83; font-size: 12px; }
 .projects-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
@@ -178,14 +194,15 @@ export default {
 .project-neutral-websites { background: #f3eff5; color: #73547e; }
 .preview-open { position: absolute; right: 9px; bottom: 9px; display: grid; place-items: center; padding: 7px; background: #fff; color: #163a66; border-radius: 4px; box-shadow: 0 1px 7px #163a661a; }
 .project-archive { position: absolute; left: 9px; top: 9px; padding: 4px 7px; background: #fffffff0; color: #425971; font-size: 10px; border-radius: 4px; }
-.project-card-content { display: flex; flex-direction: column; flex: 1; gap: 11px; padding: 17px; }
+.project-card-content { display: flex; flex-direction: column; flex: 1; gap: 11px; padding: 17px; text-align: center; }
 .project-card-top { display: flex; justify-content: space-between; gap: 8px; align-items: center; color: #506981; font-size: 11px; }
 .project-selected { color: #2c638e; font-weight: 700; }
 .project-card h4 { margin: 0; font-size: 18px; line-height: 1.35; }
-.project-card h4 button { padding: 0; border: 0; background: none; color: #163a66; font: inherit; font-weight: 700; text-align: left; cursor: pointer; }
+.project-card h4 button { padding: 0; border: 0; background: none; color: #163a66; font: inherit; font-weight: 700; text-align: center; cursor: pointer; }
 .project-card-content > p { margin: 0; color: #405c76; font-size: 13px; line-height: 1.6; }
 .project-tags { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: auto 0 0; list-style: none; }
 .project-tags li { max-width: 100%; padding: 4px 7px; border-radius: 4px; background: #eef3f8; color: #3d5c7a; font-size: 10px; line-height: 1.4; overflow-wrap: anywhere; }
+.project-card .project-tags, .project-card .project-actions { justify-content: center; }
 .project-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 3px; }
 .project-actions button, .project-actions a { display: inline-flex; gap: 5px; align-items: center; padding: 4px 0; border: 0; background: none; font: inherit; font-size: 12px; font-weight: 700; color: #205c90; text-decoration: none; cursor: pointer; }
 .project-actions button:hover, .project-actions a:hover, .project-card h4 button:hover { color: #0b3458; text-decoration: underline; }
@@ -193,6 +210,10 @@ export default {
 .private-projects h3 { margin: 0 0 5px; font-size: 14px; color: #38536f; }
 .private-projects p { margin: 0; font-size: 13px; line-height: 1.6; }
 .private-projects > svg { flex-shrink: 0; }
+.private-projects > div { min-width: 0; flex: 1; }
+.private-projects ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 28px; list-style: none; padding: 0; margin: 22px 0 0; }
+.private-projects li { display: flex; flex-direction: column; gap: 5px; font-size: 13px; line-height: 1.7; }
+.private-projects li strong { color: #38536f; }
 .project-dialog { box-sizing: border-box; width: min(880px, calc(100% - 40px)); max-height: calc(100dvh - 40px); padding: 0; border: 1px solid #bdcddd; border-radius: 8px; background: #fff; color: #294963; overflow: auto; overscroll-behavior: contain; box-shadow: 0 24px 90px #0c22354d; }
 .project-dialog::backdrop { background: #122b43a8; backdrop-filter: blur(4px); }
 .project-dialog-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 20px 24px; }
@@ -224,7 +245,7 @@ export default {
 @media (max-width: 600px) {
   .projects-intro { font-size: 13px; }
   .project-filters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
-  .project-filters button { justify-content: space-between; font-size: 11px; padding: 8px; line-height: 1.5; }
+  .project-filters button { justify-content: center; text-align: center; font-size: 11px; padding: 8px; line-height: 1.5; }
   .project-filters button:first-child { grid-column: 1/-1; }
   .project-filters span { flex-shrink: 0; }
   .project-group-heading h3 { font-size: 16px; }
@@ -238,5 +259,6 @@ export default {
   .project-dialog-intro { font-size: 14px; }
   .project-gallery { padding: 8px; }
   .project-gallery-stage { min-height: 100px; }
+  .private-projects ul { grid-template-columns: minmax(0, 1fr); }
 }
 </style>

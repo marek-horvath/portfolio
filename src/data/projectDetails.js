@@ -115,12 +115,6 @@ const details = {
     type: ["Výučbový web", "Teaching website"],
     solution: ["Materiály k algoritmizácii dopĺňa vizualizačná časť s vývojovými diagramami.", "Algorithmization materials are complemented by a flowchart-oriented learning interface."],
     decisions: ["Statický web v HTML, CSS a JavaScripte s PDF a prezentačnými podkladmi.", "A static HTML, CSS and JavaScript website with PDF and presentation materials."]
-  },
-  cardiocheck: {
-    type: ["UX prototyp", "UX prototype"],
-    solution: ["Podmienené formuláre, validácia vstupov, témy, SK/EN a ilustračná správa skúmajú používateľský tok kardiovaskulárnych vstupov.", "Conditional forms, input validation, themes, SK/EN and an illustrative report explore the user flow for cardiovascular inputs."],
-    decisions: ["Expo SDK 54, React Native Web a TypeScript tvoria spoločný základ pre webové a mobilné rozloženie.", "Expo SDK 54, React Native Web and TypeScript provide a shared foundation for web and mobile layouts."],
-    note: ["UX prototyp bez backendu, databázy a klinickej validácie. Ilustračné grafy nie sú výsledky pacientov; nejde o zdravotnícku pomôcku.", "UX prototype without a backend, database or clinical validation. Illustrative charts are not patient results; this is not a medical device."]
   }
 };
 
