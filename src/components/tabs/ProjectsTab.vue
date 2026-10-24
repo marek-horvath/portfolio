@@ -2,502 +2,241 @@
   <div class="projects-tab">
     <h2>{{ copy.title }}</h2>
     <p class="projects-intro">{{ copy.intro }}</p>
-
-    <div class="scrollable-content">
+    <nav class="project-filters" :aria-label="copy.filterLabel">
+      <button v-for="filter in filters" :key="filter.id" type="button" :aria-pressed="selectedCategory === filter.id" @click="selectCategory(filter.id)">
+        {{ filter.label }} <span>{{ filter.count }}</span>
+      </button>
+    </nav>
+    <p class="project-count" role="status">{{ visibleCount }} / {{ projects.length }} {{ copy.count }}</p>
+    <section v-for="group in visibleGroups" :key="group.id" class="project-group" :aria-labelledby="`project-group-${group.id}`">
+      <div class="project-group-heading"><h3 :id="`project-group-${group.id}`">{{ group.label }}</h3><span>{{ group.projects.length }}</span></div>
       <div class="projects-grid">
-        <component
-          :is="project.url ? 'a' : 'article'"
-          v-for="project in copy.projects"
-          :key="project.name"
-          class="project-card"
-          :class="{ 'project-card-link': project.url }"
-          :href="project.url || undefined"
-          :target="project.url ? '_blank' : undefined"
-          :rel="project.url ? 'noopener noreferrer' : undefined"
-          :aria-label="project.url ? `${copy.openProjectLabel} ${project.name}` : undefined"
-          @click="project.url && trackProject(project)"
-        >
-          <div class="project-preview">
-            <img
-              :src="projectImages[project.imageKey]"
-              :alt="project.previewAlt"
-              loading="lazy"
-            />
+        <article v-for="project in group.projects" :key="project.id" class="project-card" :class="{ 'project-featured': project.featured }" :data-project="project.id">
+          <button type="button" class="project-preview" :aria-label="`${copy.detail}: ${name(project)}`" @click="openProject(project, $event)">
+            <img v-if="project.images.length" :src="imageUrl(project.images[0], true)" :alt="`${name(project)} — ${copy.preview}`" loading="lazy" width="760" height="475" />
+            <span v-else class="project-neutral" :class="`project-neutral-${project.category}`"><component :is="projectIcon(project)" :size="42" :stroke-width="1.4" aria-hidden="true" /><span>{{ detail(project).type }}</span></span>
+            <span class="preview-open"><Maximize2 :size="16" aria-hidden="true" /></span>
+            <span v-if="project.archived" class="project-archive">{{ copy.archive }}</span>
+          </button>
+          <div class="project-card-content">
+            <div class="project-card-top"><span>{{ detail(project).type }}</span><span v-if="project.featured" class="project-selected">{{ copy.selected }}</span></div>
+            <h4><button type="button" @click="openProject(project, $event)">{{ name(project) }}</button></h4>
+            <p>{{ project.description[locale] }}</p>
+            <ul class="project-tags" :aria-label="copy.technologies"><li v-for="technology in project.technologies" :key="technology">{{ technology }}</li></ul>
+            <div class="project-actions">
+              <button type="button" @click="openProject(project, $event)">{{ copy.detail }} <ArrowUpRight :size="15" aria-hidden="true" /></button>
+              <a v-if="project.url" :href="project.url" target="_blank" rel="noopener noreferrer" @click="trackProject(project)">{{ project.access === 'protected' ? copy.website : copy.open }} <ExternalLink :size="14" aria-hidden="true" /></a>
+              <a v-if="project.repository" :href="project.repository" target="_blank" rel="noopener noreferrer" :aria-label="`GitHub: ${name(project)}`" @click="trackProject(project, true)"><Github :size="16" aria-hidden="true" /><span>GitHub</span></a>
+            </div>
           </div>
-
-          <div class="project-card-top">
-            <span class="project-type">{{ project.type }}</span>
-            <span v-if="project.url" class="project-open">{{ copy.openLabel }}</span>
-          </div>
-
-          <h3>{{ project.name }}</h3>
-          <p>{{ project.description }}</p>
-
-          <ul class="project-tags" :aria-label="copy.tagsLabel">
-            <li v-for="tag in project.tags" :key="tag">{{ tag }}</li>
-          </ul>
-        </component>
+        </article>
       </div>
-    </div>
+    </section>
+    <section class="private-projects"><LockKeyhole :size="19" aria-hidden="true" /><div><h3>{{ copy.privateTitle }}</h3><p>{{ copy.privateText }}</p></div></section>
+    <Teleport to="body">
+      <dialog ref="projectDialog" class="project-dialog" :class="{ 'project-dialog-zoom': zoomed }" aria-labelledby="project-dialog-title" @click="onBackdrop" @cancel.prevent="closeProject" @close="restoreFocus" @keydown="onDialogKeydown">
+        <template v-if="activeProject">
+          <header class="project-dialog-header"><div><span>{{ activeDetail.type }}</span><h2 id="project-dialog-title">{{ name(activeProject) }}</h2></div><button type="button" class="project-icon-button" :aria-label="copy.close" :title="copy.close" autofocus @click="closeProject"><X :size="22" aria-hidden="true" /></button></header>
+          <div v-if="activeProject.images.length" class="project-gallery">
+            <div class="project-gallery-stage" :class="{ 'project-gallery-portrait': isPortrait }">
+              <img :src="imageUrl(activeProject.images[imageIndex])" :alt="`${name(activeProject)} — ${copy.preview} ${imageIndex + 1}`" />
+              <button type="button" class="project-icon-button gallery-zoom" :aria-label="zoomed ? copy.reduce : copy.enlarge" :title="zoomed ? copy.reduce : copy.enlarge" @click="zoomed = !zoomed"><component :is="zoomed ? 'Minimize2' : 'Maximize2'" :size="19" aria-hidden="true" /></button>
+            </div>
+            <div v-if="activeProject.images.length > 1" class="project-gallery-controls">
+              <button type="button" class="project-icon-button" :aria-label="copy.previous" :title="copy.previous" @click="changeImage(-1)"><ChevronLeft :size="20" aria-hidden="true" /></button>
+              <button v-for="(file, index) in activeProject.images" :key="file" type="button" class="project-thumbnail" :aria-label="`${copy.photo} ${index + 1}`" :aria-pressed="imageIndex === index" @click="imageIndex = index"><img :src="imageUrl(file, true)" alt="" loading="lazy" /></button>
+              <button type="button" class="project-icon-button" :aria-label="copy.next" :title="copy.next" @click="changeImage(1)"><ChevronRight :size="20" aria-hidden="true" /></button>
+            </div>
+            <p v-if="activeProject.archived" class="project-gallery-caption">{{ copy.archiveDetail }}</p>
+          </div>
+          <div class="project-dialog-body">
+            <p class="project-dialog-intro">{{ activeProject.description[locale] }}</p>
+            <div class="project-detail-sections"><section v-for="key in detailSections" :key="key"><h3>{{ copy[key] }}</h3><p>{{ activeDetail[key] }}</p></section></div>
+            <p v-if="activeDetail.note" class="project-note">{{ activeDetail.note }}</p>
+            <ul class="project-tags" :aria-label="copy.technologies"><li v-for="technology in activeProject.technologies" :key="technology">{{ technology }}</li></ul>
+            <div class="project-actions">
+              <a v-if="activeProject.url" :href="activeProject.url" target="_blank" rel="noopener noreferrer" @click="trackProject(activeProject)">{{ activeProject.access === 'protected' ? copy.website : copy.open }} <ExternalLink :size="16" aria-hidden="true" /></a>
+              <a v-if="activeProject.repository" :href="activeProject.repository" target="_blank" rel="noopener noreferrer" @click="trackProject(activeProject, true)"><Github :size="16" aria-hidden="true" /> GitHub</a>
+            </div>
+          </div>
+        </template>
+      </dialog>
+    </Teleport>
   </div>
 </template>
 
 <script>
-import athenaImage from "../../assets/athena.png";
-import cnkImage from "../../assets/cnk.png";
-import demaImage from "../../assets/dema.png";
-import footballImage from "../../assets/football.png";
-import gameImage from "../../assets/hra.png";
-import guessImage from "../../assets/guess.png";
-import krajcirstvoImage from "../../assets/krajcirstvo.png";
-import neurologiaImage from "../../assets/neurologia.png";
-import pythonImage from "../../assets/pythonn.png";
-import revikImage from "../../assets/revik.png";
-import seugImage from "../../assets/seug.png";
-import slovakdleImage from "../../assets/slovakdle.png";
+import { Activity, ArrowUpRight, BookOpen, CalendarDays, ChevronLeft, ChevronRight, Code2, ExternalLink, Gamepad2, Github, Globe, Layers, LockKeyhole, Maximize2, Minimize2, Monitor, X } from "@lucide/vue";
+import projects from "../../data/projects.json";
+import { getProjectDetails } from "../../data/projectDetails";
 import { trackClick } from "../../utils/analytics";
 
-const projectImages = {
-  athena: athenaImage,
-  cnk: cnkImage,
-  dema: demaImage,
-  football: footballImage,
-  game: gameImage,
-  guess: guessImage,
-  krajcirstvo: krajcirstvoImage,
-  neurologia: neurologiaImage,
-  python: pythonImage,
-  revik: revikImage,
-  seug: seugImage,
-  slovakdle: slovakdleImage
-};
-
-const projectsCopy = {
+const images = require.context("../../assets/projects", false, /\.webp$/);
+const copy = {
   en: {
-    title: "Personal Projects",
-    intro: "Selected applications, websites, and games I have built for clients, teaching, and my own ideas. Some also include a custom admin or analytics layer for clicks and real usage signals.",
-    openLabel: "Open",
-    openProjectLabel: "Open project",
-    tagsLabel: "Project tags",
-    projects: [
-      {
-        name: "Athena Dashboard",
-        type: "Testing dashboard",
-        url: "https://athena.kpi.fei.tuke.sk",
-        imageKey: "athena",
-        previewAlt: "Preview of the Athena testing dashboard",
-        description: "Complex system for testing student programming assignments: it downloads submissions from GitLab, runs them safely in isolated Docker containers, and stores structured results for review.",
-        tags: ["Autograding", "GitLab", "Docker"]
-      },
-      {
-        name: "Doctor Booking System",
-        type: "Medical reservation system",
-        url: "https://neurologia-vert.vercel.app/",
-        imageKey: "neurologia",
-        previewAlt: "Preview of the medical reservation system",
-        description: "Booking system for a medical practice with patient reservations, an admin interface for managing appointments, and automatic email reminders sent to patients.",
-        tags: ["Healthcare", "Bookings", "Email reminders"]
-      },
-      {
-        name: "World Cup",
-        type: "Prediction app",
-        url: "http://167.233.132.16",
-        imageKey: "football",
-        previewAlt: "Preview of the World Cup football prediction app",
-        description: "Hobby app for predicting football results with friends. It automatically scraped final scores from Flashscore, evaluated picks, and kept leaderboards up to date.",
-        tags: ["Football", "Scraping", "Leaderboards"]
-      },
-      {
-        name: "Programmer's Day",
-        type: "Desktop game",
-        imageKey: "game",
-        previewAlt: "Screenshot of the Programmer's Day retro office game",
-        description: "A 2D retro office game built in Godot. Its playable demo runs for ten days, combining email, chat, meetings, project work, thirteen minigame types, bills, career reviews, and upgrades.",
-        tags: ["Godot", "Puzzle management", "Desktop"]
-      },
-      {
-        name: "Python Learning Materials",
-        type: "Teaching website",
-        url: "https://marek-horvath.github.io/python/",
-        imageKey: "python",
-        previewAlt: "Preview of the Python learning materials website",
-        description: "Python lessons and learning materials I use when teaching students, organized as an accessible website they can return to while practicing.",
-        tags: ["Python", "Teaching", "Learning materials"]
-      },
-      {
-        name: "Guess Who",
-        type: "Browser game",
-        url: "https://guesswho-rosy.vercel.app/",
-        imageKey: "guess",
-        previewAlt: "Preview of the Guess Who browser game",
-        description: "A browser-based take on Guess Who, built around narrowing down characters through questions and deduction.",
-        tags: ["Game", "Deduction", "Browser"]
-      },
-      {
-        name: "SEUG",
-        type: "Academic website",
-        url: "https://seug.kpi.fei.tuke.sk/",
-        imageKey: "seug",
-        previewAlt: "Preview of the SEUG website",
-        description: "Website for a research group at KPI FEI TUKE with people, activities, and automatic extraction of new publications for all group members.",
-        tags: ["Research group", "Publications", "Automation"]
-      },
-      {
-        name: "Cloud Native Kosice",
-        type: "Community website",
-        url: "https://marek-horvath.github.io/cnk",
-        imageKey: "cnk",
-        previewAlt: "Preview of the Cloud Native Kosice meetup website",
-        description: "Community website for Cloud Native Kosice meetups with event information, program details, history, location, email signup, and lightweight custom analytics.",
-        tags: ["Community", "Meetups", "Analytics"]
-      },
-      {
-        name: "Revik",
-        type: "Business website",
-        url: "https://www.revik.sk/",
-        imageKey: "revik",
-        previewAlt: "Preview of the Revik website",
-        description: "Presentation website for a local cleaning service, focused on a clear offer, fast contact, and a small admin/analytics layer for tracking real visitor actions.",
-        tags: ["Services", "Local business", "Analytics"]
-      },
-      {
-        name: "Krajčírstvo July",
-        type: "Service website",
-        url: "https://krajcirstvo.vercel.app/",
-        imageKey: "krajcirstvo",
-        previewAlt: "Preview of the Krajčírstvo July website",
-        description: "Public website for a tailoring service with a practical service overview, contact-oriented flow, and custom analytics for understanding visitor clicks.",
-        tags: ["Tailoring", "Small business", "Analytics"]
-      },
-      {
-        name: "Slovakdle",
-        type: "Browser game",
-        url: "https://slovakdle.vercel.app/",
-        imageKey: "slovakdle",
-        previewAlt: "Preview of the Slovakdle browser game",
-        description: "My first Wordle-inspired browser game adapted for Slovakia, built around Slovak-themed guessing and simple repeat play.",
-        tags: ["Game", "Slovakia", "Wordle inspired"]
-      },
-      {
-        name: "Dema: Signal Breach",
-        type: "Interactive project",
-        url: "https://dema-jade.vercel.app/",
-        imageKey: "dema",
-        previewAlt: "Preview of the Dema Signal Breach web project",
-        description: "Twenty One Pilots-inspired branching story game in the style of a Telltale narrative, with minigames and roughly 100 custom illustrations.",
-        tags: ["Branching story", "Minigames", "Illustrations"]
-      }
-    ]
+    title: "Personal Projects", intro: "Applications, developer tools, games and websites — from university systems to personal experiments.",
+    all: "All", filterLabel: "Project categories", categories: ["Tools & Infrastructure", "Systems & Applications", "Games & Interactive", "Websites & Presentation"],
+    count: "projects", detail: "Details", selected: "Selected", preview: "application preview", archive: "Archive", archiveDetail: "Archival screenshot from the project; not a new test capture.",
+    technologies: "Technologies", open: "Open project", website: "Website · sign-in", close: "Close project details", previous: "Previous image", next: "Next image", photo: "Image", enlarge: "Enlarge image", reduce: "Reduce image",
+    problem: "The problem", solution: "The solution", result: "What it delivers", decisions: "Technical decisions",
+    privateTitle: "Private projects", privateText: "Additional web and application projects whose details remain private."
   },
   sk: {
-    title: "Osobné projekty",
-    intro: "Výber aplikácií, webov a hier, ktoré som vytvoril pre klientov, výučbu aj vlastné nápady. Niektoré majú aj vlastné admin alebo analytické rozhranie na sledovanie používania.",
-    openLabel: "Otvoriť",
-    openProjectLabel: "Otvoriť projekt",
-    tagsLabel: "Tagy projektu",
-    projects: [
-      {
-        name: "Athena Dashboard",
-        type: "Testovací dashboard",
-        url: "https://athena.kpi.fei.tuke.sk",
-        imageKey: "athena",
-        previewAlt: "Náhľad testovacieho dashboardu Athena",
-        description: "Komplexný systém na testovanie študentských programátorských zadaní: automaticky sťahuje riešenia z GitLabu, spúšťa ich bezpečne v oddelených Docker kontajneroch a zapisuje štruktúrované výsledky.",
-        tags: ["Autograding", "GitLab", "Docker"]
-      },
-      {
-        name: "Rezervačný systém pre ambulanciu",
-        type: "Doktorský rezervačný systém",
-        url: "https://neurologia-vert.vercel.app/",
-        imageKey: "neurologia",
-        previewAlt: "Náhľad rezervačného systému pre ambulanciu",
-        description: "Rezervačný systém pre ambulanciu s objednávaním pacientov, admin rozhraním na správu termínov a automatickým posielaním emailových pripomienok pacientom.",
-        tags: ["Ambulancia", "Rezervácie", "Email reminders"]
-      },
-      {
-        name: "World Cup",
-        type: "Tipovacia aplikácia",
-        url: "http://167.233.132.16",
-        imageKey: "football",
-        previewAlt: "Náhľad tipovacej aplikácie World Cup",
-        description: "Hobby projekt na tipovanie futbalových výsledkov s kamarátmi. Automaticky scrapoval finálne výsledky z Flashscore, vyhodnocoval tipy a udržiaval leaderboard.",
-        tags: ["Futbal", "Scraping", "Leaderboard"]
-      },
-      {
-        name: "Programmer's Day",
-        type: "Desktopová hra",
-        imageKey: "game",
-        previewAlt: "Ukážka retro kancelárskej hry Programmer's Day",
-        description: "2D retro kancelárska hra v Godote. Hrateľné demo trvá desať dní a kombinuje emaily, chat, porady, projektové úlohy, trinásť typov minihier, účty, hodnotenie kariéry a vylepšenia.",
-        tags: ["Godot", "Puzzle management", "Desktop"]
-      },
-      {
-        name: "Materiály na výučbu Pythonu",
-        type: "Vzdelávací web",
-        url: "https://marek-horvath.github.io/python/",
-        imageKey: "python",
-        previewAlt: "Náhľad webu s materiálmi na výučbu Pythonu",
-        description: "Lekcie a učebné materiály k Pythonu, ktoré používam pri výučbe študentov. Sú prehľadne na webe, aby sa k nim mohli vracať pri precvičovaní.",
-        tags: ["Python", "Výučba", "Materiály"]
-      },
-      {
-        name: "Guess Who",
-        type: "Hra v prehliadači",
-        url: "https://guesswho-rosy.vercel.app/",
-        imageKey: "guess",
-        previewAlt: "Náhľad hry Guess Who",
-        description: "Hra Guess Who v prehliadači, v ktorej pomocou otázok a vylučovania možností hádaš postavu.",
-        tags: ["Hra", "Hádanie", "Prehliadač"]
-      },
-      {
-        name: "SEUG",
-        type: "Akademický web",
-        url: "https://seug.kpi.fei.tuke.sk/",
-        imageKey: "seug",
-        previewAlt: "Náhľad webu SEUG",
-        description: "Web výskumnej skupiny na KPI FEI TUKE s ľuďmi, aktivitami a automatickou extrakciou nových článkov pre všetkých členov skupiny.",
-        tags: ["Výskumná skupina", "Publikácie", "Automatizácia"]
-      },
-      {
-        name: "Cloud Native Kosice",
-        type: "Komunitný web",
-        url: "https://marek-horvath.github.io/cnk",
-        imageKey: "cnk",
-        previewAlt: "Náhľad webu Cloud Native Kosice",
-        description: "Komunitný web pre Cloud Native Kosice meetupy s informáciami o eventoch, programom, históriou, miestom konania, emailovým prihlasovaním a vlastnou lightweight analytics vrstvou.",
-        tags: ["Komunita", "Meetupy", "Analytics"]
-      },
-      {
-        name: "Revik",
-        type: "Firemný web",
-        url: "https://www.revik.sk/",
-        imageKey: "revik",
-        previewAlt: "Náhľad webu Revik",
-        description: "Prezentačný web pre lokálnu čistiacu službu so zameraním na jasnú ponuku, rýchly kontakt a malé admin/analytics rozhranie na sledovanie reálnych kliknutí.",
-        tags: ["Služby", "Lokálny biznis", "Analytics"]
-      },
-      {
-        name: "Krajčírstvo July",
-        type: "Web služieb",
-        url: "https://krajcirstvo.vercel.app/",
-        imageKey: "krajcirstvo",
-        previewAlt: "Náhľad webu Krajčírstvo July",
-        description: "Verejný web pre krajčírstvo s praktickým prehľadom služieb, kontaktne orientovaným flow a vlastnou analytics vrstvou na pochopenie kliknutí návštevníkov.",
-        tags: ["Krajčírstvo", "Malý biznis", "Analytics"]
-      },
-      {
-        name: "Slovakdle",
-        type: "Browser hra",
-        url: "https://slovakdle.vercel.app/",
-        imageKey: "slovakdle",
-        previewAlt: "Náhľad hry Slovakdle",
-        description: "Moja prvá Wordle-inšpirovaná browser hra upravená na Slovensko, postavená okolo slovenských tém a jednoduchého opakovaného hrania.",
-        tags: ["Hra", "Slovensko", "Wordle inspired"]
-      },
-      {
-        name: "Dema: Signal Breach",
-        type: "Interaktívny projekt",
-        url: "https://dema-jade.vercel.app/",
-        imageKey: "dema",
-        previewAlt: "Náhľad projektu Dema Signal Breach",
-        description: "Twenty One Pilots inšpirovaná branching story hra v štýle Telltale príbehu, s minihrami a približne 100 vlastnými ilustráciami.",
-        tags: ["Branching story", "Minihry", "Ilustrácie"]
-      }
-    ]
+    title: "Osobné projekty", intro: "Aplikácie, vývojárske nástroje, hry a weby — od univerzitných systémov po vlastné experimenty.",
+    all: "Všetky", filterLabel: "Kategórie projektov", categories: ["Nástroje a infraštruktúra", "Komplexné systémy a aplikácie", "Hry a interaktívne projekty", "Prezentačné"],
+    count: "projektov", detail: "Detail", selected: "Výber", preview: "náhľad aplikácie", archive: "Archív", archiveDetail: "Archívny záber z projektu; nejde o nový test aplikácie.",
+    technologies: "Technológie", open: "Otvoriť projekt", website: "Web · prihlásenie", close: "Zavrieť detail projektu", previous: "Predchádzajúci obrázok", next: "Nasledujúci obrázok", photo: "Obrázok", enlarge: "Zväčšiť obrázok", reduce: "Zmenšiť obrázok",
+    problem: "Problém", solution: "Riešenie", result: "Čo prináša", decisions: "Technické rozhodnutia",
+    privateTitle: "Neverejné realizácie", privateText: "Ďalšie webové a aplikačné realizácie, ktorých detaily nezverejňujem."
   }
 };
+const categoryIds = ["tools", "systems", "games", "websites"];
 
 export default {
   name: "ProjectsTab",
-  props: {
-    language: {
-      type: String,
-      default: "en"
-    }
-  },
+  components: { ArrowUpRight, ChevronLeft, ChevronRight, ExternalLink, Github, LockKeyhole, Maximize2, Minimize2, X },
+  props: { language: { type: String, default: "en" } },
+  data() { return { projects, selectedCategory: "all", activeProject: null, imageIndex: 0, zoomed: false, returnFocus: null, previousOverflow: "" }; },
   computed: {
-    projectImages() {
-      return projectImages;
-    },
-    copy() {
-      return projectsCopy[this.language] || projectsCopy.en;
+    locale() { return this.language === "sk" ? "sk" : "en"; },
+    copy() { return copy[this.locale]; },
+    groups() { return categoryIds.map((id, i) => ({ id, label: this.copy.categories[i], projects: projects.filter(p => p.category === id).sort((a, b) => Number(b.featured) - Number(a.featured)) })); },
+    filters() { return [{ id: "all", label: this.copy.all, count: projects.length }, ...this.groups.map(g => ({ id: g.id, label: g.label, count: g.projects.length }))]; },
+    visibleGroups() { return this.groups.filter(g => this.selectedCategory === "all" || g.id === this.selectedCategory); },
+    visibleCount() { return this.visibleGroups.reduce((sum, group) => sum + group.projects.length, 0); },
+    activeDetail() { return this.activeProject ? this.detail(this.activeProject) : {}; },
+    detailSections() { return ["problem", "solution", "result", "decisions"].filter(key => this.activeDetail[key]); },
+    isPortrait() { return this.activeProject?.images[this.imageIndex]?.includes("mobile"); }
+  },
+  beforeUnmount() {
+    if (this.$refs.projectDialog?.open) {
+      this.$refs.projectDialog.close();
+      document.body.style.overflow = this.previousOverflow;
     }
   },
   methods: {
-    trackProject(project) {
-      trackClick("project_open", {
-        label: project.name,
-        targetUrl: project.url,
-        language: this.language,
-        metadata: {
-          type: project.type
-        }
-      });
-    }
+    name(project) { return project.name[this.locale]; },
+    detail(project) { return getProjectDetails(project.id, this.locale); },
+    imageUrl(file, thumbnail = false) { return images(`./${thumbnail ? file.replace(".webp", "-thumb.webp") : file}`); },
+    projectIcon(project) { return ({ "workspace-manager": Monitor, monitoring: Activity, "fei-rozvrh": CalendarDays, "python-course": BookOpen, "hraj-sk": Gamepad2, workweek: Layers, neurologia: CalendarDays, "football-predictions": Activity, algoritmization: Code2 })[project.id] || Globe; },
+    selectCategory(id) { this.selectedCategory = id; trackClick("project_filter", { label: id, language: this.locale }); },
+    async openProject(project, event) {
+      this.returnFocus = event.currentTarget;
+      this.activeProject = project;
+      this.imageIndex = 0;
+      this.zoomed = false;
+      this.previousOverflow = document.body.style.overflow;
+      await this.$nextTick();
+      this.$refs.projectDialog.showModal();
+      document.body.style.overflow = "hidden";
+      trackClick("project_detail", { label: project.name.en, language: this.locale });
+    },
+    closeProject() { this.$refs.projectDialog.close(); },
+    restoreFocus() { document.body.style.overflow = this.previousOverflow; this.returnFocus?.focus({ preventScroll: true }); },
+    onBackdrop(event) {
+      if (event.target !== this.$refs.projectDialog) return;
+      const rect = event.target.getBoundingClientRect();
+      if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) this.closeProject();
+    },
+    changeImage(delta) { this.imageIndex = (this.imageIndex + delta + this.activeProject.images.length) % this.activeProject.images.length; },
+    onDialogKeydown(event) {
+      if (event.key === "Tab") {
+        const controls = [...this.$refs.projectDialog.querySelectorAll('button:not([disabled]), a[href]')].filter(el => el.getClientRects().length);
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      }
+      if (!this.activeProject.images.length) return;
+      if (event.key === "ArrowRight") { event.preventDefault(); this.changeImage(1); }
+      if (event.key === "ArrowLeft") { event.preventDefault(); this.changeImage(-1); }
+    },
+    trackProject(project, repository = false) { trackClick(repository ? "project_github" : "project_open", { label: project.name.en, targetUrl: repository ? project.repository : project.url, language: this.locale, metadata: { type: project.category } }); }
   }
 };
 </script>
 
 <style scoped>
-.projects-intro {
-  max-width: 760px;
-  margin: -4px auto 18px;
-  color: #3f5c78;
-  font-size: 14px;
-  line-height: 1.55;
-  text-align: center;
-}
-
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.project-card {
-  display: flex;
-  min-height: 190px;
-  flex-direction: column;
-  gap: 10px;
-  padding: 16px;
-  border: 1px solid rgba(13, 27, 42, 0.08);
-  border-radius: 12px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(247, 251, 255, 0.98)),
-    #f7fbff;
-  color: inherit;
-  text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.project-card-link:hover {
-  transform: translateY(-2px);
-  border-color: rgba(43, 108, 176, 0.26);
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
-}
-
-.project-card-link:focus-visible {
-  border-color: rgba(43, 108, 176, 0.58);
-  box-shadow: 0 0 0 4px rgba(43, 108, 176, 0.18), 0 12px 24px rgba(15, 23, 42, 0.08);
-  outline: none;
-}
-
-.project-preview {
-  position: relative;
-  overflow: hidden;
-  border-radius: 10px;
-  border: 1px solid rgba(13, 27, 42, 0.08);
-  background: #eaf4ff;
-  aspect-ratio: 16 / 9;
-}
-
-.project-preview img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.24s ease;
-}
-
-.project-card-link:hover .project-preview img {
-  transform: scale(1.025);
-}
-
-.project-card-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.project-type {
-  color: #4b6c8d;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.project-open {
-  flex: 0 0 auto;
-  border-radius: 999px;
-  padding: 5px 9px;
-  background: #163a66;
-  color: #f8fbff;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.project-card h3 {
-  margin: 0;
-  color: #12355f;
-  font-size: 17px;
-  line-height: 1.3;
-}
-
-.project-card p {
-  margin: 0;
-  color: #3d5874;
-  font-size: 14px;
-  line-height: 1.45;
-}
-
-.project-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin: auto 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.project-tags li {
-  border-radius: 999px;
-  padding: 5px 8px;
-  background: #e5f1ff;
-  color: #31577d;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-@media (max-width: 900px) {
-  .projects-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .project-card {
-    min-height: 0;
-  }
-}
-
-@media (max-width: 768px) {
-  .projects-intro {
-    margin: -2px auto 14px;
-    font-size: 13px;
-    text-align: left;
-  }
-
-  .projects-grid {
-    gap: 12px;
-  }
-
-  .project-card {
-    padding: 14px;
-    border-radius: 14px;
-  }
-
-  .project-preview {
-    border-radius: 12px;
-  }
-
-  .project-card h3 {
-    font-size: 16px;
-  }
-
-  .project-card p {
-    font-size: 13px;
-  }
-
-  .project-tags {
-    gap: 6px;
-  }
+.projects-intro { margin: 0 0 20px; color: #48627c; font-size: 14px; line-height: 1.6; }
+.project-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.project-filters button { display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid #cbd8e7; border-radius: 6px; background: #fff; color: #284c70; font: inherit; font-size: 12px; cursor: pointer; text-align: left; }
+.project-filters button[aria-pressed="true"] { background: #163a66; border-color: #163a66; color: #fff; }
+.project-filters span { opacity: .75; font-size: 11px; }
+.project-count { margin: 12px 0 24px; font-size: 12px; color: #526a83; }
+.project-group { margin-bottom: 32px; }
+.project-group-heading { display: flex; align-items: baseline; gap: 12px; margin: 0 0 14px; padding-bottom: 9px; border-bottom: 1px solid #d6e1ec; }
+.project-group-heading h3 { margin: 0; color: #193f65; font-size: 17px; line-height: 1.4; }
+.project-group-heading > span { color: #526a83; font-size: 12px; }
+.projects-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.project-card { min-width: 0; overflow: hidden; border: 1px solid #d4e0ed; border-radius: 8px; background: #fff; display: flex; flex-direction: column; }
+.project-featured { border-color: #9bb8d6; }
+.project-preview { display: block; position: relative; width: 100%; aspect-ratio: 16/10; padding: 0; border: 0; border-bottom: 1px solid #e0e8f0; border-radius: 0; overflow: hidden; background: #edf2f7; cursor: pointer; }
+.project-preview > img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.project-neutral { display: flex; width: 100%; height: 100%; flex-direction: column; gap: 14px; align-items: center; justify-content: center; color: #375d86; background: #eaf1f8; font-size: 13px; }
+.project-neutral-games { background: #e9f1ed; color: #35694d; }
+.project-neutral-systems { background: #edf0f9; color: #4b5684; }
+.project-neutral-websites { background: #f3eff5; color: #73547e; }
+.preview-open { position: absolute; right: 9px; bottom: 9px; display: grid; place-items: center; padding: 7px; background: #fff; color: #163a66; border-radius: 4px; box-shadow: 0 1px 7px #163a661a; }
+.project-archive { position: absolute; left: 9px; top: 9px; padding: 4px 7px; background: #fffffff0; color: #425971; font-size: 10px; border-radius: 4px; }
+.project-card-content { display: flex; flex-direction: column; flex: 1; gap: 11px; padding: 17px; }
+.project-card-top { display: flex; justify-content: space-between; gap: 8px; align-items: center; color: #506981; font-size: 11px; }
+.project-selected { color: #2c638e; font-weight: 700; }
+.project-card h4 { margin: 0; font-size: 18px; line-height: 1.35; }
+.project-card h4 button { padding: 0; border: 0; background: none; color: #163a66; font: inherit; font-weight: 700; text-align: left; cursor: pointer; }
+.project-card-content > p { margin: 0; color: #405c76; font-size: 13px; line-height: 1.6; }
+.project-tags { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: auto 0 0; list-style: none; }
+.project-tags li { max-width: 100%; padding: 4px 7px; border-radius: 4px; background: #eef3f8; color: #3d5c7a; font-size: 10px; line-height: 1.4; overflow-wrap: anywhere; }
+.project-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 3px; }
+.project-actions button, .project-actions a { display: inline-flex; gap: 5px; align-items: center; padding: 4px 0; border: 0; background: none; font: inherit; font-size: 12px; font-weight: 700; color: #205c90; text-decoration: none; cursor: pointer; }
+.project-actions button:hover, .project-actions a:hover, .project-card h4 button:hover { color: #0b3458; text-decoration: underline; }
+.private-projects { display: flex; gap: 13px; align-items: flex-start; padding: 22px 0 8px; border-top: 1px solid #d6e1ec; color: #5b6d80; }
+.private-projects h3 { margin: 0 0 5px; font-size: 14px; color: #38536f; }
+.private-projects p { margin: 0; font-size: 13px; line-height: 1.6; }
+.private-projects > svg { flex-shrink: 0; }
+.project-dialog { box-sizing: border-box; width: min(880px, calc(100% - 40px)); max-height: calc(100dvh - 40px); padding: 0; border: 1px solid #bdcddd; border-radius: 8px; background: #fff; color: #294963; overflow: auto; overscroll-behavior: contain; box-shadow: 0 24px 90px #0c22354d; }
+.project-dialog::backdrop { background: #122b43a8; backdrop-filter: blur(4px); }
+.project-dialog-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 20px 24px; }
+.project-dialog-header span { color: #567089; font-size: 12px; }
+.project-dialog-header h2 { margin: 5px 0 0; color: #173f66; font-size: 23px; line-height: 1.3; overflow-wrap: anywhere; }
+.project-icon-button { display: inline-grid; place-items: center; flex-shrink: 0; width: 38px; height: 38px; padding: 0; border: 1px solid #cbd7e3; background: #fff; border-radius: 6px; color: #254c71; cursor: pointer; }
+.project-gallery { background: #edf1f5; padding: 12px; }
+.project-gallery-stage { position: relative; display: grid; place-items: center; min-height: 180px; }
+.project-gallery-stage > img { display: block; width: 100%; height: auto; max-height: 52dvh; object-fit: contain; }
+.project-gallery-portrait > img { max-height: 65dvh; width: auto; max-width: 100%; }
+.gallery-zoom { position: absolute; right: 6px; bottom: 6px; }
+.project-gallery-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; }
+.project-thumbnail { display: block; width: 68px; height: 44px; padding: 2px; border: 2px solid transparent; border-radius: 4px; background: #fff; cursor: pointer; }
+.project-thumbnail[aria-pressed="true"] { border-color: #28669d; }
+.project-thumbnail img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.project-gallery-caption { margin: 9px 0 0; font-size: 11px; color: #526981; text-align: center; }
+.project-dialog-body { padding: 24px; }
+.project-dialog-intro { margin: 0 0 22px; font-size: 15px; line-height: 1.7; color: #2c4c69; }
+.project-detail-sections { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 26px; }
+.project-detail-sections h3 { margin: 0 0 6px; font-size: 14px; color: #1c466d; }
+.project-detail-sections p, .project-note { margin: 0; font-size: 13px; line-height: 1.7; }
+.project-note { border-left: 3px solid #b8cfe3; padding: 8px 13px; margin: 22px 0; color: #506880; }
+.project-dialog-body > .project-tags { margin-top: 22px; }
+.project-dialog-body > .project-actions { margin-top: 18px; }
+.project-dialog-zoom { width: min(1500px, calc(100% - 24px)); }
+.project-dialog-zoom .project-gallery-stage > img { max-height: none; }
+.projects-tab button:focus-visible, .projects-tab a:focus-visible, .project-dialog button:focus-visible, .project-dialog a:focus-visible { outline: 3px solid #267dc5; outline-offset: 3px; }
+@media (max-width: 900px) { .projects-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 600px) {
+  .projects-intro { font-size: 13px; }
+  .project-filters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .project-filters button { justify-content: space-between; font-size: 11px; padding: 8px; line-height: 1.5; }
+  .project-filters button:first-child { grid-column: 1/-1; }
+  .project-filters span { flex-shrink: 0; }
+  .project-group-heading h3 { font-size: 16px; }
+  .project-card-content { padding: 15px; }
+  .project-card h4 { font-size: 17px; }
+  .project-dialog { width: calc(100% - 16px); max-height: calc(100dvh - 16px); }
+  .project-dialog-header { padding: 16px; }
+  .project-dialog-header h2 { font-size: 19px; }
+  .project-dialog-body { padding: 18px; }
+  .project-detail-sections { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .project-dialog-intro { font-size: 14px; }
+  .project-gallery { padding: 8px; }
+  .project-gallery-stage { min-height: 100px; }
 }
 </style>

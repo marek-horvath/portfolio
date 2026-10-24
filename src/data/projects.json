@@ -1,0 +1,514 @@
+[
+  {
+    "id": "workspace-manager",
+    "category": "tools",
+    "featured": true,
+    "name": {
+      "sk": "Workspace Manager",
+      "en": "Workspace Manager"
+    },
+    "description": {
+      "sk": "Natívna desktopová aplikácia, ktorá z jedného miesta spravuje Git repozitáre, lokálne Docker projekty a obnovu pracovného prostredia na novom počítači.",
+      "en": "A native desktop application for managing Git repositories, local Docker projects and reproducible workspace setup across computers."
+    },
+    "technologies": [
+      "Tauri 2",
+      "Rust",
+      "React",
+      "TypeScript",
+      "Python",
+      "Tailwind CSS"
+    ],
+    "url": null,
+    "repository": null,
+    "images": [],
+    "archived": false,
+    "access": "desktop"
+  },
+  {
+    "id": "monitoring",
+    "category": "tools",
+    "featured": true,
+    "name": {
+      "sk": "Private Operations / Monitoring",
+      "en": "Private Operations / Monitoring"
+    },
+    "description": {
+      "sk": "Súkromný prevádzkový dashboard prepája dostupnosť webov a API, infraštruktúrne metriky a návštevnosť projektov v jednom rozhraní s chráneným prístupom.",
+      "en": "A private operations dashboard combining service health, infrastructure metrics and website analytics behind a protected interface."
+    },
+    "technologies": [
+      "Node.js",
+      "Docker Compose",
+      "Prometheus",
+      "Grafana",
+      "Plausible CE",
+      "Caddy"
+    ],
+    "url": "https://monitoring-six-livid.vercel.app/",
+    "repository": null,
+    "images": [
+      "monitoring-analytics.webp",
+      "monitoring-grafana-stav.webp"
+    ],
+    "archived": false,
+    "access": "protected"
+  },
+  {
+    "id": "fei-rozvrh",
+    "category": "tools",
+    "featured": false,
+    "name": {
+      "sk": "FEI Rozvrh",
+      "en": "FEI Rozvrh"
+    },
+    "description": {
+      "sk": "Nástroj na prehľadné vyhľadávanie a porovnávanie verejných rozvrhov FEI TUKE s vlastným crawlerom a PDF exportom.",
+      "en": "A tool for browsing and comparing public FEI TUKE timetables, backed by a crawler, SQLite storage and PDF export."
+    },
+    "technologies": [
+      "Python",
+      "Flask",
+      "Waitress",
+      "SQLite",
+      "ReportLab",
+      "HTML"
+    ],
+    "url": null,
+    "repository": null,
+    "images": [
+      "rozvrh-desktop.webp"
+    ],
+    "archived": false,
+    "access": "local"
+  },
+  {
+    "id": "athena",
+    "category": "systems",
+    "featured": true,
+    "name": {
+      "sk": "Athena Dashboard",
+      "en": "Athena Dashboard"
+    },
+    "description": {
+      "sk": "Platforma na automatizované hodnotenie programátorských zadaní s izolovaným spúšťaním testov, ukladaním výsledkov a prehľadovým dashboardom.",
+      "en": "An automated programming-assessment platform with isolated test execution, persistent results and an interactive review dashboard."
+    },
+    "technologies": [
+      "React",
+      "TypeScript",
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Docker"
+    ],
+    "url": "https://athena.kpi.fei.tuke.sk/",
+    "repository": null,
+    "images": [
+      "athena-archiv.webp"
+    ],
+    "archived": true,
+    "access": "protected"
+  },
+  {
+    "id": "python-course",
+    "category": "systems",
+    "featured": false,
+    "name": {
+      "sk": "Programovanie v Pythone",
+      "en": "Python Programming"
+    },
+    "description": {
+      "sk": "Výučbový portál s prednáškami, cvičeniami a pomocnými materiálmi pre programovanie v Pythone.",
+      "en": "A teaching portal with lectures, exercises and supporting materials for learning Python."
+    },
+    "technologies": [
+      "Astro",
+      "TypeScript",
+      "Node.js",
+      "PptxGenJS",
+      "HTML",
+      "CSS"
+    ],
+    "url": "https://marek-horvath.github.io/python/",
+    "repository": "https://github.com/marek-horvath/python",
+    "images": [
+      "python-live.webp"
+    ],
+    "archived": false,
+    "access": "public"
+  },
+  {
+    "id": "workweek",
+    "category": "systems",
+    "featured": false,
+    "name": {
+      "sk": "Workweek – študentské reporty a supervízia",
+      "en": "Workweek — Student Supervision"
+    },
+    "description": {
+      "sk": "Aplikácia pre pravidelné študentské reporty, konzultácie a koordináciu práce so supervízorom, doplnená rolami a PDF exportom.",
+      "en": "A student-supervision application for recurring work reports, consultations and supervisor coordination, with role-based access and PDF exports."
+    },
+    "technologies": [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Express 5",
+      "Prisma",
+      "SQLite"
+    ],
+    "url": "https://workweek-theta.vercel.app/",
+    "repository": null,
+    "images": [],
+    "archived": false,
+    "access": "protected"
+  },
+  {
+    "id": "neurologia",
+    "category": "systems",
+    "featured": true,
+    "name": {
+      "sk": "Doctor Booking System",
+      "en": "Doctor Booking System"
+    },
+    "description": {
+      "sk": "Rezervačný systém ambulancie s pacientskou rezerváciou termínu, administráciou a automatickými e-mailovými pripomienkami.",
+      "en": "A medical appointment-booking system with patient reservations, administration and automated email reminders."
+    },
+    "technologies": [
+      "Next.js 15",
+      "React",
+      "TypeScript",
+      "Prisma",
+      "PostgreSQL",
+      "Tailwind CSS"
+    ],
+    "url": "https://neurologia-vert.vercel.app/",
+    "repository": null,
+    "images": [],
+    "archived": false,
+    "access": "public"
+  },
+  {
+    "id": "football-predictions",
+    "category": "systems",
+    "featured": false,
+    "name": {
+      "sk": "World Cup / Football Predictions",
+      "en": "World Cup / Football Predictions"
+    },
+    "description": {
+      "sk": "Tipovacia aplikácia pre futbalové výsledky s vyhodnocovaním tipov, porovnaním predikcií a rebríčkami.",
+      "en": "A football-prediction application with result evaluation, prediction comparison and leaderboards."
+    },
+    "technologies": [
+      "Bun",
+      "TypeScript",
+      "Hono",
+      "Server-rendered JSX",
+      "SQLite",
+      "Appwrite adaptér (voliteľný)"
+    ],
+    "url": null,
+    "repository": null,
+    "images": [],
+    "archived": false,
+    "access": "local"
+  },
+  {
+    "id": "hraj-sk",
+    "category": "games",
+    "featured": true,
+    "name": {
+      "sk": "Hraj.sk – herná platforma",
+      "en": "Hraj.sk — Game Platform"
+    },
+    "description": {
+      "sk": "Slovenská platforma browserových hier so serverom riadenými reláciami, overovaním skóre a verejnými rebríčkami.",
+      "en": "A Slovak browser-game platform with server-controlled sessions, validated scores and public leaderboards."
+    },
+    "technologies": [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "NestJS",
+      "PostgreSQL",
+      "Prisma"
+    ],
+    "url": null,
+    "repository": null,
+    "images": [],
+    "archived": false,
+    "access": "local"
+  },
+  {
+    "id": "programmers-day",
+    "category": "games",
+    "featured": true,
+    "name": {
+      "sk": "Programmer's Day",
+      "en": "Programmer's Day"
+    },
+    "description": {
+      "sk": "Retro kancelárska hra spája správu pracovného dňa, rozhodovanie, komunikáciu a logické minihry v simulovanom desktope.",
+      "en": "A retro office game combining workday management, decisions, communication and logic minigames inside a simulated desktop."
+    },
+    "technologies": [
+      "Godot 4.7 .NET",
+      "C#",
+      "JSON",
+      "Godot Resources"
+    ],
+    "url": null,
+    "repository": null,
+    "images": [
+      "programmers-day-desktop-qa.webp",
+      "programmers-day-minihra-qa.webp"
+    ],
+    "archived": true,
+    "access": "desktop"
+  },
+  {
+    "id": "guess-who",
+    "category": "games",
+    "featured": false,
+    "name": {
+      "sk": "Guess Who / Kto to je?",
+      "en": "Guess Who / Kto to je?"
+    },
+    "description": {
+      "sk": "Browserová dedukčná hra s miestnosťami, kódom hry a komunikáciou hráčov v reálnom čase.",
+      "en": "A browser-based deduction game with game rooms, join codes and real-time player communication."
+    },
+    "technologies": [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Node.js",
+      "Express",
+      "Socket.IO"
+    ],
+    "url": "https://guesswho-rosy.vercel.app/",
+    "repository": null,
+    "images": [
+      "guesswho-live.webp"
+    ],
+    "archived": false,
+    "access": "public"
+  },
+  {
+    "id": "bandito-signal",
+    "category": "games",
+    "featured": false,
+    "name": {
+      "sk": "The Bandito Signal (Dema)",
+      "en": "The Bandito Signal (Dema)"
+    },
+    "description": {
+      "sk": "Ilustrovaná fan-made príbehová hra s vetvenými voľbami, hádankami a krátkymi 2D minihrami.",
+      "en": "An illustrated fan-made narrative game featuring branching choices, puzzles and short 2D minigames."
+    },
+    "technologies": [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Framer Motion",
+      "Lucide"
+    ],
+    "url": "https://dema-jade.vercel.app/",
+    "repository": null,
+    "images": [
+      "dema-desktop.webp"
+    ],
+    "archived": false,
+    "access": "public"
+  },
+  {
+    "id": "slovakdle",
+    "category": "games",
+    "featured": false,
+    "name": {
+      "sk": "Slovakdle",
+      "en": "Slovakdle"
+    },
+    "description": {
+      "sk": "Slovenská Wordle-inšpirovaná browserová hra s tematickým hádaním osobností a údajov.",
+      "en": "A Slovak Wordle-inspired browser game built around themed character and attribute guessing."
+    },
+    "technologies": [
+      "Next.js",
+      "React",
+      "JavaScript",
+      "Tailwind CSS",
+      "PapaParse"
+    ],
+    "url": "https://slovakdle.vercel.app/",
+    "repository": null,
+    "images": [
+      "slovakdle-live.webp"
+    ],
+    "archived": false,
+    "access": "public"
+  },
+  {
+    "id": "seug",
+    "category": "websites",
+    "featured": false,
+    "name": {
+      "sk": "SEUG – výskumná skupina",
+      "en": "SEUG — Research Group"
+    },
+    "description": {
+      "sk": "Web výskumnej skupiny prepája prezentačný obsah, ľudí a publikácie s automatizovanou synchronizáciou bibliografických údajov.",
+      "en": "A research-group website combining people, activities and publications with automated bibliographic-data synchronization."
+    },
+    "technologies": [
+      "Vue 3",
+      "Vue Router",
+      "JavaScript",
+      "Node.js",
+      "OpenAlex API",
+      "PapaParse/CSV"
+    ],
+    "url": "https://seug.kpi.fei.tuke.sk/",
+    "repository": "https://github.com/marek-horvath/skupina",
+    "images": [
+      "seug-live.webp"
+    ],
+    "archived": false,
+    "access": "public"
+  },
+  {
+    "id": "cnk",
+    "category": "websites",
+    "featured": false,
+    "name": {
+      "sk": "Cloud Native Košice",
+      "en": "Cloud Native Košice"
+    },
+    "description": {
+      "sk": "Komunitný web meetupov s programom, históriou podujatí, lokalitou a kontaktným tokom.",
+      "en": "A meetup-community website featuring event schedules, past events, location information and a contact flow."
+    },
+    "technologies": [
+      "Vue 3",
+      "JavaScript",
+      "Python HTTP API",
+      "SQLite",
+      "HTML/CSS",
+      "Vue CLI"
+    ],
+    "url": "https://marek-horvath.github.io/cnk/",
+    "repository": "https://github.com/marek-horvath/cnk",
+    "images": [],
+    "archived": false,
+    "access": "public"
+  },
+  {
+    "id": "krajcirstvo",
+    "category": "websites",
+    "featured": false,
+    "name": {
+      "sk": "Krajčírstvo July",
+      "en": "Krajčírstvo July"
+    },
+    "description": {
+      "sk": "Prezentačný web krajčírstva so službami, cenníkom a kontaktným tokom, doplnený vlastnou analytickou a administračnou vrstvou.",
+      "en": "A tailoring-business website with service details, pricing and contact information, complemented by a custom analytics and administration layer."
+    },
+    "technologies": [
+      "Vue 3",
+      "Vite",
+      "JavaScript",
+      "Node.js API",
+      "SQLite",
+      "Docker"
+    ],
+    "url": "https://krajcirstvovranov.sk/",
+    "repository": null,
+    "images": [
+      "krajcirstvo-desktop.webp",
+      "krajcirstvo-mobile.webp"
+    ],
+    "archived": false,
+    "access": "public"
+  },
+  {
+    "id": "revik",
+    "category": "websites",
+    "featured": false,
+    "name": {
+      "sk": "Revik",
+      "en": "Revik"
+    },
+    "description": {
+      "sk": "Web lokálnej čistiacej služby s prehľadnou ponukou, kontaktnými prvkami a mapou.",
+      "en": "A local cleaning-service website with a clear service offering, contact actions and an interactive map."
+    },
+    "technologies": [
+      "Vue 3",
+      "Tailwind CSS",
+      "Leaflet",
+      "vue3-leaflet",
+      "Vue CLI"
+    ],
+    "url": "https://www.revik.sk/",
+    "repository": "https://github.com/marek-horvath/revik",
+    "images": [],
+    "archived": false,
+    "access": "public"
+  },
+  {
+    "id": "algoritmization",
+    "category": "websites",
+    "featured": false,
+    "name": {
+      "sk": "Algoritmization / vývojové diagramy",
+      "en": "Algorithmization & Flowcharts"
+    },
+    "description": {
+      "sk": "Menší výučbový web s materiálmi a vizualizačnou časťou k algoritmizácii.",
+      "en": "A small teaching website with algorithmization materials and a diagram-oriented learning interface."
+    },
+    "technologies": [
+      "HTML",
+      "CSS",
+      "JavaScript"
+    ],
+    "url": "https://marek-horvath.github.io/algo/",
+    "repository": "https://github.com/marek-horvath/algo",
+    "images": [],
+    "archived": false,
+    "access": "public"
+  },
+  {
+    "id": "cardiocheck",
+    "category": "websites",
+    "featured": false,
+    "name": {
+      "sk": "CardioCheck – UX prototyp pre VÚSCH",
+      "en": "CardioCheck — UX Prototype for VÚSCH"
+    },
+    "description": {
+      "sk": "Responzívny prototyp zberu kardiovaskulárnych vstupov s podmieneným formulárom, validáciou, témami a ilustračnou správou.",
+      "en": "A responsive cardiovascular-screening UX prototype featuring conditional forms, input validation, themes and an illustrative report."
+    },
+    "technologies": [
+      "Expo SDK 54",
+      "React Native",
+      "React Native Web",
+      "TypeScript",
+      "Expo Router",
+      "React Navigation"
+    ],
+    "url": null,
+    "repository": null,
+    "images": [
+      "vusch-desktop.webp",
+      "vusch-mobile.webp"
+    ],
+    "archived": false,
+    "access": "prototype"
+  }
+]

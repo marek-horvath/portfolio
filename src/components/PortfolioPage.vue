@@ -289,7 +289,7 @@ const pageCopy = {
     menuLabel: "Open section menu",
     blogLabel: "Blog",
     lastUpdatedLabel: "Last updated:",
-    lastUpdated: "October 9, 2026",
+    lastUpdated: "October 24, 2026",
     footerLinksLabel: "Footer links",
     emailLabel: "Email",
     emailLinkLabel: "Send email",
@@ -330,7 +330,7 @@ const pageCopy = {
     menuLabel: "Otvoriť menu sekcií",
     blogLabel: "Blog",
     lastUpdatedLabel: "Posledná aktualizácia:",
-    lastUpdated: "9. októbra 2026",
+    lastUpdated: "24. októbra 2026",
     footerLinksLabel: "Odkazy v pätičke",
     emailLabel: "Email",
     emailLinkLabel: "Poslať email",
@@ -533,6 +533,7 @@ export default {
 :global(html),
 :global(body) {
   width: 100%;
+  margin: 0;
   overflow-x: hidden;
   font-family: "Plus Jakarta Sans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: #eef6ff;

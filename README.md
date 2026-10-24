@@ -80,6 +80,14 @@ Current blog sections:
 - Hackathons
 - Photos
 
+## Project catalog
+
+The bilingual project catalog is maintained in `src/data/projects.json`, with
+detail text in `src/data/projectDetails.js` and optimized screenshots in
+`src/assets/projects/`. The catalog groups projects into four categories and
+uses accessible dialogs for details and image galleries. The local `port/`
+input folder is ignored by Git and Docker and is not part of the public build.
+
 ## Checks and build
 
 Run lint:
